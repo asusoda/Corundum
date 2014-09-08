@@ -22,8 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import main.Main.MessageColor;
-
 public class CorundumException extends RuntimeException {
     private static final long serialVersionUID = 970447372251179781L;
 
