@@ -10,9 +10,9 @@
  * 
  * @author REALDrummer */
 
-package main;
+package Corundum;
 
-import static utils.StringUtilities.aOrAn;
+import static Corundum.utils.StringUtilities.aOrAn;
 
 import java.io.BufferedWriter;
 import java.io.File;

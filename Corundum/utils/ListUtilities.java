@@ -10,14 +10,14 @@
  * 
  * @author REALDrummer */
 
-package utils;
+package Corundum.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import main.CorundumException;
-import main.Main;
+import Corundum.CorundumException;
+import Corundum.Main;
 
 public class ListUtilities {
 

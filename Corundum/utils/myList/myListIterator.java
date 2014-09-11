@@ -10,7 +10,7 @@
  * 
  * @author REALDrummer */
 
-package Minecraft;
+package Corundum.utils.myList;
 
 
 import java.util.Iterator;

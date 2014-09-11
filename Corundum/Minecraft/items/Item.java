@@ -10,10 +10,10 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.items;
+package Corundum.Minecraft.items;
 
-import Minecraft.myList;
-import Minecraft.items.recipes.Recipe;
+import Corundum.Minecraft.items.recipes.Recipe;
+import Corundum.utils.myList.myList;
 
 public class Item {
     private final ItemType type;

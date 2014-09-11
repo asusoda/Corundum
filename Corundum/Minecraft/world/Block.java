@@ -10,10 +10,17 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.entities;
+package Corundum.Minecraft.world;
 
-import Minecraft.items.Item;
+public class Block {
+    private BlockType type;
+    private Location location;
 
-public class Mob extends Entity {
-    private Item[] drops;
+    public enum BlockType {
+        AIR, DIRT;  // TODO: finish
+
+        // TODO TEMP: initializations should be done in a constructor
+        private final boolean solid = true, can_be_broken_by_liquids = true, opaque = true;
+        private final byte light_emission = 0;
+    }
 }

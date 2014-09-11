@@ -10,12 +10,12 @@
  * 
  * @author REALDrummer */
 
-package utils;
+package Corundum.Minecraft;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-import static utils.StringUtilities.*;
+import static Corundum.utils.StringUtilities.*;
 
 /** This static singleton class contains a plethora of utilities related to {@link Player}s and {@link Block}s, including methods to convert between total experience and
  * experience levels, case-insensitively autocomplete a player's name, and calculate the block that a given {@link Player} is pointing at.

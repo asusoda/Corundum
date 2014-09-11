@@ -10,17 +10,18 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.world;
+package Corundum.Minecraft.world;
 
-import java.io.File;
+import Corundum.utils.myList.myList;
 
-public class World {
-    private String name;
-    private File folder;
-    private WorldType type;
-    private Location spawn_location;
+public class Chunk {
+    private static myList<Chunk> loaded_chunks = new myList<Chunk>();
 
-    public enum WorldType {
-        OVERWORLD, NETHER, END, CUSTOM;
+    private final int chunk_x, chunk_z;
+    private final Block[][][] blocks = new Block[16][256][16];
+
+    public Chunk(int chunk_x, int chunk_z) {
+        this.chunk_x = chunk_x;
+        this.chunk_z = chunk_z;
     }
 }

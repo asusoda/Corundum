@@ -10,13 +10,12 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.items;
+package Corundum.Minecraft.items;
 
-import main.CorundumException;
-import main.Main;
-import Minecraft.items.Item.ItemType;
-
-import static utils.StringUtilities.*;
+import Corundum.CorundumException;
+import Corundum.Main;
+import Corundum.Minecraft.items.Item.ItemType;
+import static Corundum.utils.StringUtilities.*;
 
 public class Enchantment {
     private int level;

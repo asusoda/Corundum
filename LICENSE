@@ -9,30 +9,13 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-This code is property of the Corundum project managed under the Software 
-Developers' Association of Arizona State University. 
-
-Copying and use of this open-source code is permitted provided that the 
-following requirements are met:
-
-- This code may not be used or distributed for private enterprise, including
-but not limited to personal or corporate profit.
-- Any products resulting from the copying, use, or modification of this code
- may not claim endorsement by the Corundum project or any of its members or 
-associates without written formal permission from the endorsing party or parties.
-- This code may not be copied or used under any circumstances without the inclusion
-of this notice and mention of the contribution of the code by the Corundum project.
-In source code form, this notice must be included as a comment at the start of every 
-code file in the project; in binary form, proper documentation must be included with 
-the final product that includes this statement verbatim.
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

@@ -10,10 +10,10 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.items.recipes;
+package Corundum.Minecraft.items.recipes;
 
-import main.Main;
-import Minecraft.items.Item.ItemType;
+import Corundum.Main;
+import Corundum.Minecraft.items.Item.ItemType;
 
 public class CraftingRecipe extends Recipe {
     private final ItemType[][] materials;

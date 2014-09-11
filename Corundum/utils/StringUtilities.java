@@ -10,15 +10,15 @@
  * 
  * @author REALDrummer */
 
-package utils;
+package Corundum.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import utils.interfaces.Matchable;
-import main.CorundumException;
-import main.Main;
-import static utils.ListUtilities.*;
+import Corundum.CorundumException;
+import Corundum.Main;
+import Corundum.utils.interfaces.Matchable;
+import static Corundum.utils.ListUtilities.*;
 
 public class StringUtilities {
     public static final String[] BORDERS = { "[]", "\\/", "\"*", "_^", "-=", ":;", "&%", "#@", ",.", "<>", "~$", ")(", "+-", "|o" }, YESES = { "yes", "yea", "yep", "ja",

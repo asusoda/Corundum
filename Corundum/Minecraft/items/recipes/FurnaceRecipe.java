@@ -1,7 +1,7 @@
-package Minecraft.items.recipes;
+package Corundum.Minecraft.items.recipes;
 
-import Minecraft.items.Item;
-import Minecraft.items.Item.ItemType;
+import Corundum.Minecraft.items.Item;
+import Corundum.Minecraft.items.Item.ItemType;
 
 public class FurnaceRecipe extends Recipe {
     private final ItemType cooking_material;

@@ -10,7 +10,7 @@
  * 
  * @author REALDrummer */
 
-package main;
+package Corundum;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,9 +18,9 @@ import java.util.UUID;
 
 import javax.swing.Timer;
 
-import utils.interfaces.TickListener;
-import Minecraft.myList;
-import static utils.ListUtilities.contains;
+import Corundum.utils.interfaces.TickListener;
+import Corundum.utils.myList.myList;
+import static Corundum.utils.ListUtilities.contains;
 
 /** This is the main (executable) class of Corundum. ...Does anything more need to be said?
  * 

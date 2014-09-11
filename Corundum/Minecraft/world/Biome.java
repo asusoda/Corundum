@@ -10,9 +10,20 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.world;
+package Corundum.Minecraft.world;
 
-public class Location {
-    private float x, y, z;
-    private World world;
+public class Biome {
+    private BiomeType biome;
+
+    public enum BiomeType {
+        JUNGLE(false), TUNDRA(true); // TODO
+
+        private final boolean snowy;
+
+        // TODO private final EntityType[] naturally_spawning_mobs;
+
+        private BiomeType(boolean snowy /* TODO */) {
+            this.snowy = snowy;
+        }
+    }
 }

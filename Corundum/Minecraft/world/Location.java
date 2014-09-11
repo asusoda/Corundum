@@ -10,8 +10,9 @@
  * 
  * @author REALDrummer */
 
-package utils.interfaces;
+package Corundum.Minecraft.world;
 
-public interface Matchable {
-    public int matchTo(String... match_parameters);
+public class Location {
+    private float x, y, z;
+    private World world;
 }

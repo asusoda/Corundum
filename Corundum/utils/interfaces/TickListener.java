@@ -10,20 +10,8 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.world;
+package Corundum.utils.interfaces;
 
-public class Biome {
-    private BiomeType biome;
-
-    public enum BiomeType {
-        JUNGLE(false), TUNDRA(true); // TODO
-
-        private final boolean snowy;
-
-        // TODO private final EntityType[] naturally_spawning_mobs;
-
-        private BiomeType(boolean snowy /* TODO */) {
-            this.snowy = snowy;
-        }
-    }
+public interface TickListener {
+    public void tickPassed();
 }

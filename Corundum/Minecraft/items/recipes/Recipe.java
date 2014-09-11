@@ -1,8 +1,8 @@
-package Minecraft.items.recipes;
+package Corundum.Minecraft.items.recipes;
 
-import main.CorundumException;
-import Minecraft.items.Item;
-import Minecraft.items.Item.ItemType;
+import Corundum.CorundumException;
+import Corundum.Minecraft.items.Item;
+import Corundum.Minecraft.items.Item.ItemType;
 
 public abstract class Recipe {
     protected final ItemType resulting_material;

@@ -10,18 +10,10 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.world;
+package Corundum.Minecraft.entities;
 
-import Minecraft.myList;
+import Corundum.Minecraft.items.Item;
 
-public class Chunk {
-    private static myList<Chunk> loaded_chunks = new myList<Chunk>();
-
-    private final int chunk_x, chunk_z;
-    private final Block[][][] blocks = new Block[16][256][16];
-
-    public Chunk(int chunk_x, int chunk_z) {
-        this.chunk_x = chunk_x;
-        this.chunk_z = chunk_z;
-    }
+public class Mob extends Entity {
+    private Item[] drops;
 }

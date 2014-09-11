@@ -10,16 +10,16 @@
  * 
  * @author REALDrummer */
 
-package Minecraft;
+package Corundum.utils.myList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import utils.ListUtilities;
-import utils.interfaces.Matchable;
-import main.Main;
-import static utils.ListUtilities.*;
-import static utils.StringUtilities.match;
+import Corundum.Main;
+import Corundum.utils.ListUtilities;
+import Corundum.utils.interfaces.Matchable;
+import static Corundum.utils.ListUtilities.*;
+import static Corundum.utils.StringUtilities.match;
 
 /** This list structure is an auto-sorting quick-searching structure based on "root-knockdown" auto-balancing binary trees.
  * <hr>

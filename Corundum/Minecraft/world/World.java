@@ -10,17 +10,17 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.world;
+package Corundum.Minecraft.world;
 
-public class Block {
-    private BlockType type;
-    private Location location;
+import java.io.File;
 
-    public enum BlockType {
-        AIR, DIRT;  // TODO: finish
+public class World {
+    private String name;
+    private File folder;
+    private WorldType type;
+    private Location spawn_location;
 
-        // TODO TEMP: initializations should be done in a constructor
-        private final boolean solid = true, can_be_broken_by_liquids = true, opaque = true;
-        private final byte light_emission = 0;
+    public enum WorldType {
+        OVERWORLD, NETHER, END, CUSTOM;
     }
 }

@@ -10,9 +10,9 @@
  * 
  * @author REALDrummer */
 
-package Minecraft.entities;
+package Corundum.Minecraft.entities;
 
-import Minecraft.world.Location;
+import Corundum.Minecraft.world.Location;
 
 public class Entity {
     private EntityType type;

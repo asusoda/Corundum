@@ -10,8 +10,8 @@
  * 
  * @author REALDrummer */
 
-package utils.interfaces;
+package Corundum.utils.interfaces;
 
-public interface TickListener {
-    public void tickPassed();
+public interface Matchable {
+    public int matchTo(String... match_parameters);
 }

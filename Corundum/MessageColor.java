@@ -1,4 +1,4 @@
-package main;
+package Corundum;
 
 /** This enum class represents the different chat colors available in the Minecraft chat. There are 16 in total. These {@link MessageColor}s can be added to messages being sent
  * to the ANSI-compatible console or a player and they will change all the following text in that message to the corresponding color.
