@@ -7,23 +7,35 @@
  * party or parties. - This code may not be copied or used under any circumstances without the inclusion of this notice and mention of the contribution of the code by the
  * Corundum project. In source code form, this notice must be included as a comment as it is here; in binary form, proper documentation must be included with the final product
  * that includes this statement verbatim.
- * 
+ *
  * @author REALDrummer */
 
 package Corundum.Minecraft.world;
 
+import java.awt.*;
+
+import Corundum.Minecraft.entities.Mob;
+import Corundum.utils.myList.myList;
+
 public class Biome {
-    private BiomeType biome;
+    // TODO TEMP: "final"s are commented to avoid compilation errors for now
+    private/* final */BiomeType biome;
+    private/* final */myList<Chunk> chunks;
 
     public enum BiomeType {
-        JUNGLE(false), TUNDRA(true); // TODO
+        JUNGLE(false), TUNDRA(true); // TODO: 3. finish this list
 
-        private final boolean snowy;
-
-        // TODO private final EntityType[] naturally_spawning_mobs;
+        // TODO: 1. replace this
+        private final Mob.MobType[] naturally_spawning_mobs;
+        private final byte[] min_spawn_group_sizes, max_spawn_group_sizes;
+        private final Color map_color, water_color;
+        private final float temperature, rainfall;
+        private final boolean has_trees, has_rain, has_snow, can_spawn_squid;
+        private final int min_height, max_height;
+        private final Block.BlockType surface_block, filler_block;
 
         private BiomeType(boolean snowy /* TODO */) {
-            this.snowy = snowy;
+            // TODO
         }
     }
 }

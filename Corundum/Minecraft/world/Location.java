@@ -7,7 +7,7 @@
  * party or parties. - This code may not be copied or used under any circumstances without the inclusion of this notice and mention of the contribution of the code by the
  * Corundum project. In source code form, this notice must be included as a comment as it is here; in binary form, proper documentation must be included with the final product
  * that includes this statement verbatim.
- * 
+ *
  * @author REALDrummer */
 
 package Corundum.Minecraft.world;
