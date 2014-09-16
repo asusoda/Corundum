@@ -14,6 +14,8 @@ package Corundum.Minecraft.world;
 
 import java.awt.Color;
 
+import Corundum.utils.StringUtilities;
+
 public class Block {
     private BlockType type;
     private byte data;
@@ -403,7 +405,7 @@ public class Block {
         SEA_LENTERN(-1),
         HAY_BALE,
         // carpet
-        WHIET_CARPET(0),
+        WHITE_CARPET(0),
         ORANGE_CARPET,
         MAGENTA_CARPET,
         LIGHT_BLUE_CARPET,
@@ -458,7 +460,8 @@ public class Block {
         ACACIA_DOOR,
         DARK_OAK_DOOR;
 
-        /** property-getting methods of <b><tt>blockMC</b></tt>:<br>
+        /** <b><i>DEV NOTES:</b></i><br>
+         * property-getting methods of <b><tt>blockMC</b></tt>:<br>
          * <i>NOTE:</i> "<tt>Material.</tt>" at the beginning of a method indicates that the property can be obtained through {@link net.minecraft.block.Block#getMaterial()}.
          * booleans: <br>
          * - <tt>Material.isReplaceable</tt>: tells if block placement can cover it; snow, tall grass, and water are replaceable, but stone, signs, and torches are not <br>
@@ -475,7 +478,8 @@ public class Block {
          * - <tt>Material.getCanBlockGrass</tt>: tells if the presence of this block atop a dirt block can stop grass from spreading to that dirt; TODO: why does block take
          * the ! of it? <br>
          * <b>int</b>s: <br>
-         * - <tt>Material.getMaterialMobility</tt>: 0 for most blocks (e.g. dirt), 1 if it cannot push other blocks (TODO: specifics?), 2 if it cannot be pushed (e.g. bedrock) <br>
+         * - <tt>Material.getMaterialMobility</tt>: 0 for most blocks (e.g. dirt), 1 if it cannot push other blocks, but pistons can push over them, 2 if it cannot be pushed
+         * at all (e.g. bedrock) <br>
          * - <tt>Block.getLightOpacity</tt>: the amount of light lost going through this block; 0 for anvils and enchantment tables, 1 for leaves and webs, 3 for water and
          * ice, 255 otherwise <br>
          * <b>float</b>s: <br>
@@ -546,6 +550,25 @@ public class Block {
             blockMC = (net.minecraft.block.Block) net.minecraft.block.Block.blockRegistry.getObjectForID(id);
         }
 
+        /** This method determines whether or not a block of this {@link BlockType} can stop grass from spreading onto nearby dirt if placed on top of the dirt. For example, if
+         * you place {@link BlockType#STONE stone} on top of dirt, that dirt cannot grow grass even if there is well-lit grass right next to it; on the other hand,
+         * {@link BlockType#AIR air} cannot stop grass from spreading onto dirt.
+         * 
+         * @return <b>true</b> if this {@link BlockType} can stop the spread of grass to dirt; <b>false</b> otherwise. */
+        public boolean canBlockGrass() {
+            return blockMC.getMaterial().getCanBlockGrass();
+        }
+
+        /** This method returns the {@link BoundingBox} that describes the shape of this block. Some blocks have normal bounds and are shaped like full-size cubes, like
+         * {@link BlockType#GRASS grass} and {@link BlockType#STONE stone}; others like {@link BlockType#GLASS_PANE glass panes} and {@link BlockType#ANVIL anvils} don't take
+         * on a perfectly 1x1x1 cubic shape.
+         * 
+         * @return a {@link BoundingBox} describing the shape of this {@link BlockType}. */
+        public BoundingBox getBoundingBox() {
+            return new BoundingBox((float) blockMC.getBlockBoundsMinX(), (float) blockMC.getBlockBoundsMinY(), (float) blockMC.getBlockBoundsMinZ(), (float) blockMC
+                    .getBlockBoundsMaxX(), (float) blockMC.getBlockBoundsMaxY(), (float) blockMC.getBlockBoundsMaxZ());
+        }
+
         /** This method returns the data value associated with this {@link BlockType}. The data value is an extra identifier in Minecraft used to differentiate between blocks
          * on a more specific level than I.D.s. If two blocks have the same I.D., but different data values, they could be the same kind of block, but be different sub-types;
          * for example, {@link BlockType#OAK_LOG oak logs} and {@link BlockType#SPRUCE_LOG spruce logs} are both types of wood logs and they both have the same I.D. and a lot
@@ -576,14 +599,32 @@ public class Block {
             return (short) (id_minus_128 + 128);
         }
 
-        /**This method returns the color that appears on a map to represent this {@link BlockType}. 
+        /** This method returns the amount of light emitted by this type of block as a number between 0 and 1. Most blocks like {@link BlockType#GRASS grass} and
+         * {@link BlockType#STONE stone} don't emit any light, so they have a light level of 0; some other blocks like {@link BlockType#POWERED_REDSTONE_LAMP powered redstone
+         * lamps} will emit lots of light (light level 1) and others like {@link BlockType#POWERED_REDSTONE_TORCH powered redstone torches} can emit some low light (light level
+         * 0.5 in this case).
          * 
-         * @return a standard Java {@link Color} object representing the color that this {@link BlockType} is represented by on a map.*/
+         * @return a number between 0 and 1 representing the amount of light emitted by this block. */
+        public float getLightEmission() {
+            return blockMC.getLightValue();
+        }
+
+        /** This method returns the color that appears on a map to represent this {@link BlockType}.
+         * 
+         * @return a standard Java {@link Color} object representing the color that this {@link BlockType} is represented by on a map. */
         public Color getMapColor() {
             /* Mojang decided that they don't need to use three values for a color, but one big int in which the bits were basically concatenated from the three bytes
              * representing red, green, and blue values; this splits the int into three RGB values and puts it into a standard Color object */
             int color_value = blockMC.getMaterial().getMaterialMapColor().colorValue;
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
+        }
+
+        /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is
+         * completely clear like {@link BlockType#GLASS}).
+         * 
+         * @return a number between 0 and 255 representing the opacity of this {@link BlockType}. */
+        public short getOpacity() {
+            return (short) blockMC.getLightOpacity();
         }
 
         /** This method determines whether or not this {@link BlockType} is a "sibling" of the given {@link BlockType}. Corundum considered two {@link BlockType}s "siblings" if
@@ -599,14 +640,47 @@ public class Block {
             return type.id_minus_128 == id_minus_128;
         }
 
-        /** This method determines whether or not this {@link BlockType} is able to be burned until broken. Note that most blocks can be lit on fire, but that does not
-         * necessarily make them "burnable"; burnable blocks are the blocks that will burn until they break and often spread fire to other nearby blocks. For example,
+        /** This method determines whether or not this {@link BlockType} can be mined and its drops obtained without a tool in Adventure Mode.
+         * 
+         * @return <b>true</b> if its drops can be obtained without the use of a tool in Adventure Mode; <b>false</b> otherwise. */
+        public boolean isAdventureModeExempt() {
+            return blockMC.getMaterial().isAdventureModeExempt();
+        }
+
+        /** This method determines whether of not a block is broken when it is pushed by a piston. For example, {@link BlockType#TORCH torches} are broken when they are pushed,
+         * while {@link BlockType#STONE stone} blocks are easily pushed without breaking and {@link BlockType#BEDROCK bedrock} cannot be pushed at all.
+         * 
+         * @return <b>true</b> if this {@link BlockType} can be pushed, but will break when it is pushed; <b>false</b> otherwise.
+         * @see {@link #isPushable()} and {@link #isImmobile()} */
+        public boolean isBrokenWhenPushed() {
+            return blockMC.getMaterial().getMaterialMobility() == 1;
+        }
+
+        /** This method determines whether or not a block of this {@link BlockType} is able to be burned until broken. Note that most blocks can be lit on fire, but that does
+         * not necessarily make them "burnable"; burnable blocks are the blocks that will burn until they break and often spread fire to other nearby blocks. For example,
          * {@link BlockType#LEAVES leaves}, {@link BlockType#OAK_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but {@link BlockType#WATER water},
          * {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
          * 
          * @return <b>true</b> if this {@link BlockType} is burnable; <b>false</b> otherwise. */
         public boolean isBurnable() {
             return blockMC.getMaterial().getCanBurn();
+        }
+
+        /** This method determines whether or not a block of this {@link BlockType} is a "full cube", meaning that its {@link BoundingBox} takes the whole space of a cube.
+         * 
+         * @return <b>true</b> if this block is a normally rendered cube. */
+        public boolean isFullCube() {
+            return blockMC.getBlockBoundsMinX() == 0 && blockMC.getBlockBoundsMinY() == 0 && blockMC.getBlockBoundsMinZ() == 0 && blockMC.getBlockBoundsMaxX() == 1
+                    && blockMC.getBlockBoundsMaxY() == 1 && blockMC.getBlockBoundsMaxZ() == 1;
+        }
+
+        /** This method determines whether or not a block of this {@link BlockType} is able to be pushed by a piston (or pulled by a sticky piston). For example,
+         * {@link BlockType#BEDROCK bedrock} cannot be pushed by pistons while {@link BlockType#STONE stone} blocks can be pushed easily and {@link BlockType#TORCH torches} can
+         * be pushed, but will break and not push the block after them.
+         * 
+         * @return <b>true</b> if this {@link BlockType} cannot be pushed or pulled by pistons; <b>false</b> otherwise. */
+        public boolean isImmobile() {
+            return blockMC.getMaterial().getMaterialMobility() == 2;
         }
 
         /** This method determines whether or not a block of this {@link BlockType} is liquid. So far (as of 1.8), {@link BlockType#WATER water},
@@ -616,6 +690,16 @@ public class Block {
          * @return <b>true</b> if this {@link BlockType} is a liquid like water or lava; <b>false</b> otherwise. */
         public boolean isLiquid() {
             return blockMC.getMaterial().isLiquid();
+        }
+
+        /** This method determines whether or not a block is able to be pushed by a piston (or pulled by a sticky piston) without being broken. For example,
+         * {@link BlockType#STONE stone} blocks are easily pushed without breaking while {@link BlockType#TORCH torches} can be pushed, but break off when they are pushed, and
+         * {@link BlockType#BEDROCK bedrock} cannot be pushed at all.
+         * 
+         * @return <b>true</b> if this {@link BlockType} can be pushed without breaking; <b>false</b> otherwise.
+         * @see {@link #isBrokenWhenPushed()} and {@link #isImmobile()} */
+        public boolean isPushable() {
+            return blockMC.getMaterial().getMaterialMobility() == 0;
         }
 
         /** This method determines whether or not a block of this {@link BlockType} is "replaceable", meaning a new block can be placed where this block is without breaking
@@ -634,6 +718,22 @@ public class Block {
          * @return <b>true</b> if this {@link BlockType} is solid; <b>false</b> otherwise. */
         public boolean isSolid() {
             return blockMC.getMaterial().isSolid();
+        }
+
+        /** This method determines whether or not a block of this {@link BlockType} requires a tool to be used to be able to obtain any drops from it. For example,
+         * {@link BlockType#STONE stone} blocks will not drop anything unless a tool (in this case, a pickaxe) is used to break it; on the other hand, {@link BlockType#DIRT
+         * dirt} can drop dirt even if a player uses their bare hands to dig it out.
+         * 
+         * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
+        public boolean requiresTool() {
+            return !blockMC.getMaterial().isToolNotRequired();
+        }
+
+        /** This method returns the name of this {@link BlockType} formatted nicely for messages. This formatting includes lowercasing, replacing underscores with spaces, and
+         * capitalizing the first letters of certain {@link BlockType}s. */
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase().replaceAll("_", " ");
         }
     }
 }

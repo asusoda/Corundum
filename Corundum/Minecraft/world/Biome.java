@@ -23,19 +23,13 @@ public class Biome {
     private/* final */myList<Chunk> chunks;
 
     public enum BiomeType {
-        JUNGLE(false), TUNDRA(true); // TODO: 3. finish this list
+        JUNGLE, TUNDRA; // TODO: 3. finish this list
 
         // TODO: 1. replace this
-        private final Mob.MobType[] naturally_spawning_mobs;
-        private final byte[] min_spawn_group_sizes, max_spawn_group_sizes;
-        private final Color map_color, water_color;
-        private final float temperature, rainfall;
-        private final boolean has_trees, has_rain, has_snow, can_spawn_squid;
-        private final int min_height, max_height;
-        private final Block.BlockType surface_block, filler_block;
+        /* private final Mob.MobType[] naturally_spawning_mobs; private final byte[] min_spawn_group_sizes, max_spawn_group_sizes; private final Color map_color, water_color;
+         * private final float temperature, rainfall; private final boolean has_trees, has_rain, has_snow, can_spawn_squid; private final int min_height, max_height; private
+         * final Block.BlockType surface_block, filler_block; */
 
-        private BiomeType(boolean snowy /* TODO */) {
-            // TODO
-        }
+        // TODO: BiomeType constructor
     }
 }
