@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import Corundum.CorundumException;
 import Corundum.Main;
+import Corundum.Minecraft.world.Location;
 import Corundum.utils.interfaces.Matchable;
 import static Corundum.utils.ListUtilities.*;
 
@@ -150,8 +151,8 @@ public class StringUtilities {
             }
         // match Locations by their block-coordinate writeLocation() outputs
         // TODO TEMP CMT
-        /* else if (object instanceof Location) return writeLocation((Location) object, false).compareTo( combine(match_parameters, " ")/* remove decimal places *
-         * /.replaceAll(".\\d*,", ",").replaceAll(".\\d*\\)", ")")); */
+        /* else if (object instanceof Location) return writeLocation((Location) object, false).compareTo(combine(match_parameters, " ")/* remove decimal places * /
+         * .replaceAll(".\\d*,", ",").replaceAll(".\\d*\\)", ")")); */
         // if all else fails, try to match their toString() outputs
         else
             return object.toString().compareTo(combine(match_parameters, " "));

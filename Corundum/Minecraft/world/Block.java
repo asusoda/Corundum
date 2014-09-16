@@ -14,12 +14,39 @@ package Corundum.Minecraft.world;
 
 import java.awt.Color;
 
+import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
+import Corundum.utils.interfaces.Matchable;
+import Corundum.utils.myList.myList;
 
 public class Block {
     private BlockType type;
     private byte data;
     private Location location;
+
+    public byte getData() {
+        return data;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public BlockType getType() {
+        return type;
+    }
+
+    public void setData(byte data) {
+        this.data = data;
+        // TODO: change the BlockType if necessary
+        // TODO: send a packet to clients concerning the block change
+    }
+
+    public void setType(BlockType type) {
+        this.type = type;
+        // TODO: change the data accordingly, but try to do in such a way that the orientation of the block doesn't change
+        // TODO: send a packet to clients concerning the block change
+    }
 
     /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that
@@ -45,7 +72,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType {
+    public enum BlockType implements Matchable {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),
@@ -627,6 +654,29 @@ public class Block {
             return (short) blockMC.getLightOpacity();
         }
 
+        /** This method retrieves all the {@link BlockType}s that are "siblings" of this {@link BlockType}, i.e. all the {@link BlockType}s with the same I.D. as this one.
+         * 
+         * @return all the siblings of this {@link BlockType}. */
+        public BlockType[] getSiblings() {
+            // since BlockTypes are organized by I.D. and data value, all BlockTypes with the same I.D.s will be together
+            // first, find the first and last BlockTypes with this same I.D.
+            int first_sibling_ordinal = ordinal(), last_sibling_ordinal_plus1 = ordinal() + 1;
+            while (first_sibling_ordinal > 0 && BlockType.values()[first_sibling_ordinal - 1].id_minus_128 == id_minus_128)
+                first_sibling_ordinal--;
+            while (last_sibling_ordinal_plus1 <= BlockType.values().length && BlockType.values()[last_sibling_ordinal_plus1].id_minus_128 == id_minus_128)
+                last_sibling_ordinal_plus1++;
+
+            // create an array of the appropriate size
+            BlockType[] results = new BlockType[last_sibling_ordinal_plus1 - first_sibling_ordinal];
+
+            /* fill in the array with the contents between first_sibling_ordinal and lasT_sibling_ordinal_plus1 (including the BlockType at ordinal first_sibling_ordinal, but
+             * NOT including the BlockType at ordinal last_sibling_ordinal_plus1) */
+            for (int i = first_sibling_ordinal; i < last_sibling_ordinal_plus1; i++)
+                results[i] = BlockType.values()[i];
+
+            return results;
+        }
+
         /** This method determines whether or not this {@link BlockType} is a "sibling" of the given {@link BlockType}. Corundum considered two {@link BlockType}s "siblings" if
          * the have the same item I.D. like {@link BlockType#STONE stone}, {@link BlockType#GRANITE granite}, and {@link BlockType#DIORITE diorite}, which all have the I.D. 0
          * but have different data values to differentiate between them.
@@ -727,6 +777,12 @@ public class Block {
          * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
         public boolean requiresTool() {
             return !blockMC.getMaterial().isToolNotRequired();
+        }
+
+        // overrides
+        @Override
+        public int matchTo(String... match_parameters) {
+            return StringUtilities.match(new Object[] { (byte) (id_minus_128 + 128), data }, match_parameters);
         }
 
         /** This method returns the name of this {@link BlockType} formatted nicely for messages. This formatting includes lowercasing, replacing underscores with spaces, and

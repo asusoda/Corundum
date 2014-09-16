@@ -26,6 +26,9 @@ import static Corundum.utils.ListUtilities.contains;
  * 
  * @author REALDrummer */
 public class Main {
+    /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
+     * respectively, but enabling or disabling them will <i>not</i> affect this list. */
+    public static myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
     /** This {@link Timer} does off every Minecraft tick (1/20 of a second or 50ms). Using one single global tick timer accessible from anywhere in the program is more
      * efficient and straightforward than using tick timers for different entities.
      * 
