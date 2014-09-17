@@ -14,7 +14,12 @@ package Corundum.Minecraft.world;
 
 import java.io.File;
 
+import net.minecraft.world.WorldServer;
+import Corundum.UnfinishedException;
+
 public class World {
+    // TODO: public static final World MAIN_WORLD;
+
     private String name;
     private File folder;
     private WorldType type;
@@ -22,5 +27,10 @@ public class World {
 
     public enum WorldType {
         OVERWORLD, NETHER, END, CUSTOM;
+    }
+
+    static World fromMCWorld(WorldServer worldMC) {
+        // TODO
+        throw new UnfinishedException("World.fromMCWorld()");
     }
 }

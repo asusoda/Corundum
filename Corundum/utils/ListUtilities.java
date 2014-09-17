@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import Corundum.CorundumException;
-import Corundum.Main;
+import Corundum.Corundum;
 
 public class ListUtilities {
 

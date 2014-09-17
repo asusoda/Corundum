@@ -14,6 +14,8 @@ package Corundum.Minecraft.world;
 
 import java.awt.Color;
 
+import Corundum.UnfinishedException;
+import Corundum.Minecraft.world.Biome.BiomeType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.Matchable;
@@ -23,6 +25,19 @@ public class Block {
     private BlockType type;
     private byte data;
     private Location location;
+
+    /** This method retrieves the {@link Biome} that this block is located in.
+     * 
+     * @return the {@link Biome} that this block is in. */
+    public Biome getBiome() {
+        // TODO
+        throw new UnfinishedException("Block.getBiome()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+    }
+
+    public Chunk getChunk() {
+        // TODO
+        throw new UnfinishedException("Block.getChunk()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+    }
 
     public byte getData() {
         return data;

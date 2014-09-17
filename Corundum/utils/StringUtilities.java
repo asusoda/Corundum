@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Corundum.CorundumException;
-import Corundum.Main;
+import Corundum.Corundum;
 import Corundum.Minecraft.world.Location;
 import Corundum.utils.interfaces.Matchable;
 import static Corundum.utils.ListUtilities.*;
@@ -244,7 +244,7 @@ public class StringUtilities {
         if (format.endsWith("\n"))
             format = format.substring(0, format.length() - 1);
 
-        Main.debug("reading parameters; parameters=\"" + combine(parameters, " ") + "\"; format=\"" + format + "\"");
+        Corundum.debug("reading parameters; parameters=\"" + combine(parameters, " ") + "\"; format=\"" + format + "\"");
 
         // interpret the index values if any were given
         byte start = 0, end = (byte) parameters.length;
@@ -273,12 +273,12 @@ public class StringUtilities {
                 options = format_parts[j].split(",");
             else if (format_parts[j].contains("/"))
                 options = format_parts[j].split("/");
-            Main.debug(options.length + " option(s) found: " + writeArray(options));
+            Corundum.debug(options.length + " option(s) found: " + writeArray(options));
 
             boolean fits = false;
             // first, see if the current parameter fits the current format part; skip to the next format part if the current format part is optional and doesn't fit
             for (String option : options) {
-                Main.debug("testing option " + option + "...");
+                Corundum.debug("testing option " + option + "...");
 
                 // determine the starting and terminating Strings needed if it's a specific parameter; default to "" because .startsWith("") >> true
                 String required_starter = "", required_terminator = "";
@@ -288,7 +288,7 @@ public class StringUtilities {
                     if (option.toCharArray()[option.length() - 2] == '"')
                         required_terminator = option.substring(option.substring(0, option.lastIndexOf('"')).lastIndexOf('"') + 1, option.length() - 2);
                 }
-                Main.debug("required starter=\"" + required_starter + "\"; required terminator=\"" + required_terminator + "\"");
+                Corundum.debug("required starter=\"" + required_starter + "\"; required terminator=\"" + required_terminator + "\"");
 
                 /* determine whether or not the option is "specific", meaning it requires a starting and/or terminating String; note that it isn't specific if required_starter
                  * is the same as required_terminator and there are two or less double quotes because that means instead that it's a simple String parameter like ("debug") */
@@ -299,11 +299,11 @@ public class StringUtilities {
                 String option_name =
                         option.substring(1 + (specific && required_starter.length() > 0 ? 2 + required_starter.length() : 0), option.length() - 1
                                 - (specific && required_terminator.length() > 0 ? 2 + required_terminator.length() : 0));
-                Main.debug("option name=\"" + option_name + "\"");
+                Corundum.debug("option name=\"" + option_name + "\"");
 
                 // see if the current parameter fits this option's requirements
                 if (parameters[i].startsWith(required_starter) && parameters[i].endsWith(required_terminator)) {
-                    Main.debug("match identified: \"" + parameters[i] + "\" instance of " + option);
+                    Corundum.debug("match identified: \"" + parameters[i] + "\" instance of " + option);
                     data.put(option_name, parameters[i].substring(specific ? required_starter.length() : 0, parameters[i].length()
                             - (specific ? required_terminator.length() : 0)));
                     fits = true;
@@ -311,10 +311,10 @@ public class StringUtilities {
                     // begin parsing this variable if it is a parsing parameter
                     if (option_name.endsWith("...")) {
                         parsing = option_name;
-                        Main.debug("parsing parameter; parsing " + option_name);
+                        Corundum.debug("parsing parameter; parsing " + option_name);
                     } // if it is not a parsing parameter, make any current parsing stop
                     else if (parsing != null) {
-                        Main.debug("stopping parsing " + parsing + "...");
+                        Corundum.debug("stopping parsing " + parsing + "...");
                         parsing = null;
                     }
 
@@ -330,19 +330,19 @@ public class StringUtilities {
                 // if the current parameter did not fit the current format part, add the current parameter to the end of the current parsing variable if there is one
                 if (parsing != null) {
                     data.put(parsing, data.get(parsing) + " " + parameters[i]);
-                    Main.debug("added parameter to current parsing: " + parsing + "=\"" + data.get(parsing) + "\"");
+                    Corundum.debug("added parameter to current parsing: " + parsing + "=\"" + data.get(parsing) + "\"");
                     i++;
                 } else if (format_parts[j].startsWith("(") && !(j == format_parts.length - 1 && format_parts[j].contains(","))) {
-                    Main.debug("no match, but parameter is optional; skipping to next format part...");
+                    Corundum.debug("no match, but parameter is optional; skipping to next format part...");
                     j++;
                 } else {
-                    Main.debug("WARNING: unrecognized parameter \"" + parameters[i] + "\"; ignoring...");
+                    Corundum.debug("WARNING: unrecognized parameter \"" + parameters[i] + "\"; ignoring...");
                     i++;
                 }
         }
 
         for (String key : data.keySet())
-            Main.debug("\"" + key + "\" >> \"" + data.get(key) + "\"");
+            Corundum.debug("\"" + key + "\" >> \"" + data.get(key) + "\"");
         return data;
     }
 

@@ -13,7 +13,7 @@
 package Corundum.Minecraft.items;
 
 import Corundum.CorundumException;
-import Corundum.Main;
+import Corundum.Corundum;
 import Corundum.Minecraft.items.Item.ItemType;
 import static Corundum.utils.StringUtilities.*;
 

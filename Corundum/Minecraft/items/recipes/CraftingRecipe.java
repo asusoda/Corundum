@@ -12,7 +12,7 @@
 
 package Corundum.Minecraft.items.recipes;
 
-import Corundum.Main;
+import Corundum.Corundum;
 import Corundum.Minecraft.items.Item.ItemType;
 
 public class CraftingRecipe extends Recipe {

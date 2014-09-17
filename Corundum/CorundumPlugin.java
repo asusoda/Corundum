@@ -12,7 +12,7 @@ public abstract class CorundumPlugin implements CorundumListener {
         // TODO
         onLoad();
         // TODO
-        Main.plugins.add(this);
+        Corundum.plugins.add(this);
     }
 
     public final void enable() {
@@ -31,7 +31,7 @@ public abstract class CorundumPlugin implements CorundumListener {
         // TODO
         onUnload();
         // TODO
-        Main.plugins.remove(this);
+        Corundum.plugins.remove(this);
     }
 
     // plugin handling event handling for plugin makers

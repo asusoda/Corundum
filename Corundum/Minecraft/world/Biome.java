@@ -19,10 +19,10 @@ import Corundum.utils.myList.myList;
 
 public class Biome {
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
-    private/* final */BiomeType biome;
+    private/* final */BiomeType type;
     private/* final */myList<Chunk> chunks;
 
-    public enum BiomeType {
+    public static enum BiomeType {
         JUNGLE, TUNDRA; // TODO: 3. finish this list
 
         // TODO: 1. replace this
