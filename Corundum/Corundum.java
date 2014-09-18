@@ -25,7 +25,10 @@ import static Corundum.utils.ListUtilities.contains;
 /** This is the main (executable) class of Corundum. ...Does anything more need to be said?
  * 
  * @author REALDrummer */
-public class Main {
+public class Corundum {
+    /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
+     * respectively, but enabling or disabling them will <i>not</i> affect this list. */
+    public static myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
     /** This {@link Timer} does off every Minecraft tick (1/20 of a second or 50ms). Using one single global tick timer accessible from anywhere in the program is more
      * efficient and straightforward than using tick timers for different entities.
      * 
@@ -41,7 +44,7 @@ public class Main {
 
     });
     /** This {@link myList} of {@link TickListener}s represents all the {@link TickListeners} registered with Corundum. Each one of these {@link TickListener}s will be called
-     * using their {@link TickListener#tickPassed() tickPassed()} methods every Minecraft tick (1/20 of a second or 50ms) as determineed by the {@link Main#tick_timer global
+     * using their {@link TickListener#tickPassed() tickPassed()} methods every Minecraft tick (1/20 of a second or 50ms) as determineed by the {@link Corundum#tick_timer global
      * tick timer}. */
     public static myList<TickListener> tick_listeners = new myList<TickListener>();
     /** This {@link myList}<<tt>String</tt>> keeps track of the players (or console, indicated by null) who are currently in debugging mode. */

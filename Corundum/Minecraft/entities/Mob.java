@@ -16,4 +16,12 @@ import Corundum.Minecraft.items.Item;
 
 public class Mob extends Entity {
     private Item[] drops;
+
+    public enum MobType {
+        PIG, SKELETON;  // TODO: 3. finish this list
+
+        // TODO: 1. make final variables for all the information that needs to be kept for any mob type
+
+        // TODO: 2. make a private constructor for MobTypes
+    }
 }

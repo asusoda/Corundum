@@ -15,7 +15,7 @@ package Corundum.utils.myList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import Corundum.Main;
+import Corundum.Corundum;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
 import static Corundum.utils.ListUtilities.*;
@@ -579,7 +579,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
 
     /** This method prints debugging information concerning the {@link myList} using {@link myCoreLibrary#debug(String) myCoreLibrary's debug() method}. */
     public void debug() {
-        Main.debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "")
+        Corundum.debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "")
                 + (hasRoot() ? "; has root!" : "") + "\n" + toString());
     }
 
