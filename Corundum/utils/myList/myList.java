@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Corundum.Corundum;
+import Corundum.CorundumPlugin;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
+import Corundum.utils.messaging.Messenger;
 import static Corundum.utils.ListUtilities.*;
 import static Corundum.utils.StringUtilities.match;
 
@@ -33,9 +35,9 @@ import static Corundum.utils.StringUtilities.match;
  * 
  * @param <T>
  *            is the type of <tt>Object</tt> which the <tt>myList</tt> will hold. <i>Please read the description above for notes on the dangers of not using {@link Comparable}
- *            {@link Matchable} <tt>Object</tt>s. */
+ *            {@link Matchable} <tt>Object</tt>s.</i> */
 @SuppressWarnings("unchecked")
-public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchable {
+public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchable, Messenger {
     private T data = null;
     private myList<T> left = null, right = null, root = null;
     private Integer size = 0;  // I used Integer instead of int so that it can be set to null and garbage collected in free()
@@ -577,10 +579,10 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         free();
     }
 
-    /** This method prints debugging information concerning the {@link myList} using {@link myCoreLibrary#debug(String) myCoreLibrary's debug() method}. */
+    /** This method prints debugging information concerning the {@link myList} using {@link #debug(String) myCoreLibrary's debug() method}. */
     public void debug() {
-        Corundum.debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "")
-                + (hasRoot() ? "; has root!" : "") + "\n" + toString());
+        debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "")
+                + "\n" + toString());
     }
 
     public void debugFull() {
@@ -1434,6 +1436,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     }
 
     @Override
+    public CorundumPlugin getPlugin() {
+        return null;
+    }
+
+    @Override
     public myListIterator<T> iterator() {
         return new myListIterator<T>(this);
     }
@@ -1490,4 +1497,5 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         // return the completed ArrayList formatted into a list
         return writeArray(strings, separator, final_conjunction);
     }
+
 }

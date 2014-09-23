@@ -16,8 +16,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import Corundum.CorundumException;
 import Corundum.Corundum;
+import Corundum.exceptions.CorundumException;
 
 public class ListUtilities {
 
@@ -32,7 +32,7 @@ public class ListUtilities {
     /** This method combines all of the given <tt>String</tt>s array into a single String.
      * 
      * @param strings
-     *            is the list of <tt>String</tt>s that will be combined into a signel <tt>String</tt>.
+     *            is the list of <tt>String</tt>s that will be combined into a single <tt>String</tt>.
      * @param separator
      *            is the String used to separate the different <tt>String</tt>s, e.g. ", " in the list "apple, orange, lemon, melon"
      * @param indices

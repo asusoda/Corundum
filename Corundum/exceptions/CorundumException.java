@@ -10,7 +10,7 @@
  * 
  * @author REALDrummer */
 
-package Corundum;
+package Corundum.exceptions;
 
 import static Corundum.utils.StringUtilities.aOrAn;
 
@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import Corundum.utils.messaging.MessageColor;
 
 public class CorundumException extends RuntimeException {
     private static final long serialVersionUID = 970447372251179781L;
@@ -47,7 +49,7 @@ public class CorundumException extends RuntimeException {
     /** This method causes Corundum to consider the exception uncaught. Upon calling, it will log the error in the Corundum <tt>error log.txt</tt>, then inform all available
      * ops and the console of what has occurred. This method is meant to be called only after sending the {@link CorundumException} through the plugins without being caught;
      * after that, it should be caught by Corundum itself and this method should be called. */
-    void err() {
+    public void err() {
         // localize the cause and message so that they can be changed in the loop
         Throwable cause = this.cause;
         String message = this.message;
@@ -100,5 +102,4 @@ public class CorundumException extends RuntimeException {
         /* TODO TEMP RPLC tellOps */System.out
                 .println(MessageColor.RED + "myCraft had an accident! \u2639\n" + message + "\nPlease give REALDrummer your error log.txt!"/* TODO TEMP CMT , true */);
     }
-
 }

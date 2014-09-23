@@ -10,16 +10,16 @@
  *
  * @author REALDrummer */
 
-package Corundum.Minecraft.world;
+package Corundum.world;
 
 import java.awt.Color;
 
-import Corundum.UnfinishedException;
-import Corundum.Minecraft.world.Biome.BiomeType;
+import Corundum.exceptions.UnfinishedException;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
+import Corundum.world.Biome.BiomeType;
 
 public class Block {
     private BlockType type;

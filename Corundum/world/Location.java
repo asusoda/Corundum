@@ -10,7 +10,7 @@
  *
  * @author REALDrummer */
 
-package Corundum.Minecraft.world;
+package Corundum.world;
 
 public class Location {
     private float x, y, z;

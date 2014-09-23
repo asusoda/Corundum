@@ -10,11 +10,11 @@
  * 
  * @author REALDrummer */
 
-package Corundum.Minecraft.items;
+package Corundum.items;
 
-import Corundum.CorundumException;
 import Corundum.Corundum;
-import Corundum.Minecraft.items.Item.ItemType;
+import Corundum.exceptions.CorundumException;
+import Corundum.items.Item.ItemType;
 import static Corundum.utils.StringUtilities.*;
 
 public class Enchantment {

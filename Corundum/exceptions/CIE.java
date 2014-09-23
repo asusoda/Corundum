@@ -1,4 +1,4 @@
-package Corundum;
+package Corundum.exceptions;
 
 import static Corundum.utils.StringUtilities.aOrAn;
 
@@ -10,22 +10,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class CorundumInternalException extends RuntimeException {
-    private static final long serialVersionUID = 970447372251179781L;
+import Corundum.CorundumPlugin;
+import Corundum.utils.messaging.MessageColor;
+
+/** This {@link Throwable} class represents a "<u>C</u>orundum <u>I</u>nternal <u>E</u>xception", which is an exception that occurs due to an error inside Corundum itself, as
+ * opposed to a {@link CorundumException}, which is for use with the A.P.I. to handle errors that occur inside {@link CorundumPlugin}s.
+ * 
+ * @author REALDrummer */
+public class CIE extends Throwable {
+
+    private static final long serialVersionUID = 7593335510270990574L;
 
     private final String message;
     private final String issue;
     private final Throwable cause;
     private final Object[] additional_information;
 
-    public CorundumInternalException(String message, String issue, Object... additional_information) {
+    public CIE(String message, String issue, Object... additional_information) {
         this.message = message;
         this.issue = issue;
         cause = null;
         this.additional_information = additional_information;
     }
 
-    public CorundumInternalException(String message, Throwable cause, Object... additional_information) {
+    public CIE(String message, Throwable cause, Object... additional_information) {
         this.message = message;
         issue = cause.getClass().getSimpleName();
         this.cause = cause;
@@ -33,8 +41,8 @@ public class CorundumInternalException extends RuntimeException {
     }
 
     /** This method causes Corundum to consider the exception uncaught. Upon calling, it will log the error in the Corundum <tt>error log.txt</tt>, then inform all available
-     * ops and the console of what has occurred. This method is meant to be called only after sending the {@link CorundumException} through the plugins without being caught;
-     * after that, it should be caught by Corundum itself and this method should be called. */
+     * ops and the console of what has occurred. This method is meant to be called only after sending the {@link CIE} through the plugins without being caught; after that, it
+     * should be caught by Corundum itself and this method should be called. */
     void err() {
         // localize the cause and message so that they can be changed in the loop
         Throwable cause = this.cause;
@@ -89,4 +97,11 @@ public class CorundumInternalException extends RuntimeException {
                 .println(MessageColor.RED + "myCraft had an accident! \u2639\n" + message + "\nPlease give REALDrummer your error log.txt!"/* TODO TEMP CMT , true */);
     }
 
+    public static void err(String message, String issue, Object... additional_information) {
+        new CIE(message, issue, additional_information).err();
+    }
+
+    public static void err(String message, Throwable issue, Object... additional_information) {
+        new CIE(message, issue, additional_information).err();
+    }
 }

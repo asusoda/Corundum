@@ -1,6 +1,7 @@
-package Corundum;
+package Corundum.exceptions;
 
-public class UnfinishedException extends CorundumInternalException {
+
+public class UnfinishedException extends CorundumException {
     private static final long serialVersionUID = -2600820745236875269L;
 
     public UnfinishedException(String unfinished_method_name, Object... additional_information) {

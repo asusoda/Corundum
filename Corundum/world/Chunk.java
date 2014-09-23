@@ -10,11 +10,11 @@
  *
  * @author REALDrummer */
 
-package Corundum.Minecraft.world;
+package Corundum.world;
 
 import net.minecraft.world.WorldServer;
-import Corundum.Minecraft.world.Biome.BiomeType;
 import Corundum.utils.myList.myList;
+import Corundum.world.Biome.BiomeType;
 
 public class Chunk {
     private static myList<Chunk> loaded_chunks = new myList<Chunk>();

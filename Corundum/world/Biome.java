@@ -7,21 +7,29 @@
  * party or parties. - This code may not be copied or used under any circumstances without the inclusion of this notice and mention of the contribution of the code by the
  * Corundum project. In source code form, this notice must be included as a comment as it is here; in binary form, proper documentation must be included with the final product
  * that includes this statement verbatim.
- * 
+ *
  * @author REALDrummer */
 
-package Corundum.Minecraft.entities;
+package Corundum.world;
 
-import Corundum.Minecraft.items.Item;
+import java.awt.*;
 
-public class Mob extends Entity {
-    private Item[] drops;
+import Corundum.entities.Mob;
+import Corundum.utils.myList.myList;
 
-    public enum MobType {
-        PIG, SKELETON;  // TODO: 3. finish this list
+public class Biome {
+    // TODO TEMP: "final"s are commented to avoid compilation errors for now
+    private/* final */BiomeType type;
+    private/* final */myList<Chunk> chunks;
 
-        // TODO: 1. make final variables for all the information that needs to be kept for any mob type
+    public static enum BiomeType {
+        JUNGLE, TUNDRA; // TODO: 3. finish this list
 
-        // TODO: 2. make a private constructor for MobTypes
+        // TODO: 1. replace this
+        /* private final Mob.MobType[] naturally_spawning_mobs; private final byte[] min_spawn_group_sizes, max_spawn_group_sizes; private final Color map_color, water_color;
+         * private final float temperature, rainfall; private final boolean has_trees, has_rain, has_snow, can_spawn_squid; private final int min_height, max_height; private
+         * final Block.BlockType surface_block, filler_block; */
+
+        // TODO: BiomeType constructor
     }
 }

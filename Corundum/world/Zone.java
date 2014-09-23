@@ -1,6 +1,6 @@
-package Corundum.Minecraft.world;
+package Corundum.world;
 
-import Corundum.CorundumException;
+import Corundum.exceptions.CorundumException;
 
 public class Zone {
     /** <b><i>DEV NOTES:</b></i><br>

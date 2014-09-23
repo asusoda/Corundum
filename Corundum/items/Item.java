@@ -10,9 +10,9 @@
  * 
  * @author REALDrummer */
 
-package Corundum.Minecraft.items;
+package Corundum.items;
 
-import Corundum.Minecraft.items.recipes.Recipe;
+import Corundum.items.recipes.Recipe;
 import Corundum.utils.myList.myList;
 
 public class Item {

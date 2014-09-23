@@ -7,29 +7,22 @@
  * party or parties. - This code may not be copied or used under any circumstances without the inclusion of this notice and mention of the contribution of the code by the
  * Corundum project. In source code form, this notice must be included as a comment as it is here; in binary form, proper documentation must be included with the final product
  * that includes this statement verbatim.
- *
+ * 
  * @author REALDrummer */
 
-package Corundum.Minecraft.world;
+package Corundum.entities;
 
-import java.awt.*;
+import Corundum.world.Location;
 
-import Corundum.Minecraft.entities.Mob;
-import Corundum.utils.myList.myList;
+public class Entity {
+    private EntityType type;
+    private Location location;
+    private float pitch, yaw;
 
-public class Biome {
-    // TODO TEMP: "final"s are commented to avoid compilation errors for now
-    private/* final */BiomeType type;
-    private/* final */myList<Chunk> chunks;
+    public enum EntityType {
+        PIG, SKELETON;  // TODO
 
-    public static enum BiomeType {
-        JUNGLE, TUNDRA; // TODO: 3. finish this list
-
-        // TODO: 1. replace this
-        /* private final Mob.MobType[] naturally_spawning_mobs; private final byte[] min_spawn_group_sizes, max_spawn_group_sizes; private final Color map_color, water_color;
-         * private final float temperature, rainfall; private final boolean has_trees, has_rain, has_snow, can_spawn_squid; private final int min_height, max_height; private
-         * final Block.BlockType surface_block, filler_block; */
-
-        // TODO: BiomeType constructor
+        // TODO TEMP: initializations should be done in a constructor
+        private final boolean monster = false, despawns = true;
     }
 }

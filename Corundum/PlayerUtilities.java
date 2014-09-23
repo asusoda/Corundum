@@ -10,7 +10,7 @@
  * 
  * @author REALDrummer */
 
-package Corundum.Minecraft;
+package Corundum;
 
 import java.util.HashMap;
 import java.util.UUID;
