@@ -87,7 +87,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType implements Matchable {
+    public enum BlockType implements Matchable<BlockType> {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),
@@ -795,16 +795,16 @@ public class Block {
         }
 
         // overrides
-        @Override
-        public int matchTo(String... match_parameters) {
-            return StringUtilities.match(new Object[] { (byte) (id_minus_128 + 128), data }, match_parameters);
-        }
-
         /** This method returns the name of this {@link BlockType} formatted nicely for messages. This formatting includes lowercasing, replacing underscores with spaces, and
          * capitalizing the first letters of certain {@link BlockType}s. */
         @Override
         public String toString() {
             return super.toString().toLowerCase().replaceAll("_", " ");
+        }
+
+        @Override
+        public Object[] getSortPriorities() {
+            return new Object[] { (short) (id_minus_128 + 128), data };
         }
     }
 }

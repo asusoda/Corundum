@@ -47,7 +47,7 @@ public class MessengerUtilities {
             return;
 
         if (verbose_debuggers.contains((UUID) null)) {
-            Corundum.CONSOLE.sendMessage(MessageColor.translateMCChatCodesToANSICodes(plugin.getPrefix() + message));
+            tellConsole(plugin, MessageColor.translateMCChatCodesToANSICodes(plugin.getPrefix() + message));
             if (verbose_debuggers.size() == 1)
                 return;
         }
@@ -91,7 +91,7 @@ public class MessengerUtilities {
     }
 
     static void tellConsole(CorundumPlugin plugin, String message) {
-        Corundum.CONSOLE.sendMessage(plugin.getPrefix() + message);
+        Corundum.SERVER.sendMessage(plugin.getPrefix() + message);
     }
 
     static void tellPlayer(CorundumPlugin plugin, Player player, String message) {

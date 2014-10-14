@@ -12,7 +12,6 @@
 
 package Corundum.world;
 
-import net.minecraft.world.WorldServer;
 import Corundum.utils.myList.myList;
 import Corundum.world.Biome.BiomeType;
 
@@ -46,7 +45,7 @@ public class Chunk {
     }
 
     public Location getLocation() {
-        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMCWorld((WorldServer) chunkMC.worldObj));
+        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMCWorld((net.minecraft.world.WorldServer) chunkMC.worldObj));
     }
 
     public boolean isLoaded() {
@@ -54,10 +53,10 @@ public class Chunk {
     }
 
     public void load() {
-        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((net.minecraft.world.WorldServer) chunkMC.worldObj).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 
     public void unload() {
-        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((net.minecraft.world.WorldServer) chunkMC.worldObj).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 }

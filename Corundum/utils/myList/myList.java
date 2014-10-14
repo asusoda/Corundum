@@ -21,7 +21,7 @@ import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.messaging.Messenger;
 import static Corundum.utils.ListUtilities.*;
-import static Corundum.utils.StringUtilities.match;
+import static Corundum.utils.interfaces.Matchable.match;
 
 /** This list structure is an auto-sorting quick-searching structure based on "root-knockdown" auto-balancing binary trees.
  * <hr>
@@ -29,7 +29,7 @@ import static Corundum.utils.StringUtilities.match;
  * {@link Comparable} and {@link Matchable}. If the <tt>Object</tt> is not {@link Comparable}, the <tt>myList</tt> will compare the outputs of the <tt>Object</tt>s'
  * <tt>toString()</tt> methods; however, this can lead to complications in searching for an item in the list using {@link #find(Object)} if the <tt>Object</tt> that you are
  * searching for does not have the same <tt>toString()</tt> output as the <tt>Object</tt> given to search for. If the <tt>Object</tt> is not {@link Matchable},
- * {@link #findMatch(String...) myList's findMatch() methods} will throw errors.
+ * {@link #findMatch(Object...) myList's findMatch() methods} will throw errors.
  * 
  * @author REALDrummer
  * 
@@ -607,7 +607,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
      * @param object
      *            is the <tt>Object</tt> that this method will search for in the {@link myList}.
      * @return the index of <b><tt>object</b></tt> in the {@link myList} or -1 if <b><tt>object</b></tt> is not in the {@link myList}.
-     * @see {@link #find(Object...)}, {@link #find(Collection)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(String...)}. */
+     * @see {@link #find(Object...)}, {@link #find(Collection)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(Object...)}. */
     public int find(T object) {
         return find(object, hasLeft() ? left.length() : 0);
     }
@@ -618,7 +618,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
      *            is the list of <tt>Object</tt>s that this method will search for in the {@link myList}.
      * @return a <b>int</b><tt>[]</tt> in which each <b>int</b> is the index in the {@link myList} of the <tt>Object</tt> at the corresponding index in the given <b>
      *         <tt>objects</b></tt> list or -1 if <b><tt>object</b></tt> is not in the {@link myList}.
-     * @see {@link #find(Object)}, {@link #find(Collection)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(String...)}. */
+     * @see {@link #find(Object)}, {@link #find(Collection)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(Object...)}. */
     public int[] find(T... objects) {
         int[] indices = new int[objects.length];
         for (int i = 0; i < objects.length; i++)
@@ -632,7 +632,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
      *            is the list of <tt>Object</tt>s that this method will search for in the {@link myList}.
      * @return a <b>int</b><tt>[]</tt> in which each <b>int</b> is the index in the {@link myList} of the <tt>Object</tt> at the corresponding index in the given <b>
      *         <tt>objects</b></tt> list or -1 if <b><tt>object</b></tt> is not in the {@link myList}.
-     * @see {@link #find(Object)}, {@link #find(Object...)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(String...)}. */
+     * @see {@link #find(Object)}, {@link #find(Object...)}, {@link #find(myList)}, {@link #get(Object)}, and {@link #findMatch(Object...)}. */
     public int[] find(Collection<T> objects) {
         return find((T[]) objects.toArray());
     }
@@ -643,25 +643,25 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
      *            is the list of <tt>Object</tt>s that this method will search for in the {@link myList}.
      * @return a <b>int</b><tt>[]</tt> in which each <b>int</b> is the index in the {@link myList} of the <tt>Object</tt> at the corresponding index in the given <b>
      *         <tt>objects</b></tt> list or -1 if <b><tt>object</b></tt> is not in the {@link myList}.
-     * @see {@link #find(Object)}, {@link #find(Object...)}, {@link #find(Collection)}, {@link #get(Object)}, and {@link #findMatch(String...)}. */
+     * @see {@link #find(Object)}, {@link #find(Object...)}, {@link #find(Collection)}, {@link #get(Object)}, and {@link #findMatch(Object...)}. */
     public int[] find(myList<T> objects) {
         return find(objects.toArray());
     }
 
     /** This method finds the <tt>Object</tt> in the {@link myList} that matches the given <b><tt>match_parameters</b></tt> using the <tt>Object</tt>'s
-     * {@link Matchable#matchTo(String...)} method.
+     * {@link Matchable#matchTo(Object...)} method.
      * <hr>
      * Note that this method only works for <tt>Object</tt>s that implement {@link Matchable the Matchable interface}. If the {@link myList} does not contain {@link Matchable}
      * <tt>Object</tt>s, this method will throw an error.
      * <hr>
-     * Also, this method will not function properly if the parameters for the <tt>Object</tt>'s {@link Matchable#matchTo(String...)} method work differently than the
+     * Also, this method will not function properly if the parameters for the <tt>Object</tt>'s {@link Matchable#matchTo(Object...)} method work differently than the
      * parameters for the <tt>Object</tt>'s {@link Comparable#compareTo(Object)} method (assuming the <tt>Object</tt> is {@link Comparable}).
      * 
      * @param match_parameters
-     *            is the list of <tt>String</tt>s that will be given as the argument when {@link Matchable#matchTo(String...)} is called while searching the {@link myList}.
-     * @return the <tt>Object</tt> that {@link Matchable#matchTo(String...) matches} the given <b><tt>match_parameters</b></tt> in the {@link myList} or <b>null</b> if no
+     *            is the list of <tt>String</tt>s that will be given as the argument when {@link Matchable#matchTo(Object...)} is called while searching the {@link myList}.
+     * @return the <tt>Object</tt> that {@link Matchable#matchTo(Object...) matches} the given <b><tt>match_parameters</b></tt> in the {@link myList} or <b>null</b> if no
      *         <tt>Object</tt> in the {@link myList} matches the given <b><tt>match_parameters</b></tt>. */
-    public T findMatch(String... match_parameters) {
+    public T findMatch(Object... match_parameters) {
         myList<T> node = findMatchingNode(match_parameters);
         if (node == null)
             return null;
@@ -669,7 +669,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
             return node.data;
     }
 
-    public T[] findMatches(String[]... match_parameter_sets) {
+    public T[] findMatches(Object[]... match_parameter_sets) {
         T[] matches = (T[]) new Object[match_parameter_sets.length];
         for (int i = 0; i < match_parameter_sets.length; i++)
             matches[i] = findMatch(match_parameter_sets[i]);
@@ -684,11 +684,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return findMatches(match_parameter_sets.toArray());
     }
 
-    public int findMatchIndex(String... match_parameters) {
+    public int findMatchIndex(Object... match_parameters) {
         return findMatchIndex(match_parameters, hasLeft() ? left.length() : 0);
     }
 
-    public int[] findMatchIndices(String[]... match_parameter_sets) {
+    public int[] findMatchIndices(Object[]... match_parameter_sets) {
         int[] matches = new int[match_parameter_sets.length];
         for (int i = 0; i < match_parameter_sets.length; i++)
             matches[i] = findMatchIndex(match_parameter_sets[i]);
@@ -703,7 +703,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return findMatchIndices(match_parameter_sets.toArray());
     }
 
-    public myList<T> findMatchingNode(String... match_parameters) {
+    public myList<T> findMatchingNode(Object... match_parameters) {
         if (data == null)
             return null;
 
@@ -729,7 +729,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
             return null;
     }
 
-    public myList<T>[] findMatchingNodes(String[]... match_parameter_sets) {
+    public myList<T>[] findMatchingNodes(Object[]... match_parameter_sets) {
         myList<T>[] matches = (myList<T>[]) new Object[match_parameter_sets.length];
         for (int i = 0; i < match_parameter_sets.length; i++)
             matches[i] = findMatchingNode(match_parameter_sets[i]);
@@ -818,11 +818,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return find(objects);
     }
 
-    public T getMatch(String... match_parameters) {
+    public T getMatch(Object... match_parameters) {
         return findMatch(match_parameters);
     }
 
-    public T[] getMatch(String[]... match_parameter_sets) {
+    public T[] getMatch(Object[]... match_parameter_sets) {
         return findMatches(match_parameter_sets);
     }
 
@@ -928,11 +928,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return find(objects);
     }
 
-    public int indexOfMatch(String... match_parameters) {
+    public int indexOfMatch(Object... match_parameters) {
         return findMatchIndex(match_parameters);
     }
 
-    public int[] indicesOfMatches(String[]... match_parameters) {
+    public int[] indicesOfMatches(Object[]... match_parameters) {
         return findMatchIndices(match_parameters);
     }
 
@@ -999,11 +999,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return lastIndicesOf(objects.toArray());
     }
 
-    public int lastIndexOfMatch(String... match_parameters) {
+    public int lastIndexOfMatch(Object... match_parameters) {
         return lastIndexOfMatch(match_parameters, 0);
     }
 
-    public int[] lastIndicesOfMatches(String[]... match_parameters) {
+    public int[] lastIndicesOfMatches(Object[]... match_parameters) {
         int[] results = new int[match_parameters.length];
         for (int i = 0; i < match_parameters.length; i++)
             results[i] = lastIndexOfMatch(match_parameters[i]);
@@ -1441,12 +1441,16 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     }
 
     @Override
+    public Object[] getSortPriorities() {
+        return new Object[] { data };
+    }
+
+    @Override
     public myListIterator<T> iterator() {
         return new myListIterator<T>(this);
     }
 
-    @Override
-    public int matchTo(String... match_parameters) {
+    public int matchTo(Object... match_parameters) {
         // if the list contains an item that matches those parameters, then we have a match
         if (findMatch(match_parameters) == null)
             return 1;
@@ -1454,10 +1458,10 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
             return 0;
     }
 
-    public int matchTo(String[]... match_parameters) {
+    public int matchTo(Object[]... match_parameters) {
         // try to match all the given match parameters to elements in the list
-        for (String[] match_parameter : match_parameters)
-            if (matchTo(match_parameters) == 1)
+        for (Object[] match_parameter : match_parameters)
+            if (matchTo(match_parameter) == 1)
                 return 1;
 
         // if all the match_parameters were matched to values in the list, it's a match

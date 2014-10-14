@@ -12,25 +12,63 @@
 
 package Corundum.world;
 
-import java.io.File;
-
+import net.minecraft.world.WorldProviderEnd;
+import net.minecraft.world.WorldProviderHell;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
-import Corundum.exceptions.UnfinishedException;
+import net.minecraft.world.storage.WorldInfo;
+import Corundum.utils.interfaces.Matchable;
+import Corundum.utils.myList.myList;
 
-public class World {
+public class World implements Matchable<World> {
     // TODO: public static final World MAIN_WORLD;
+    public static myList<World> worlds = new myList<World>();
 
-    private String name;
-    private File folder;
-    private WorldType type;
-    private Location spawn_location;
+    private final WorldServer worldMC;
+    private final WorldType type;
+
+    // TODO: add more constructors to allow the creation of new worlds
+
+    public World(WorldServer worldMC) {
+        this.worldMC = worldMC;
+
+        if (worldMC.provider instanceof WorldProviderSurface)
+            type = WorldType.OVERWORLD;
+        else if (worldMC.provider instanceof WorldProviderHell)
+            type = WorldType.NETHER;
+        else if (worldMC.provider instanceof WorldProviderEnd)
+            type = WorldType.END;
+        else
+            type = WorldType.CUSTOM;
+
+        if (!worlds.contains(this))
+            worlds.add(this);
+    }
+
+    public static World fromMCWorld(WorldServer worldMC) {
+        return worlds.findMatch(null, worldMC);
+    }
+
+    public WorldServer getMCWorld() {
+        return worldMC;
+    }
+
+    public String getName() {
+        WorldInfo info = worldMC.getWorldInfo();
+        return info.getWorldName();
+    }
+
+    public WorldType getType() {
+        return type;
+    }
 
     public enum WorldType {
         OVERWORLD, NETHER, END, CUSTOM;
     }
 
-    static World fromMCWorld(WorldServer worldMC) {
-        // TODO
-        throw new UnfinishedException("World.fromMCWorld()");
+    @Override
+    public Object[] getSortPriorities() {
+        return new Object[] { type.ordinal(), getName() };
     }
+
 }

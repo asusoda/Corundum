@@ -13,6 +13,7 @@
 package Corundum.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import Corundum.Corundum;
@@ -90,109 +91,6 @@ public class StringUtilities implements Messenger {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    public static int match(Object object, String... match_parameters) {
-        if (match_parameters.length == 0)
-            return match(object, null);
-        // null can be matched to "\null"; otherwise, null is considered the lesser value
-        else if (object == null)
-            if (match_parameters[0] == null || match_parameters[0].equals("\\null"))
-                return 0;  // since null is a wild card, \null can be used to actually search for null specifically
-            else
-                return -1;  // null is < everything else
-        // if it's Matchable, simply call its matchTo() method
-        else if (object instanceof Matchable)
-            return ((Matchable) object).matchTo(match_parameters);
-        // if it's not Matchable and the match parameters are null, just return 0 since null is a "wild card"
-        else if (match_parameters[0] == null)
-            return 0;
-        // match Strings by case-insensitive autocompletion
-        else if (object instanceof String)
-            if (((String) object).length() < match_parameters[0].length())
-                return -1;
-            else
-                return ((String) object).substring(0, match_parameters[0].length()).compareToIgnoreCase(match_parameters[0]);
-        // match Booleans against "T" vs. "F"
-        else if (object instanceof Boolean)
-            return ((Boolean) object) ^ Character.toUpperCase(match_parameters[0].charAt(0)) == 'T' ? 1 : 0;
-        // match integers by their difference
-        else if (object instanceof Byte)
-            try {
-                return ((Byte) object) - Byte.parseByte(match_parameters[0]);
-            } catch (NumberFormatException e) {
-                return ((Byte) object);
-            }
-        else if (object instanceof Short)
-            try {
-                return ((Short) object) - Short.parseShort(match_parameters[0]);
-            } catch (NumberFormatException e) {
-                return ((Short) object);
-            }
-        else if (object instanceof Integer)
-            try {
-                return ((Integer) object) - Integer.parseInt(match_parameters[0]);
-            } catch (NumberFormatException e) {
-                return ((Integer) object);
-            }
-        else if (object instanceof Long)
-            try {
-                return (int) (((Long) object) - Long.parseLong(match_parameters[0]));
-            } catch (NumberFormatException e) {
-                return (int) ((Long) object).longValue();
-            }
-        // match floating point numbers by their truncated difference
-        else if (object instanceof Float)
-            try {
-                return (int) (((Float) object) - Float.parseFloat(match_parameters[0]));
-            } catch (NumberFormatException e) {
-                return (int) ((Float) object).floatValue();
-            }
-        else if (object instanceof Double)
-            try {
-                return (int) (((Double) object) - Double.parseDouble(match_parameters[0]));
-            } catch (NumberFormatException e) {
-                return (int) ((Double) object).doubleValue();
-            }
-        // match Locations by their block-coordinate writeLocation() outputs
-        // TODO TEMP CMT
-        /* else if (object instanceof Location) return writeLocation((Location) object, false).compareTo(combine(match_parameters, " ")/* remove decimal places * /
-         * .replaceAll(".\\d*,", ",").replaceAll(".\\d*\\)", ")")); */
-        // if all else fails, try to match their toString() outputs
-        else
-            return object.toString().compareTo(combine(match_parameters, " "));
-    }
-
-    public static int match(Object[] objects, String[] match_parameters) {
-        // NOTE: this method has to be separate from match(Object[], String[]...) because of differences between String[] and String[]...
-        if (match_parameters.length == 0)
-            return 0;
-
-        // compare the objects given until one does not match
-        for (int i = 0; i < objects.length && i < match_parameters.length; i++) {
-            int comparison = match(objects[i], match_parameters[i]);
-            if (comparison != 0)
-                return comparison;
-        }
-
-        // if all of the objects matched, return 0
-        return 0;
-    }
-
-    public static int match(Object[] objects, String[]... match_parameters) {
-        // NOTE: this method has to be separate from match(Object[], String[]) because of differences between String[] and String[]...
-        if (match_parameters.length == 0)
-            return 0;
-
-        // compare the objects given until one does not match
-        for (int i = 0; i < objects.length && i < match_parameters.length; i++) {
-            int comparison = match(objects[i], match_parameters[i]);
-            if (comparison != 0)
-                return comparison;
-        }
-
-        // if all of the objects matched, return 0
-        return 0;
     }
 
     public static HashMap<String, String> readData(String format, String data) {

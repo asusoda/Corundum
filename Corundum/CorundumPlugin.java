@@ -17,17 +17,21 @@ import Corundum.utils.messaging.Messenger;
 import Corundum.utils.myList.myList;
 
 public abstract class CorundumPlugin implements CorundumListener, Messenger {
-    private final JarFile JAR;
+    private final JarFile jar;
+    private final URLClassLoader loader;
 
     private boolean enabled = false;
     private myList<CorundumListener> listeners = new myList<CorundumListener>(this);
     private HashMap<String, Method> commands = new HashMap<String, Method>();
 
     public CorundumPlugin() throws CIE {
+        // get the URLClassLoader used to load this class
+        loader = (URLClassLoader) getClass().getClassLoader();
+
         // first, try to find the jar's URL from the URLClassLoader used to load it
         URL jar_URL;
         try {
-            jar_URL = ((URLClassLoader) getClass().getClassLoader()).getURLs()[0];
+            jar_URL = loader.getURLs()[0];
         } catch (ClassCastException exception) {
             throw new CorundumException("Someone loaded this plugin with something besides a URLClassLoader!", exception, "ClassLoader type="
                     + getClass().getClassLoader().getClass().getSimpleName());
@@ -37,7 +41,7 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
 
         // then, try to isolate the jar's path from the URL into a new JarFile
         try {
-            JAR = new JarFile(jar_URL.toString().substring(9 /* remove the "jar:file:" */, jar_URL.toString().length() - 2/* remove the "!/" */));
+            jar = new JarFile(jar_URL.toString().substring(9 /* remove the "jar:file:" */, jar_URL.toString().length() - 2/* remove the "!/" */));
         } catch (IOException exception) {
             throw new CIE("There was a problem getting the jar file path while loading a new CorundumPlugin!", exception, "path=\""
                     + jar_URL.toString().substring(9, jar_URL.toString().length() - 2) + "\"");
@@ -49,13 +53,21 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
      * given {@link JarFile}, add it to the {@link Corundum#plugins global plugins list}, and call the {@link CorundumPlugin}'s {@link #onLoad() onLoad() method}. Loading a
      * plugin will load the plugin and its data into the RAM and make its classes accessible, but will not start the plugin or use any of its {@link CorundumListener}s.
      * 
-     * @param jar
-     *            is the {@link JarFile} from which the plugin will be loaded.
+     * @param file_path
+     *            is the path to the {@link JarFile} from which the plugin will be loaded.
+     * @return all the {@link CorundumPlugin}s loaded from the {@link JarFile} at the given <b><tt>file_path</b></tt>.
      * @throws CIE
      *             if any input/output issues arise while loading or attempting to cancel the loading of this plugin.
      * @see {@link #onLoad()}, {@link #enable()}, {@link #disable()}, and {@link #unload()}. */
-    @SuppressWarnings("unchecked")
-    public static final void load(JarFile jar) throws CIE {
+    @SuppressWarnings({ "unchecked", "resource" })
+    public static final CorundumPlugin[] load(String file_path) throws CIE {
+        JarFile jar;
+        try {
+            jar = new JarFile(file_path);
+        } catch (IOException exception) {
+            throw new CIE("There was no jar file at the specified path of this plugin jar!", exception, "file path=\"" + file_path + "\"");
+        }
+
         // load the plugin from its jar file using ClassLoaders
         URLClassLoader loader;
         try {
@@ -94,12 +106,8 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
                         throw new CIE("I couldn't find the class in the JarEntry!", exception, "entry name=\"" + entry.getName() + "\"");
                     }
 
-        // once all the classes are loaded, close the ClassLoader and run the plugin's main class(es) load() method(s)
-        try {
-            loader.close();
-        } catch (IOException exception) {
-            throw new CIE("I couldn't close the URLClassLoader used to load this plugin!", exception, "jar file=\"" + jar.getName() + "\"");
-        }
+        // once all the classes are loaded, run the plugin's main class(es) load() method(s)
+        ArrayList<CorundumPlugin> loaded_plugins = new ArrayList<CorundumPlugin>();
         for (Class<CorundumPlugin> main_class : main_classes) {
             // load the main class as a new CorundumPlugin
             CorundumPlugin plugin;
@@ -127,7 +135,7 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
                 } catch (IOException exception) {
                     throw new CIE(plugin.getName() + " had an issue while trying to cancel the loading process!", exception);
                 }
-                return;
+                return null;
             }
 
             // call the plugin's onLoad() method
@@ -136,10 +144,10 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
                 cancelled = plugin.onLoad();
             } catch (CorundumException exception) {
                 exception.err();
-                return;
+                return null;
             } catch (Exception exception) {
                 new CorundumException(plugin.getName() + " had a problem while being loaded!", exception).err();
-                return;
+                return null;
             }
 
             if (cancelled) {
@@ -150,9 +158,19 @@ public abstract class CorundumPlugin implements CorundumListener, Messenger {
                 } catch (IOException exception) {
                     throw new CIE(plugin.getName() + " had an issue while trying to cancel the loading process!", exception);
                 }
-                return;
+                return null;
             }
+
+            loaded_plugins.add(plugin);
         }
+
+        try {
+            jar.close();
+        } catch (IOException exception) {
+            throw new CIE("I couldn't close \"" + jar.getName() + "\" at the end of the loading process!", exception);
+        }
+
+        return loaded_plugins.toArray(new CorundumPlugin[loaded_plugins.size()]);
     }
 
     /** This method enables this {@link CorundumPlugin} and calls the plugin's {@link #onEnable() onEnable() method}. Enabling a plugin causes all its {@link CorundumListener}s

@@ -12,22 +12,10 @@
 
 package Corundum;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URLClassLoader;
-import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.plugins.ResolverUtil.IsA;
-
-import Corundum.exceptions.CorundumSecurityException;
-import Corundum.utils.messaging.MessageColor;
 import Corundum.utils.messaging.Messenger;
-import Corundum.utils.messaging.MessengerUtilities;
+import Corundum.exceptions.CorundumSecurityException;
 import Corundum.utils.myList.myList;
 import static Corundum.utils.StringUtilities.capitalize;
-import static Corundum.utils.messaging.Messenger.*;
 
 /** This is the main (executable) class of Corundum. ...Does anything more need to be said?
  * 
@@ -36,49 +24,13 @@ public class Corundum implements Messenger {
     public static final Corundum CORUNDUM = new Corundum();
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public static final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
-    public static final CorundumServer SERVER = new CorundumServer(new File("."));
-    /** This {@link OperatingSystem} represents the single console from which the server is centrally run. */
-    public static final Console CONSOLE = new Console();
-
+    public static final CorundumServer SERVER = new CorundumServer("Corundum.jar");
     /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
     public static myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
 
-    /** This is the main method of Corundum. When Corundum is started, this is the method that is called to start the program.
-     * 
-     * @param arguments
-     *            is the list of <tt>String</tt> arguments given in the command to start this program. These arguments are given through a command line like the Windows
-     *            command prompt or Unix terminal.<br>
-     * <br>
-     *            Accepted arguments:<br>
-     *            <i>debugging</i>:<br>
-     *            <li><tt>--debug, -d</tt> to activate debugging mode, which outputs debugging information to the console and the logs</li> <li><tt>--no-debug, -D</tt> to
-     *            deactivate debugging mode</li> <li><tt>--verbose, -v</tt> to activate verbose debugging mode, which outputs lots of extra detailed debugging information to
-     *            the console and the logs</li> <li><tt>--no-verbose, -V</tt> to deactivate verbose debugging mode</li> <i>server properties <b>(not yet supported)</b></i>: <br>
-     *            <li>
-     *            <tt>--online-mode, -o</tt> to activate online mode, which makes the server connect to Mojang's authentication servers and verify users when they try to
-     *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
-     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(String[] arguments) {
-        for (int i = 0; i < arguments.length; i++) {
-            // TODO TEST: make sure that using getDebuggers() and then modifying the result will actually change the MessengerUtilities.getDebuggers() list
-            if (arguments[i].equals("--debug") || arguments[i].equals("-d")) {
-                MessengerUtilities.getDebuggers().add((UUID) null);
-                CORUNDUM.debug("All normal debugging modes are on.");
-            } else if (arguments[i].equals("--no-debug") || arguments[i].equals("-D")) {
-                MessengerUtilities.getDebuggers().remove((UUID) null);
-            } else if (arguments[i].equals("--verbose") || arguments[i].equals("-v")) {
-                MessengerUtilities.getVerboseDebuggers().add((UUID) null);
-                CORUNDUM.debug("All verbose debugging modes are on.");
-            } else if (arguments[i].equals("--no-verbose") || arguments[i].equals("-V")) {
-                MessengerUtilities.getVerboseDebuggers().remove((UUID) null);
-                CORUNDUM.debug("All verbose debugging modes are off.");
-            } else
-                CORUNDUM.debug("I don't know what \"" + arguments[i] + "\" means!");
-        }
-
-        CORUNDUM.debug("STARTING CORUNDUM...");
-
+        // do nothing for now
     }
 
     /** This method can check at any given spot whether or not a call is "secure". The point is to ensure that certain methods are only called form inside Corundum, not by
@@ -125,7 +77,7 @@ public class Corundum implements Messenger {
     }
 
     /** This method shuts down Corundum completely. */
-    public static final void quit() {
+    static final void quit() {
         // TODO: close Minecraft
 
         // close Corundum

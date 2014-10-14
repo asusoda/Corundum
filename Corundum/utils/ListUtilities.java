@@ -151,18 +151,6 @@ public class ListUtilities {
 
     // TODO: containsAND and containsOR
 
-    public static int match(Object object, String... match_parameters) {
-        return StringUtilities.match(object, match_parameters);
-    }
-
-    public static int match(Object[] objects, String[] match_parameters) {
-        return StringUtilities.match(objects, match_parameters);
-    }
-
-    public static int match(Object[] objects, String[]... match_parameters) {
-        return StringUtilities.match(objects, match_parameters);
-    }
-
     /** This method separates items in a properly formatted list into individual Strings.
      * 
      * @param list

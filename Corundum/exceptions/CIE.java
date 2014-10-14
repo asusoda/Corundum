@@ -94,7 +94,7 @@ public class CIE extends Throwable {
 
         // display the error to ops (note: \u2639 is a Unicode frowny face)
         /* TODO TEMP RPLC tellOps */System.out
-                .println(MessageColor.RED + "myCraft had an accident! \u2639\n" + message + "\nPlease give REALDrummer your error log.txt!"/* TODO TEMP CMT , true */);
+                .println(MessageColor.RED + "Corundum had an accident! \u2639\n" + message + "\nPlease give the Corundum team your error log.txt!"/* TODO TEMP CMT , true */);
     }
 
     public static void err(String message, String issue, Object... additional_information) {
