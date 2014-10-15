@@ -74,7 +74,7 @@ public class CorundumLauncher {
             File outJar = new File(outDir, "minecraft_server.jar");
 
             if (!outJar.exists() && outDir.isDirectory()) {
-                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.exe");
+                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
                 HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
                 Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outJar));
