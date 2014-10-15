@@ -1,12 +1,13 @@
 package Corundum.launcher;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -28,6 +29,7 @@ public class CorundumLauncher {
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(String[] arguments) {
         // TODO: download the minecraft_server.jar from minecraft.net
+        downloadMCServerJar(new File("."));
 
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
@@ -62,6 +64,29 @@ public class CorundumLauncher {
             exception.printStackTrace();
         }
     }
+
+    /**
+     * Downloads the minecraft server jar.
+     * @param outDir The directory to output the jar to.
+     */
+	public static void downloadMCServerJar(File outDir) {
+		try {
+            File outJar = new File(outDir, "minecraft_server.jar");
+
+            if (!outJar.exists() && outDir.isDirectory()) {
+                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.exe");
+                HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
+                Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
+                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outJar));
+
+                while (streamScanner.hasNextByte()) {
+                    outputStream.write(streamScanner.nextByte());
+                }
+            }
+		} catch (IOException exception) {
+           exception.printStackTrace();
+        }
+	}
 
     /** This method loads all the classes in a given jar file.
      * 
