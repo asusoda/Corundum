@@ -12,6 +12,8 @@
 
 package Corundum.entities;
 
+import Corundum.exceptions.CIE;
+import Corundum.exceptions.CorundumException;
 import Corundum.items.Item;
 import Corundum.world.Location;
 
@@ -36,14 +38,34 @@ public class Mob extends Entity {
         SKELETON(EntityType.SKELETON);  // TODO: 3. finish this list
 
         private final EntityType entityType;
+        private boolean monster, despawns, neutral;
+        //The minimum light level for the mob to spawn.
+        private int minLightLevelForSpawn;
 
-        public boolean monster, despawns, neutral;
-
+        //Reuses EntityType for reduced necessary args.
         private MobType(EntityType entityType) {
             this.entityType = entityType;
-            this.monster = entityType.getIsMonster();
-            this.despawns = entityType.getCanDespawn();
-            this.neutral = entityType.getIsNeutral();
+
+            if (entityType.getIsLiving()) {
+                this.monster = entityType.getIsMonster();
+                this.despawns = entityType.getCanDespawn();
+                this.neutral = entityType.getIsNeutral();
+            } else {
+                //Perhaps it should be a CIE?
+                CorundumException.err("Error creating a MobType enum!", "The EntityType passed for the MobType is for a non-living entity! As Mobs are always living entities, this shouldn't happen! Enums are only editable by code or Reflection/ASM, so it's likely one of the dev's fault (probably Niadel's, this sort of derpitude is right up his alley)!", new Object[0]);
+            }
+        }
+
+        public boolean getIsMonster() {
+            return this.monster;
+        }
+
+        public boolean getCanDespawn() {
+            return this.despawns;
+        }
+
+        public boolean getIsNeutral() {
+            return this.neutral;
         }
 
         public EntityType getEntityType() {
