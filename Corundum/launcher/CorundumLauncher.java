@@ -63,7 +63,7 @@ public class CorundumLauncher {
             }
             System.out.println("Success!");
         } else {
-            //Use the CorundumLoader instead of the other method..
+            //Use the CorundumLoader instead of the other method.
             corundumLoader = new CorundumLoader(new URL[0], CorundumLauncher.class.getClassLoader());
             ((CorundumLoader) corundumLoader).loadJars();
         }

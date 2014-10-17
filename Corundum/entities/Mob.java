@@ -13,12 +13,42 @@
 package Corundum.entities;
 
 import Corundum.items.Item;
+import Corundum.world.Location;
 
 public class Mob extends Entity {
+    /**
+     * List of Items this mob can drop.
+     */
     private Item[] drops;
 
+    public Mob(MobType mobType, Location location, Item... drops) {
+        super(mobType.getEntityType(), location);
+        this.drops = drops;
+    }
+
+    public Mob(MobType mobType, Location location, float pitch, float yaw, Item... drops) {
+        super(mobType.getEntityType(), location, pitch, yaw);
+        this.drops = drops;
+    }
+
     public enum MobType {
-        PIG, SKELETON;  // TODO: 3. finish this list
+        PIG(EntityType.PIG),
+        SKELETON(EntityType.SKELETON);  // TODO: 3. finish this list
+
+        private final EntityType entityType;
+
+        public boolean monster, despawns, neutral;
+
+        private MobType(EntityType entityType) {
+            this.entityType = entityType;
+            this.monster = entityType.getIsMonster();
+            this.despawns = entityType.getCanDespawn();
+            this.neutral = entityType.getIsNeutral();
+        }
+
+        public EntityType getEntityType() {
+            return this.entityType;
+        }
 
         // TODO: 1. make final variables for all the information that needs to be kept for any mob type
 
