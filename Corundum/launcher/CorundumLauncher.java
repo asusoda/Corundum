@@ -1,11 +1,14 @@
 package Corundum.launcher;
 
+import Corundum.Corundum;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
@@ -26,39 +29,50 @@ public class CorundumLauncher {
      *            <li>
      *            <tt>--online-mode, -o</tt> to activate online mode, which makes the server connect to Mojang's authentication servers and verify users when they try to
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
-     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
+     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li>
+     *            <i>optional features</i>:<br>
+     *            <li><tt>--use-experimental-loader</tt> activates the experimental CorundumLoader. To the end user there's little difference,
+     *            but internally, the loader is changed to be more modularised as opposed to being hardcoded. </li>
+     *            */
     public static void main(String[] arguments) {
-        // TODO: download the minecraft_server.jar from minecraft.net
+        // Downloads the minecraft_server jar in case it's not already in the directory.
         downloadMCServerJar(new File("."));
 
-        // load the Minecraft server jar
-        System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
-        URLClassLoader Minecraft_loader = loadJar("minecraft_server.jar", CorundumLauncher.class.getClassLoader(), true);
-        if (Minecraft_loader == null)
-            return;
-        System.out.println("Success!");
+        URLClassLoader corundumLoader;
+        if (!Arrays.asList(arguments).contains("--use-experimental-loader")) {
+            // load the Minecraft server jar
+            System.out.println("Loading the Minecraft server jar...");
+            @SuppressWarnings("resource")
+            URLClassLoader minecraftLoader = loadJar("minecraft_server.jar", CorundumLauncher.class.getClassLoader(), true);
+            if (minecraftLoader == null)
+                return;
+            System.out.println("Success!");
 
-        // load the Corundum jar
-        System.out.println("Loading the Corundum server jar...");
-        @SuppressWarnings("resource")
-        URLClassLoader Corundum_loader = loadJar("Corundum.jar", Minecraft_loader);
-        if (Corundum_loader == null) {
-            try {
-                Minecraft_loader.close();
-            } catch (IOException exception) {
-                System.out.println("I was unable to close the Minecraft jar ClassLoader after Corundum's loading failed!");
-                exception.printStackTrace();
+            // load the Corundum jar
+            System.out.println("Loading the Corundum server jar...");
+            corundumLoader = loadJar("Corundum.jar", minecraftLoader);
+            if (corundumLoader == null) {
+                try {
+                    minecraftLoader.close();
+                } catch (IOException exception) {
+                    System.out.println("I was unable to close the Minecraft jar ClassLoader after Corundum's loading failed!");
+                    exception.printStackTrace();
+                }
+                return;
             }
-            return;
+            System.out.println("Success!");
+        } else {
+            //Use the CorundumLoader instead of the other method..
+            corundumLoader = new CorundumLoader(new URL[0], CorundumLauncher.class.getClassLoader());
+            ((CorundumLoader) corundumLoader).loadJars();
         }
-        System.out.println("Success!");
 
         // start Corundum
-        Class<?> main_class;
+        Class<?> mainClass;
         try {
-            main_class = Class.forName("Corundum.Corundum", true, Corundum_loader);
-            main_class.getMethod("main", String[].class).invoke(null, (Object) arguments);
+            mainClass = Class.forName("Corundum.Corundum", true, corundumLoader);
+            mainClass.getMethod("main", String[].class).invoke(null, (Object) arguments);
         } catch (ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
             System.out.println("I couldn't load the Corundum main class!");
             exception.printStackTrace();
@@ -76,6 +90,8 @@ public class CorundumLauncher {
             if (!outJar.exists() && outDir.isDirectory()) {
                 URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
                 HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
+                //A Scanner is an easier way to read a stream than the while ((var = stream.read()) != -1) method,
+                //in my opinion. It's also neater.
                 Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outJar));
 
