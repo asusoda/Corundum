@@ -110,7 +110,7 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
         ArrayList<CorundumPlugin> loaded_plugins = new ArrayList<CorundumPlugin>();
         for (Class<CorundumPlugin> main_class : main_classes) {
             // load the main class as a new CorundumPlugin
-            CorundumPlugin plugin;
+            final CorundumPlugin plugin;
             try {
                 plugin = main_class.asSubclass(CorundumPlugin.class).newInstance();
             } catch (InstantiationException exception) {
@@ -122,8 +122,15 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
             // add the newly loaded plugin to the plugins list
             Corundum.plugins.add(plugin);
 
+            //Used to convert from lambdas for Java 7 compat.
+            ListenerCaller listenerCaller = new ListenerCaller() {
+                @Override
+                public boolean generateEvent(CorundumListener listener) {
+                    return listener.onPluginLoad(plugin);
+                }
+            };
             // generate an event describing the loading
-            CorundumListener cancelling_listener = CorundumListener.generateEvent(listener -> listener.onPluginLoad(plugin));
+            CorundumListener cancelling_listener = CorundumListener.generateEvent(listenerCaller);
 
             // if the a cancellation was requested, close the URLClassLoader
             if (cancelling_listener != null) {
