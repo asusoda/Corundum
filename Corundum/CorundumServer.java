@@ -9,11 +9,9 @@ import Corundum.world.Location;
 
 public class CorundumServer extends DedicatedServer implements MessageReceiver, Commander {
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
-     * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
+     * Through {@link DedicatedServer}'s constructor, it will also set {@link net.minecraft.server.MinecraftServer#mcServer} to this new server. <br>
      * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link Corundum#SERVER}.
-     * 
-     * @param loader
-     *            is the class loader used to load the server from its jar file.
+     *
      * @param file_path
      *            is the path of the file from which this server should be loaded. */
     public CorundumServer(String file_path) {

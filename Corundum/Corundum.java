@@ -78,8 +78,7 @@ public class Corundum implements Messenger {
 
     /** This method shuts down Corundum completely. */
     static final void quit() {
-        // TODO: close Minecraft
-
+        SERVER.stopServer();
         // close Corundum
         System.exit(0);
     }

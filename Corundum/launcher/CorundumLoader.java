@@ -13,8 +13,9 @@ import java.util.jar.JarFile;
 
 /**
  * Loads the jars necessary for Corundum to work correctly. Previously, the loading code was inside CorundumLauncher,
- * but this class should more modularise it and make updating the loading code much easier to do. This is at
- * time of writing not used by default. Note that it uses a lot of REALDrummer's original loading code.
+ * but this class should more modularise it and make updating the loading code much easier to do, possibly allowing
+ * for things like plugin priorities. This is at time of writing not used by default. Note that it uses a lot of
+ * REALDrummer's original loading code to load Corundum necessary jars.
  *
  * @author Niadel
  */
