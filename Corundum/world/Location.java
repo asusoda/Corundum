@@ -13,13 +13,13 @@
 package Corundum.world;
 
 public class Location {
-    private double x, y, z;
+    private float x, y, z;
     private World world;
 
     public Location(double x, double y, double z, World world) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = (float) x;
+        this.y = (float) y;
+        this.z = (float) z;
         this.world = world;
     }
 
@@ -35,15 +35,15 @@ public class Location {
         return (int) z;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
@@ -52,15 +52,15 @@ public class Location {
     }
 
     public void setX(double x) {
-        this.x = x;
+        this.x = (float) x;
     }
 
     public void setY(double y) {
-        this.y = y;
+        this.y = (float) y;
     }
 
     public void setZ(double z) {
-        this.z = z;
+        this.z = (float) z;
     }
 
     public void setWorld(World world) {

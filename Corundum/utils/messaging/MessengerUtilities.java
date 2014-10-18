@@ -28,7 +28,50 @@ public class MessengerUtilities {
         return verbose_debuggers;
     }
 
-    // utility methods
+    // non-plugin-specific messaging utilities
+    /** This method sends the given message to the console, players, and logs that are in "verbose debugging mode". These messages can contain very detailed information
+     * relevant to debugging, unlike the regular {@link #debug(String) debug() method} which should be given only basic debugging information. Players and the console can enter
+     * or exit verbose debugging mode with a command. In addition, if "verbose debug logging" is active, the message will be logged in Corundum's log files.
+     * 
+     * @param message
+     *            is the debug message to send to the verbosely debugging parties.
+     * @throws UnfinishedException
+     *             TODO
+     * @see {@link Messenger#bloviate(String)}, {@link #setVerboseLogging(boolean)}, and {@link #debug(CorundumPlugin, String)} */
+    public static void bloviate(String message) throws UnfinishedException {
+        bloviate(null, message);
+    }
+
+    /** This method broadcasts the given message to the server, displaying it in the console, in all players' chats, and in the logs.
+     * 
+     * @param message
+     *            is the message to be broadcasted to the server.
+     * @see {@link Messenger#broadcast(String)} */
+    public static void broadcast(String message) {
+        broadcast(null, message);
+    }
+
+    /** This method sends the given message to all the players (or console) that are currently in "debugging mode". These messages should contain basic important information
+     * relevant to debugging, unlike the verbose {@link #bloviate(String) bloviate() method} which can output large amounts of very detailed information. Players and the
+     * console can enter or exit debugging mode with a command. In addition, if "debug logging" is active, the message will be logged in Corundum's log files.
+     * 
+     * @param message
+     *            is the debug message to send to the debugging parties.
+     * 
+     * @see {@link Messenger#debug(String)}, {@link #setVerboseDebugLogging(boolean)}, and {@link #bloviate(CorundumPlugin, String)} */
+    public static void debug(String message) {
+        debug(null, message);
+    }
+
+    public static void tellConsole(String message) {
+        tellConsole(null, message);
+    }
+
+    public static void tellPlayer(Player player, String message) {
+        tellPlayer(null, message);
+    }
+
+    // plugin-specific messaging utilities
     /** This method sends the given message to the console, players, and logs that are in "verbose debugging mode". These messages can contain very detailed information
      * relevant to debugging, unlike the regular {@link #debug(String) debug() method} which should be given only basic debugging information. Players and the console can enter
      * or exit verbose debugging mode with a command. In addition, if "verbose debug logging" is active, the message will be logged in Corundum's log files.
@@ -40,14 +83,14 @@ public class MessengerUtilities {
      * @throws UnfinishedException
      *             TODO
      * @see {@link Messenger#bloviate(String)}, {@link #setVerboseLogging(boolean)}, and {@link #debug(CorundumPlugin, String)} */
-    static void bloviate(CorundumPlugin plugin, String message) throws UnfinishedException {
+    public static void bloviate(CorundumPlugin plugin, String message) throws UnfinishedException {
         Corundum.secure();
 
         if (verbose_debuggers.size() == 0)
             return;
 
         if (verbose_debuggers.contains((UUID) null)) {
-            tellConsole(plugin, MessageColor.translateMCChatCodesToANSICodes(plugin.getPrefix() + message));
+            tellConsole(plugin, MessageColor.translateMCChatCodesToANSICodes((plugin != null ? plugin.getPrefix() : "") + message));
             if (verbose_debuggers.size() == 1)
                 return;
         }
@@ -62,7 +105,7 @@ public class MessengerUtilities {
      * @param message
      *            is the message to be broadcasted to the server.
      * @see {@link Messenger#broadcast(String)} */
-    static void broadcast(CorundumPlugin plugin, String message) {
+    public static void broadcast(CorundumPlugin plugin, String message) {
         throw new UnfinishedException("MessengerUtilities.broadcast()");
     }
 
@@ -77,7 +120,7 @@ public class MessengerUtilities {
      *            is the debug message to send to the debugging parties.
      * 
      * @see {@link Messenger#debug(String)}, {@link #setVerboseDebugLogging(boolean)}, and {@link #bloviate(CorundumPlugin, String)} */
-    static void debug(CorundumPlugin plugin, String message) {
+    public static void debug(CorundumPlugin plugin, String message) {
         if (debuggers.size() == 0)
             return;
         if (debuggers.contains((UUID) null)) {
@@ -90,19 +133,20 @@ public class MessengerUtilities {
         throw new UnfinishedException("MessengerUtilities.debug");
     }
 
-    static void tellConsole(CorundumPlugin plugin, String message) {
-        Corundum.SERVER.sendMessage(plugin.getPrefix() + message);
+    public static void tellConsole(CorundumPlugin plugin, String message) {
+        Corundum.SERVER.message(plugin.getPrefix() + message);
     }
 
-    static void tellPlayer(CorundumPlugin plugin, Player player, String message) {
-        player.sendMessage(plugin.getPrefix() + message);
+    public static void tellPlayer(CorundumPlugin plugin, Player player, String message) {
+        player.message(plugin.getPrefix() + message);
     }
 
+    // other messaging-related utilities
     public static String timeStamp() {
-        return timeStamp('-', ':');
+        return timeStamp("-", ":");
     }
 
-    public static String timeStamp(char date_separator, char time_separator) {
+    public static String timeStamp(String date_separator, String time_separator) {
         return String.valueOf(Calendar.getInstance().get(Calendar.MONTH)) + date_separator + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + date_separator
                 + (Calendar.getInstance().get(Calendar.YEAR) - 2000) + " " + (Calendar.getInstance().get(Calendar.HOUR) == 0 ? 12 : Calendar.getInstance().get(Calendar.HOUR))
                 + time_separator + Calendar.getInstance().get(Calendar.MINUTE) + time_separator + Calendar.getInstance().get(Calendar.SECOND)

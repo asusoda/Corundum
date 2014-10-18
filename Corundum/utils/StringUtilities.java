@@ -13,20 +13,18 @@
 package Corundum.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import Corundum.Corundum;
 import Corundum.CorundumPlugin;
 import Corundum.exceptions.CorundumException;
 import Corundum.utils.interfaces.Matchable;
-import Corundum.utils.messaging.Messenger;
 import Corundum.world.Location;
 import static Corundum.utils.ListUtilities.*;
 import static Corundum.utils.messaging.MessengerUtilities.*;
 
-public class StringUtilities implements Messenger {
-    private static final StringUtilities UTILITY = new StringUtilities();
-
+public class StringUtilities {
     public static final String[] BORDERS = { "[]", "\\/", "\"*", "_^", "-=", ":;", "&%", "#@", ",.", "<>", "~$", ")(", "+-", "|o" }, YESES = { "yes", "yea", "yep", "ja",
             "sure", "why not", "ok", "do it", "fine", "whatever", "w/e", "very well", "accept", "tpa", "cool", "hell yeah", "hells yeah", "hells yes", "come", "k ", "kk",
             "true", "on" }, NOS = { "no ", "na", "nope", "nein", "don't", "shut up", "ignore", "it's not", "its not", "creeper", "unsafe", "wait", "one ", "1 ", "false",
@@ -146,7 +144,7 @@ public class StringUtilities implements Messenger {
         if (format.endsWith("\n"))
             format = format.substring(0, format.length() - 1);
 
-        UTILITY.bloviate("reading parameters; parameters=\"" + combine(parameters, " ") + "\"; format=\"" + format + "\"");
+        bloviate("reading parameters; parameters=\"" + combine(parameters, " ") + "\"; format=\"" + format + "\"");
 
         // interpret the index values if any were given
         byte start = 0, end = (byte) parameters.length;
@@ -175,12 +173,12 @@ public class StringUtilities implements Messenger {
                 options = format_parts[j].split(",");
             else if (format_parts[j].contains("/"))
                 options = format_parts[j].split("/");
-            UTILITY.bloviate(options.length + " option(s) found: " + writeArray(options));
+            bloviate(options.length + " option(s) found: " + writeArray(options));
 
             boolean fits = false;
             // first, see if the current parameter fits the current format part; skip to the next format part if the current format part is optional and doesn't fit
             for (String option : options) {
-                UTILITY.bloviate("testing option " + option + "...");
+                bloviate("testing option " + option + "...");
 
                 // determine the starting and terminating Strings needed if it's a specific parameter; default to "" because .startsWith("") >> true
                 String required_starter = "", required_terminator = "";
@@ -190,7 +188,7 @@ public class StringUtilities implements Messenger {
                     if (option.toCharArray()[option.length() - 2] == '"')
                         required_terminator = option.substring(option.substring(0, option.lastIndexOf('"')).lastIndexOf('"') + 1, option.length() - 2);
                 }
-                UTILITY.bloviate("required starter=\"" + required_starter + "\"; required terminator=\"" + required_terminator + "\"");
+                bloviate("required starter=\"" + required_starter + "\"; required terminator=\"" + required_terminator + "\"");
 
                 /* determine whether or not the option is "specific", meaning it requires a starting and/or terminating String; note that it isn't specific if required_starter
                  * is the same as required_terminator and there are two or less double quotes because that means instead that it's a simple String parameter like ("debug") */
@@ -201,11 +199,11 @@ public class StringUtilities implements Messenger {
                 String option_name =
                         option.substring(1 + (specific && required_starter.length() > 0 ? 2 + required_starter.length() : 0), option.length() - 1
                                 - (specific && required_terminator.length() > 0 ? 2 + required_terminator.length() : 0));
-                UTILITY.bloviate("option name=\"" + option_name + "\"");
+                bloviate("option name=\"" + option_name + "\"");
 
                 // see if the current parameter fits this option's requirements
                 if (parameters[i].startsWith(required_starter) && parameters[i].endsWith(required_terminator)) {
-                    UTILITY.bloviate("match identified: \"" + parameters[i] + "\" instance of " + option);
+                    bloviate("match identified: \"" + parameters[i] + "\" instance of " + option);
                     data.put(option_name, parameters[i].substring(specific ? required_starter.length() : 0, parameters[i].length()
                             - (specific ? required_terminator.length() : 0)));
                     fits = true;
@@ -213,10 +211,10 @@ public class StringUtilities implements Messenger {
                     // begin parsing this variable if it is a parsing parameter
                     if (option_name.endsWith("...")) {
                         parsing = option_name;
-                        UTILITY.bloviate("parsing parameter; parsing " + option_name);
+                        bloviate("parsing parameter; parsing " + option_name);
                     } // if it is not a parsing parameter, make any current parsing stop
                     else if (parsing != null) {
-                        UTILITY.bloviate("stopping parsing " + parsing + "...");
+                        bloviate("stopping parsing " + parsing + "...");
                         parsing = null;
                     }
 
@@ -232,19 +230,19 @@ public class StringUtilities implements Messenger {
                 // if the current parameter did not fit the current format part, add the current parameter to the end of the current parsing variable if there is one
                 if (parsing != null) {
                     data.put(parsing, data.get(parsing) + " " + parameters[i]);
-                    UTILITY.bloviate("added parameter to current parsing: " + parsing + "=\"" + data.get(parsing) + "\"");
+                    bloviate("added parameter to current parsing: " + parsing + "=\"" + data.get(parsing) + "\"");
                     i++;
                 } else if (format_parts[j].startsWith("(") && !(j == format_parts.length - 1 && format_parts[j].contains(","))) {
-                    UTILITY.bloviate("no match, but parameter is optional; skipping to next format part...");
+                    bloviate("no match, but parameter is optional; skipping to next format part...");
                     j++;
                 } else {
-                    UTILITY.bloviate("WARNING: unrecognized parameter \"" + parameters[i] + "\"; ignoring...");
+                    bloviate("WARNING: unrecognized parameter \"" + parameters[i] + "\"; ignoring...");
                     i++;
                 }
         }
 
         for (String key : data.keySet())
-            UTILITY.bloviate("\"" + key + "\" >> \"" + data.get(key) + "\"");
+            bloviate("\"" + key + "\" >> \"" + data.get(key) + "\"");
         return data;
     }
 
@@ -521,10 +519,5 @@ public class StringUtilities implements Messenger {
             return written;
         else
             return null;
-    }
-
-    @Override
-    public CorundumPlugin getPlugin() {
-        return null;
     }
 }
