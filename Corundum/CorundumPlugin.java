@@ -6,17 +6,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import Corundum.entities.Player;
 import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
-import Corundum.utils.messaging.Messenger;
+import Corundum.listeners.CorundumListener;
+import Corundum.listeners.ListenerCaller;
+import Corundum.listeners.plugins.PluginLoadListener;
+import Corundum.utils.messaging.MessengerUtilities;
 import Corundum.utils.myList.myList;
 
-public abstract class CorundumPlugin extends CorundumListener implements Messenger {
+public abstract class CorundumPlugin implements CorundumListener {
     private final JarFile jar;
     private final URLClassLoader loader;
 
@@ -86,7 +91,7 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
                 if (!entry.isDirectory() && entry.getName().endsWith(".class"))
                     try {
                         // first, load the class
-                        Class<?> loaded_class = loader.loadClass(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", ""));
+                        Class<?> loaded_class = loader.loadClass(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "."));
 
                         // then, figure out if the class extends CorundumPlugin
                         Class<?> superclass = loaded_class.getSuperclass();
@@ -110,7 +115,7 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
         ArrayList<CorundumPlugin> loaded_plugins = new ArrayList<CorundumPlugin>();
         for (Class<CorundumPlugin> main_class : main_classes) {
             // load the main class as a new CorundumPlugin
-            final CorundumPlugin plugin;
+            CorundumPlugin plugin;
             try {
                 plugin = main_class.asSubclass(CorundumPlugin.class).newInstance();
             } catch (InstantiationException exception) {
@@ -120,23 +125,22 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
             }
 
             // add the newly loaded plugin to the plugins list
-            Corundum.plugins.add(plugin);
+            Corundum.SERVER.plugins.add(plugin);
 
-            //Used to convert from lambdas for Java 7 compat.
-            ListenerCaller listenerCaller = new ListenerCaller() {
-                @Override
-                public boolean generateEvent(CorundumListener listener) {
-                    return listener.onPluginLoad(plugin);
-                }
-            };
             // generate an event describing the loading
-            CorundumListener cancelling_listener = CorundumListener.generateEvent(listenerCaller);
+            final CorundumPlugin pluginF = plugin;
+            CorundumListener cancelling_listener = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener>() {
+                @Override
+                public boolean generateEvent(PluginLoadListener listener) {
+                    return listener.onPluginLoad(pluginF);
+                }
+            });
 
             // if the a cancellation was requested, close the URLClassLoader
             if (cancelling_listener != null) {
                 plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" load cancelled by plugin \"" + cancelling_listener.getPlugin().getName()
                         + "\"'s listener class \"" + cancelling_listener.getClass().getSimpleName() + "\"");
-                Corundum.plugins.remove(plugin);
+                Corundum.SERVER.plugins.remove(plugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
@@ -159,7 +163,7 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
 
             if (cancelled) {
                 plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" cancelled its own loading");
-                Corundum.plugins.remove(plugin);
+                Corundum.SERVER.plugins.remove(plugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
@@ -234,7 +238,7 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
         }
 
         // remove this plugin from the plugins list
-        Corundum.plugins.remove(this);
+        Corundum.SERVER.plugins.remove(this);
 
         // shut down the ClassLoader for this plugin
         try {
@@ -248,6 +252,55 @@ public abstract class CorundumPlugin extends CorundumListener implements Messeng
 
         // run garbage collection to gain back the RAM that was used by the plugin
         System.gc();
+    }
+
+    // messenger utilities
+    /** This method sends the given message to the console, players, and logs that are in "verbose debugging mode". These messages can contain very detailed information
+     * relevant to debugging, unlike the regular {@link #debug(String) debug() method} which should be given only basic debugging information. Players and the console can enter
+     * or exit verbose debugging mode with a command. In addition, if "verbose debug logging" is active, the message will be logged in Corundum's log files.
+     * 
+     * @param message
+     *            is the debug message to send to the verbosely debugging parties.
+     * @see {@link #debug(String)} */
+    public void bloviate(String message) {
+        if (getPlugin() == null)
+            Corundum.secure("No CorundumPlugin's Messengers should return null for a plugin!");
+
+        MessengerUtilities.bloviate(getPlugin(), message);
+    }
+
+    /** This method broadcasts the given message to the server, displaying it in the console, in all players' chats, and in the logs.
+     * 
+     * @param message
+     *            is the message to be broadcasted to the server.
+     * @see {@link Messenger#broadcast(String)} */
+    public void broadcast(String message) {
+        if (getPlugin() == null)
+            Corundum.secure("No CorundumPlugin's Messengers should return null for a plugin!");
+
+        tellConsole(message);
+
+        // TODO: when supportable, send the message to all players on the server
+    }
+
+    /** This method sends the given message to all the players (or console) that are currently in "debugging mode". These messages should contain basic important information
+     * relevant to debugging, unlike the verbose {@link #bloviate(String) bloviate() method} which can output large amounts of very detailed information. Players and the
+     * console can enter or exit debugging mode with a command. In addition, if "debug logging" is active, the message will be logged in Corundum's log files.
+     * 
+     * @param message
+     *            is the debug message to send to the debugging parties.
+     * 
+     * @see {@link #bloviate(String)} */
+    public void debug(String message) {
+        MessengerUtilities.debug(getPlugin(), message);
+    }
+
+    public void tellConsole(String message) {
+        MessengerUtilities.tellConsole(getPlugin(), message);
+    }
+
+    public void tellPlayer(Player player, String message) {
+        MessengerUtilities.tellPlayer(getPlugin(), player, message);
     }
 
     // plugin handling event handling for plugin makers

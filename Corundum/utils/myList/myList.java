@@ -19,9 +19,9 @@ import Corundum.Corundum;
 import Corundum.CorundumPlugin;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
-import Corundum.utils.messaging.Messenger;
+import Corundum.utils.messaging.MessengerUtilities;
 import static Corundum.utils.ListUtilities.*;
-import static Corundum.utils.interfaces.Matchable.match;
+import static Corundum.utils.interfaces.MatchUtilities.match;
 
 /** This list structure is an auto-sorting quick-searching structure based on "root-knockdown" auto-balancing binary trees.
  * <hr>
@@ -37,7 +37,7 @@ import static Corundum.utils.interfaces.Matchable.match;
  *            is the type of <tt>Object</tt> which the <tt>myList</tt> will hold. <i>Please read the description above for notes on the dangers of not using {@link Comparable}
  *            {@link Matchable} <tt>Object</tt>s.</i> */
 @SuppressWarnings("unchecked")
-public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchable, Messenger {
+public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchable<myList<T>> {
     private T data = null;
     private myList<T> left = null, right = null, root = null;
     private Integer size = 0;  // I used Integer instead of int so that it can be set to null and garbage collected in free()
@@ -581,8 +581,8 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
 
     /** This method prints debugging information concerning the {@link myList} using {@link #debug(String) myCoreLibrary's debug() method}. */
     public void debug() {
-        debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "")
-                + "\n" + toString());
+        MessengerUtilities.debug(null, String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "")
+                + (hasRoot() ? "; has root!" : "") + "\n" + toString());
     }
 
     public void debugFull() {
@@ -1433,11 +1433,6 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     @Override
     public boolean equals(Object object) {
         return object instanceof myList<?> && ((myList<T>) object).compareTo(this) == 0;
-    }
-
-    @Override
-    public CorundumPlugin getPlugin() {
-        return null;
     }
 
     @Override
