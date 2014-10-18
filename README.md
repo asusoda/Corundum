@@ -9,4 +9,4 @@ Installation
 =========
 NOTE: This product is not finished and will not function properly yet.
 
-To install Corundum on any system, simply ensure that you have the Java 8 virtual machine installed and run the executable Corundum.jar with the Java 8 virtual machine.
+To install Corundum on any system, simply ensure that you have the Java 7 virtual machine installed and run the executable Corundum.jar with the Java 7 virtual machine.
