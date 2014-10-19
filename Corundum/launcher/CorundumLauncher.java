@@ -1,13 +1,9 @@
 package Corundum.launcher;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
+import java.util.Scanner;
 
 public class CorundumLauncher {
     /** This is the main method of Corundum. When Corundum is started, this is the method that is called to start the program.
@@ -27,7 +23,7 @@ public class CorundumLauncher {
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
         // TODO: download the minecraft_server.jar from minecraft.net
-
+        downloadMCServer(new File("."));
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
@@ -106,5 +102,27 @@ public class CorundumLauncher {
         }
 
         return loader;
+    }
+
+    public static void downloadMCServer(File outDir) {
+        try {
+            File outJar = new File(outDir, "minecraft_server.jar");
+
+            if (!outJar.exists() && outDir.isDirectory()) {
+                URL
+                mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
+                HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
+                //A Scanner is an easier way to read a stream than the while ((var = stream.read()) != -1) method,
+                //in my opinion. It's also neater.
+                Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
+                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outJar));
+
+                while (streamScanner.hasNextByte()) {
+                    outputStream.write(streamScanner.nextByte());
+                }
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }
