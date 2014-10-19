@@ -15,6 +15,7 @@ package Corundum.world;
 import java.awt.Color;
 
 import Corundum.exceptions.UnfinishedException;
+import Corundum.items.MaterialType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.Matchable;
@@ -87,7 +88,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType implements Matchable<BlockType> {
+    public enum BlockType implements MaterialType<BlockType>, Matchable<BlockType> {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),
@@ -531,7 +532,7 @@ public class Block {
          * - <tt>MapColor Material.getMaterialMapColor</tt></tt>: the color that is represented for this block on the map */
         private final net.minecraft.block.Block blockMC;
 
-        private final byte id_minus_128, data;
+        private final byte id_minus_128 /* -128 to use the negative range of the byte to fit values of up to 255 */, data;
 
         // sub-types are delimited by declaration of data with 0, then declaration of data <= the previous
 
@@ -659,6 +660,12 @@ public class Block {
              * representing red, green, and blue values; this splits the int into three RGB values and puts it into a standard Color object */
             int color_value = blockMC.getMaterial().getMaterialMapColor().colorValue;
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
+        }
+
+        /***/
+        public byte getMaxStackSize() {
+            // ALL blocks stack to 64; it's items that can vary
+            return (byte) 64;
         }
 
         /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is

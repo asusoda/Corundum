@@ -57,7 +57,7 @@ public class Enchantment {
                 int applicable_items_index = 0;
                 for (int i = 0; i < applicable_item_id_ranges.length; i += 2)
                     for (int id = applicable_item_id_ranges[i]; id <= applicable_item_id_ranges[i + 1]; id++) {
-                        applicable_items[applicable_items_index] = ItemType.get(id);
+                        applicable_items[applicable_items_index] = ItemType.getByID(id);
                         applicable_items_index++;
                     }
             }

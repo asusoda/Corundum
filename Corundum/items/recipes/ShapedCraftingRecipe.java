@@ -13,17 +13,17 @@
 package Corundum.items.recipes;
 
 import Corundum.Corundum;
-import Corundum.items.Item.ItemType;
+import Corundum.items.MaterialType;
 
-public class OrderedCraftingRecipe extends Recipe {
-    private final ItemType[][] materials;
+public class ShapedCraftingRecipe extends Recipe {
+    private final MaterialType[][] materials;
 
-    // constructors by ItemTypes
-    public OrderedCraftingRecipe(ItemType[][] materials, ItemType resulting_material) {
+    // constructors by Materials
+    public ShapedCraftingRecipe(MaterialType[][] materials, MaterialType resulting_material) {
         this(materials, resulting_material, 1);
     }
 
-    public OrderedCraftingRecipe(ItemType[][] materials, ItemType resulting_material, int number_of_resulting_items) {
+    public ShapedCraftingRecipe(MaterialType[][] materials, MaterialType resulting_material, int number_of_resulting_items) {
         super(resulting_material, number_of_resulting_items);
 
         if (!(materials.length == 3 && materials[0].length == 3) && !(materials.length == 2 && materials[0].length == 2)) {
@@ -34,31 +34,31 @@ public class OrderedCraftingRecipe extends Recipe {
         this.materials = materials;
     }
 
-    public OrderedCraftingRecipe(ItemType material11, ItemType material21, ItemType material12, ItemType material22, ItemType resulting_material) {
+    public ShapedCraftingRecipe(MaterialType material11, MaterialType material21, MaterialType material12, MaterialType material22, MaterialType resulting_material) {
         this(material11, material21, material12, material22, resulting_material, 1);
     }
 
-    public OrderedCraftingRecipe(ItemType material11, ItemType material21, ItemType material12, ItemType material22, ItemType resulting_material, int number_of_resulting_items) {
+    public ShapedCraftingRecipe(MaterialType material11, MaterialType material21, MaterialType material12, MaterialType material22, MaterialType resulting_material, int number_of_resulting_items) {
         super(resulting_material, number_of_resulting_items);
 
-        materials = new ItemType[][] { new ItemType[] { material11, material21 }, new ItemType[] { material12, material22 } };
+        materials = new MaterialType[][] { new MaterialType[] { material11, material21 }, new MaterialType[] { material12, material22 } };
     }
 
-    public OrderedCraftingRecipe(ItemType material11, ItemType material21, ItemType material31, ItemType material12, ItemType material22, ItemType material32,
-            ItemType material13, ItemType material23, ItemType material33, ItemType resulting_material) {
+    public ShapedCraftingRecipe(MaterialType material11, MaterialType material21, MaterialType material31, MaterialType material12, MaterialType material22, MaterialType material32,
+            MaterialType material13, MaterialType material23, MaterialType material33, MaterialType resulting_material) {
         this(material11, material21, material31, material12, material22, material32, material13, material23, material33, resulting_material, 1);
     }
 
-    public OrderedCraftingRecipe(ItemType material11, ItemType material21, ItemType material31, ItemType material12, ItemType material22, ItemType material32,
-            ItemType material13, ItemType material23, ItemType material33, ItemType resulting_material, int number_of_resulting_items) {
+    public ShapedCraftingRecipe(MaterialType material11, MaterialType material21, MaterialType material31, MaterialType material12, MaterialType material22, MaterialType material32,
+            MaterialType material13, MaterialType material23, MaterialType material33, MaterialType resulting_material, int number_of_resulting_items) {
         super(resulting_material, number_of_resulting_items);
 
         materials =
-                new ItemType[][] { new ItemType[] { material11, material21, material31 }, new ItemType[] { material12, material22, material32 },
-                        new ItemType[] { material13, material23, material33 } };
+                new MaterialType[][] { new MaterialType[] { material11, material21, material31 }, new MaterialType[] { material12, material22, material32 },
+                        new MaterialType[] { material13, material23, material33 } };
     }
 
-    private static ItemType[][] toItemTypes(int[][] IDs) {
+    private static MaterialType[][] toMaterials(int[][] IDs) {
         // TODO
         return null;
     }
@@ -66,7 +66,7 @@ public class OrderedCraftingRecipe extends Recipe {
     public static class IncompleteCraftingRecipeMaterialsException extends RecipeException {
         private static final long serialVersionUID = -699828186348471323L;
 
-        public IncompleteCraftingRecipeMaterialsException(String message, ItemType[][] materials_given, Object... additional_information) {
+        public IncompleteCraftingRecipeMaterialsException(String message, MaterialType[][] materials_given, Object... additional_information) {
             super(message, "a malformed crafting recipe material set", "materials given: " + materials_given.toString(), additional_information);
         }
 
