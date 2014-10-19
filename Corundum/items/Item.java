@@ -12,6 +12,7 @@
 
 package Corundum.items;
 
+import Corundum.items.recipes.OrderedCraftingRecipe;
 import Corundum.items.recipes.Recipe;
 import Corundum.utils.myList.myList;
 
@@ -37,7 +38,9 @@ public class Item {
     }
 
     public enum ItemType {
-        IRON_SHOVEL(256);
+        IRON_SHOVEL(256, /* crafting recipe */0, 265, 0, 0, 280, 0, 0, 280, 0, /* repairable with */265), IRON_PICKAXE(257, /* crafting recipe */
+        0, 265, 0, 0, 280, 0, 0, 280, 0, /* repairable with */
+        265);
 
         private final short id;
         private final short data;  // -1 indicates no static data value; the default is 0
@@ -45,6 +48,7 @@ public class Item {
         private final ItemType repairable_with;
         private final Recipe recipe;
 
+        // constructors for non-craftable items
         private ItemType(int id) {
             this.id = (short) id;
             data = 0;
@@ -61,36 +65,77 @@ public class Item {
             repairable_with = null;
         }
 
-        private ItemType(int id, int max_durability, ItemType repairable_with) {
+        private ItemType(int id, int material11_ID, int material21_ID, int material31_ID, int material12_ID, int material22_ID, int material32_ID, int material13_ID,
+                int material23_ID, int material33_ID) {
             this.id = (short) id;
-            data = -1;
-            this.max_durability = (short) max_durability;
-            recipe = null;
-            this.repairable_with = repairable_with;
+            data = 0;
+            max_durability = 0;
+            repairable_with = null;
+
+            // construct the recipe from the given I.D.s
+            ItemType[][] recipe_materials = new ItemType[3][3];
+            recipe_materials[0] = new ItemType[] { ItemType.get(material11_ID), ItemType.get(material21_ID), ItemType.get(material31_ID) };
+            recipe_materials[1] = new ItemType[] { ItemType.get(material12_ID), ItemType.get(material22_ID), ItemType.get(material32_ID) };
+            recipe_materials[2] = new ItemType[] { ItemType.get(material13_ID), ItemType.get(material23_ID), ItemType.get(material33_ID) };
+            recipe = new OrderedCraftingRecipe(recipe_materials, this);
         }
 
+        private ItemType(int id, int material11_ID, int material21_ID, int material31_ID, int material12_ID, int material22_ID, int material32_ID, int material13_ID,
+                int material23_ID, int material33_ID, int max_durability) {
+            this.id = (short) id;
+            this.max_durability = (short) max_durability;
+            data = 0;
+            repairable_with = null;
+
+            // construct the recipe from the given I.D.s
+            ItemType[][] recipe_materials = new ItemType[3][3];
+            recipe_materials[0] = new ItemType[] { ItemType.get(material11_ID), ItemType.get(material21_ID), ItemType.get(material31_ID) };
+            recipe_materials[1] = new ItemType[] { ItemType.get(material12_ID), ItemType.get(material22_ID), ItemType.get(material32_ID) };
+            recipe_materials[2] = new ItemType[] { ItemType.get(material13_ID), ItemType.get(material23_ID), ItemType.get(material33_ID) };
+            recipe = new OrderedCraftingRecipe(recipe_materials, this);
+        }
+
+        private ItemType(int id, int material11_ID, int material21_ID, int material31_ID, int material12_ID, int material22_ID, int material32_ID, int material13_ID,
+                int material23_ID, int material33_ID, int max_durability, int repairable_with) {
+            this.id = (short) id;
+            this.max_durability = (short) max_durability;
+            data = 0;
+
+            this.repairable_with = ItemType.get(repairable_with);
+
+            // construct the recipe from the given I.D.s
+            ItemType[][] recipe_materials = new ItemType[3][3];
+            recipe_materials[0] = new ItemType[] { ItemType.get(material11_ID), ItemType.get(material21_ID), ItemType.get(material31_ID) };
+            recipe_materials[1] = new ItemType[] { ItemType.get(material12_ID), ItemType.get(material22_ID), ItemType.get(material32_ID) };
+            recipe_materials[2] = new ItemType[] { ItemType.get(material13_ID), ItemType.get(material23_ID), ItemType.get(material33_ID) };
+            recipe = new OrderedCraftingRecipe(recipe_materials, this);
+        }
+
+        // constructors for 3x3 craftable items
         private ItemType(int id, Recipe recipe) {
             this.id = (short) id;
             data = 0;
             max_durability = 0;
-            this.recipe = recipe;
             repairable_with = null;
+
+            this.recipe = recipe;
         }
 
-        private ItemType(int id, int data, Recipe recipe) {
+        private ItemType(int id, Recipe recipe, int max_durability) {
             this.id = (short) id;
-            this.data = (byte) data;
-            max_durability = 0;
-            this.recipe = recipe;
-            repairable_with = null;
-        }
-
-        private ItemType(int id, int max_durability, ItemType repairable_with, Recipe recipe) {
-            this.id = (short) id;
-            data = -1;
             this.max_durability = (short) max_durability;
             this.recipe = recipe;
-            this.repairable_with = repairable_with;
+            data = 0;
+            repairable_with = null;
+        }
+
+        private ItemType(int id, Recipe recipe, int max_durability, int repairable_with) {
+            this.id = (short) id;
+            this.max_durability = (short) max_durability;
+            this.recipe = recipe;
+            data = 0;
+
+            this.repairable_with = ItemType.get(repairable_with);
         }
 
         /** This method retrieves the {@link ItemType} with the given item I.D. value.

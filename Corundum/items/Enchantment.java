@@ -28,6 +28,7 @@ public class Enchantment {
 
         private EnchantmentType(int max_level, ItemType... applicable_items) throws CorundumException {
             this.max_level = (byte) max_level;
+
             if (applicable_items.length == 0) {
                 this.applicable_items = null;
                 throw new EnchantmentException("Someone forgot to list the items that " + name() + "works with!", "item-less enchantment");

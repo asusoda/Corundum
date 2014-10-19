@@ -2,7 +2,6 @@ package Corundum.launcher;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -24,6 +23,7 @@ public class CorundumJarLoader extends URLClassLoader {
         this.is_Minecraft_server_jar = is_Minecraft_server_jar;
     }
 
+    @Override
     public Class<?> loadClass(String class_name) throws ClassNotFoundException {
         try {
             return CorundumLauncher.class.getClassLoader().loadClass(class_name);
