@@ -102,4 +102,12 @@ public class CorundumException extends RuntimeException {
         /* TODO TEMP RPLC tellOps */System.out
                 .println(MessageColor.RED + "myCraft had an accident! \u2639\n" + message + "\nPlease give REALDrummer your error log.txt!"/* TODO TEMP CMT , true */);
     }
+
+    public static void err(String message, String issue, Object... additional_information) {
+        new CorundumException(message, issue, additional_information).err();
+    }
+
+    public static void err(String message, Throwable issue, Object... additional_information) {
+        new CorundumException(message, issue, additional_information).err();
+    }
 }

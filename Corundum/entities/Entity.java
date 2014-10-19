@@ -69,6 +69,9 @@ public class Entity {
         WITCH(true, true, true, false),
         BLAZE(true, true, true, false),
         SLIME(true, true, true, false),
+        MAGMA_CUBE(true, true, true, false),
+        ENDERDRAGON(true, false, true, false),
+        WITHER(true, false, true, false),
         //NON LIVING ENTITIES
         BOAT(false, false, false, false),
         ITEM_ENTITY(false, true, false, false),
