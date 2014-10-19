@@ -1,14 +1,13 @@
 package Corundum.items.recipes;
 
 import Corundum.exceptions.CorundumException;
-import Corundum.items.Item;
-import Corundum.items.Item.ItemType;
+import Corundum.items.MaterialType;
 
 public abstract class Recipe {
-    protected final ItemType resulting_material;
+    protected final MaterialType resulting_material;
     protected final byte number_of_resulting_items;
 
-    protected Recipe(ItemType resulting_material, int number_of_resulting_items) {
+    protected Recipe(MaterialType resulting_material, int number_of_resulting_items) {
         this.resulting_material = resulting_material;
         this.number_of_resulting_items = (byte) number_of_resulting_items;
     }

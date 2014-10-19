@@ -12,8 +12,6 @@
 
 package Corundum;
 
-import java.io.PrintStream;
-
 import Corundum.exceptions.CorundumSecurityException;
 import static Corundum.utils.StringUtilities.capitalize;
 
