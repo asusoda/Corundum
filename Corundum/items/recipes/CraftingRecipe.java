@@ -1,9 +1,9 @@
 package Corundum.items.recipes;
 
-import Corundum.items.Item.ItemType;
+import Corundum.IDedType;
 
 public abstract class CraftingRecipe extends Recipe {
-    protected CraftingRecipe(ItemType resulting_material, int number_of_resulting_items) {
-        super(resulting_material, number_of_resulting_items);
+    protected CraftingRecipe(IDedType<?>[] materials, IDedType<?> resulting_material, int number_of_resulting_items) {
+        super(materials, resulting_material, number_of_resulting_items);
     }
 }

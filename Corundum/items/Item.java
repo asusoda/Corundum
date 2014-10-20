@@ -12,6 +12,7 @@
 
 package Corundum.items;
 
+import Corundum.IDedType;
 import Corundum.items.recipes.FurnaceRecipe;
 import Corundum.items.recipes.ShapedCraftingRecipe;
 import Corundum.items.recipes.Recipe;
@@ -40,10 +41,9 @@ public class Item {
         return type;
     }
 
-    public enum ItemType implements MaterialType<ItemType>, Matchable<ItemType> {
-        IRON_INGOT(265, new FurnaceRecipe(BlockType.IRON_ORE, ItemType.getByID(265))), IRON_SHOVEL(256, new ShapedCraftingRecipe(null, ItemType.getByID(265), null, null,
-                ItemType.getByID(280), null, null, ItemType.getByID(280), null, ItemType.getByID(256)), 265), IRON_PICKAXE(257, new ShapedCraftingRecipe(null, ItemType
-                .getByID(265)), 265);
+    public enum ItemType implements IDedType<ItemType>, Matchable<ItemType> {
+        IRON_SHOVEL(256, new ShapedCraftingRecipe(null, ItemType.getByID(265), null, null, ItemType.getByID(280), null, null, ItemType.getByID(280), null, ItemType
+                .getByID(256)), 265), IRON_PICKAXE(257, new ShapedCraftingRecipe(null, ItemType.getByID(265)), 265);
 
         private final short id;
         private final byte data /* -1 indicates no static data value; the default is 0 */;
@@ -95,33 +95,6 @@ public class Item {
             this.repairable_with = ItemType.getByID(repairable_with);
         }
 
-        /** This method retrieves the {@link ItemType} with the given item I.D. value.
-         * 
-         * @param id
-         *            is the item I.D. of the {@link ItemType} you wish to locate.
-         * @return the {@link ItemType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
-        public static ItemType getByID(int id) {
-            return getByID(id, -1);
-        }
-
-        /** This method retrieves the {@link ItemType} with the given item I.D. and data values.
-         * 
-         * @param id
-         *            is the item I.D. of the {@link ItemType} you wish to locate.
-         * @param data
-         *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
-         *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
-         * @return the {@link ItemType} that matches the given item I.D. and data value. */
-        public static ItemType getByID(int id, int data) {
-            // TODO: replace this linear search with a binary search algorithm
-            short id_minus_384 = (short) (id - 384);
-
-            for (ItemType item_type : values())
-                if (item_type.id == id_minus_384 && (data < 0 || item_type.data == data))
-                    return item_type;
-            return null;
-        }
-
         @Override
         public short getID() {
             return (short) (id + 384);
@@ -154,5 +127,33 @@ public class Item {
             // TODO Auto-generated method stub
             return false;
         }
+
+        /** This method retrieves the {@link ItemType} with the given item I.D. value.
+         * 
+         * @param id
+         *            is the item I.D. of the {@link ItemType} you wish to locate.
+         * @return the {@link ItemType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
+        public static ItemType getByID(int id) {
+            return getByID(id, -1);
+        }
+
+        /** This method retrieves the {@link ItemType} with the given item I.D. and data values.
+         * 
+         * @param id
+         *            is the item I.D. of the {@link ItemType} you wish to locate.
+         * @param data
+         *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
+         *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
+         * @return the {@link ItemType} that matches the given item I.D. and data value. */
+        public static ItemType getByID(int id, int data) {
+            // TODO: replace this linear search with a binary search algorithm
+            short id_minus_384 = (short) (id - 384);
+
+            for (ItemType item_type : values())
+                if (item_type.id == id_minus_384 && (data < 0 || item_type.data == data))
+                    return item_type;
+            return null;
+        }
+
     }
 }
