@@ -14,6 +14,12 @@ public class Zone {
         // TODO when Location is complete:
         // - if location1 and location2 are in different worlds, throw a ZoneCornersInDifferentWorldsException
         // - initialize "low" and "high" as described in the DEV NOTES Javadoc comments above
+        if (location1.getWorld() == location2.getWorld()) {
+
+        } else {
+            //If the worlds are different, throw an exception.
+            throw new ZoneCornersInDifferentWorldsException(location1, location2);
+        }
     }
 
     public class ZoneCornersInDifferentWorldsException extends CorundumException {

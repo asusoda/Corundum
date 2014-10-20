@@ -22,6 +22,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class Biome {
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
     private/* final */BiomeType type;
+    //Perhaps remove as chunks are stored in the world and not the actual biome?
     private/* final */myList<Chunk> chunks;
 
     public static enum BiomeType {
