@@ -14,8 +14,8 @@ package Corundum.world;
 
 import java.awt.Color;
 
+import Corundum.IDedType;
 import Corundum.exceptions.UnfinishedException;
-import Corundum.items.MaterialType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.Matchable;
@@ -88,7 +88,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType implements MaterialType<BlockType>, Matchable<BlockType> {
+    public enum BlockType implements IDedType<BlockType>, Matchable<BlockType> {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),
@@ -505,8 +505,8 @@ public class Block {
 
         /** <b><i>DEV NOTES:</b></i><br>
          * property-getting methods of <b><tt>blockMC</b></tt>:<br>
-         * <i>NOTE:</i> "<tt>Material.</tt>" at the beginning of a method indicates that the property can be obtained through {@link net.minecraft.block.Block#getMaterial()}.
-         * booleans: <br>
+         * <i>NOTE:</i> "<tt>Material.</tt>" at the beginning of a method indicates that the property can be obtained through {@link net.minecraft.block.Block#getMaterial()}. <br>
+         * <b>boolean</b>s: <br>
          * - <tt>Material.isReplaceable</tt>: tells if block placement can cover it; snow, tall grass, and water are replaceable, but stone, signs, and torches are not <br>
          * - <tt>Material.isLiquid</tt>: tells if the block is liquid; only water and lava (stationary and regular) are liquid for now <br>
          * - <tt>Material.isSolid</tt>: tells if the block is solid; stone and grass are solid, but water and signs are not <br>
@@ -521,8 +521,8 @@ public class Block {
          * - <tt>Material.getCanBlockGrass</tt>: tells if the presence of this block atop a dirt block can stop grass from spreading to that dirt; TODO: why does block take
          * the ! of it? <br>
          * <b>int</b>s: <br>
-         * - <tt>Material.getMaterialMobility</tt>: 0 for most blocks (e.g. dirt), 1 if it cannot push other blocks, but pistons can push over them, 2 if it cannot be pushed
-         * at all (e.g. bedrock) <br>
+         * - <tt>Material.getMaterialMobility</tt>: 0 for most blocks (e.g. dirt), 1 if it cannot push other blocks, but pistons can push over them (e.g. torches), 2 if it
+         * cannot be pushed at all (e.g. bedrock) <br>
          * - <tt>Block.getLightOpacity</tt>: the amount of light lost going through this block; 0 for anvils and enchantment tables, 1 for leaves and webs, 3 for water and
          * ice, 255 otherwise <br>
          * <b>float</b>s: <br>
@@ -612,32 +612,11 @@ public class Block {
                     .getBlockBoundsMaxX(), (float) blockMC.getBlockBoundsMaxY(), (float) blockMC.getBlockBoundsMaxZ());
         }
 
-        /** This method returns the data value associated with this {@link BlockType}. The data value is an extra identifier in Minecraft used to differentiate between blocks
-         * on a more specific level than I.D.s. If two blocks have the same I.D., but different data values, they could be the same kind of block, but be different sub-types;
-         * for example, {@link BlockType#OAK_LOG oak logs} and {@link BlockType#SPRUCE_LOG spruce logs} are both types of wood logs and they both have the same I.D. and a lot
-         * of the same properties, but their data values are different: oak logs have a data value of 0 while spruce logs have a data value of 1.
-         * <hr>
-         * <i>NOTE:</i> Minecraft often uses data values to indicate different things about the block it pertains to, including not just sub-types like what kind of slab it
-         * is, but also things like the orientation of a log block (up/down, north/soth, or east/west). Therefore, not all blocks will have the same data values as their
-         * {@link BlockType}s would indicate. However, there is a pattern in the way Minecraft handles orientation of blocks using their data values: all orientations of a
-         * given block will have the same data value as its {@link BlockType} plus the number of subtypes for that block I.D. times some integer (i.e.
-         * <tt>[{@link Block} data] = [{@link BlockType} data] + [number of different subtypes] * [some non-negative integer]</tt>).
-         * <hr>
-         * You can learn more about which kinds of blocks have which I.D. and data values at <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
-         * 
-         * @return the data value associated with this {@link BlockType} or -1 if this {@link BlockType} is not associated with a particular data value like
-         *         {@link BlockType#GRASS grass blocks}. */
+        @Override
         public byte getData() {
             return data;
         }
 
-        /** This method returns the I.D. that represents this {@link BlockType}. In Minecraft, every type of block is represented by a different I.D. You can see which I.D.s
-         * represent which blocks on <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
-         * <hr>
-         * <i>NOTE:</i> Not all Corundum {@link BlockType}s have different I.D.s; some things, like {@link BlockType#STONE stone} and {@link BlockType#GRANITE granite}, have
-         * the same I.D. and are differentiated by their data values (in this case, 0 and 1, respectively).
-         * 
-         * @return the block I.D. associated with this {@link BlockType}. */
         public short getID() {
             return (short) (id_minus_128 + 128);
         }
@@ -662,7 +641,7 @@ public class Block {
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
         }
 
-        /***/
+        @Override
         public byte getMaxStackSize() {
             // ALL blocks stack to 64; it's items that can vary
             return (byte) 64;
@@ -676,9 +655,6 @@ public class Block {
             return (short) blockMC.getLightOpacity();
         }
 
-        /** This method retrieves all the {@link BlockType}s that are "siblings" of this {@link BlockType}, i.e. all the {@link BlockType}s with the same I.D. as this one.
-         * 
-         * @return all the siblings of this {@link BlockType}. */
         public BlockType[] getSiblings() {
             // since BlockTypes are organized by I.D. and data value, all BlockTypes with the same I.D.s will be together
             // first, find the first and last BlockTypes with this same I.D.
@@ -699,15 +675,6 @@ public class Block {
             return results;
         }
 
-        /** This method determines whether or not this {@link BlockType} is a "sibling" of the given {@link BlockType}. Corundum considered two {@link BlockType}s "siblings" if
-         * the have the same item I.D. like {@link BlockType#STONE stone}, {@link BlockType#GRANITE granite}, and {@link BlockType#DIORITE diorite}, which all have the I.D. 0
-         * but have different data values to differentiate between them.
-         * <hr>
-         * You can see which I.D.s represent which blocks and which blocks have the same I.D. on <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
-         * 
-         * @param type
-         *            is the {@link BlockType} to compare to this {@link BlockType} to see if they're "siblings".
-         * @return <b>true</b> if this {@link BlockType} has the same I.D. as <b><tt>type</b></tt>; <b>false</b> otherwise. */
         public boolean isASiblingOf(BlockType type) {
             return type.id_minus_128 == id_minus_128;
         }

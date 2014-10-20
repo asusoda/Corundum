@@ -1,12 +1,12 @@
 package Corundum.items.recipes;
 
-import Corundum.items.MaterialType;
+import Corundum.IDedType;
 
 public class FurnaceRecipe extends Recipe {
-    private final MaterialType cooking_material;
+    private final IDedType cooking_material;
 
-    public FurnaceRecipe(MaterialType cooking_material, MaterialType resulting_material) {
-        super(resulting_material, 1);
+    public FurnaceRecipe(IDedType cooking_material, IDedType resulting_material) {
+        super(new IDedType[] { cooking_material }, resulting_material, 1);
 
         this.cooking_material = cooking_material;
     }
