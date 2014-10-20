@@ -11,16 +11,19 @@ public class Zone {
     private Location high;
 
     public Zone(Location location1, Location location2) {
-        // TODO when Location is complete:
-        // - if location1 and location2 are in different worlds, throw a ZoneCornersInDifferentWorldsException
+        //Currently there is a downside that both location coords have to be different or bad stuff happens. TODO: Fix this
+        // TODO when Location is completed
         // - initialize "low" and "high" as described in the DEV NOTES Javadoc comments above
         if (location1.getWorld() == location2.getWorld()) {
             if (location1.getX() > location2.getX() && location1.getY() > location2.getY() && location1.getZ() > location2.getZ()) {
                 this.high = location1;
                 this.low = location2;
-            } else {
+            } else if (location1.getX() < location2.getX() && location1.getY() < location2.getY() && location1.getZ() < location2.getZ()) {
                 this.high = location2;
                 this.low = location1;
+            } else {
+                //TODO TEMP: Until first TODO in constructor is completed, throw an exception if the two location coords aren't both different.
+                CorundumException.err("Error creating a Zone!", "The two locations passed to a Zone were not equal!", "Location 1:" + location1, "Location 2:" + location2);
             }
         } else {
             //If the worlds are different, throw an exception.
