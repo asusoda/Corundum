@@ -13,11 +13,13 @@
 package Corundum.entities;
 
 import Corundum.world.Location;
+import net.minecraft.entity.EntityList;
 
 public class Entity {
     private EntityType type;
     private Location location;
     private float pitch = 0, yaw = 0;
+    //Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
 
     public Entity(EntityType type, Location location) {
         this.type = type;
