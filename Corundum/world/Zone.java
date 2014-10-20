@@ -11,24 +11,18 @@ public class Zone {
     private Location high;
 
     public Zone(Location location1, Location location2) {
-        //Currently there is a downside that both location coords have to be different or bad stuff happens. TODO: Fix this
-        // TODO when Location is completed
-        // - initialize "low" and "high" as described in the DEV NOTES Javadoc comments above
-        if (location1.getWorld() == location2.getWorld()) {
-            if (location1.getX() > location2.getX() && location1.getY() > location2.getY() && location1.getZ() > location2.getZ()) {
-                this.high = location1;
-                this.low = location2;
-            } else if (location1.getX() < location2.getX() && location1.getY() < location2.getY() && location1.getZ() < location2.getZ()) {
-                this.high = location2;
-                this.low = location1;
-            } else {
-                //TODO TEMP: Until first TODO in constructor is completed, throw an exception if the two location coords aren't both different.
-                CorundumException.err("Error creating a Zone!", "The two locations passed to a Zone were partially/totally equal!", "Location 1:" + location1, "Location 2:" + location2);
-            }
-        } else {
-            //If the worlds are different, throw an exception.
+        // if the two corners of the zone are in different worlds, throw an exception
+        if (!location1.getWorld().equals(location2.getWorld()))
             throw new ZoneCornersInDifferentWorldsException(location1, location2);
-        }
+
+        // put all the lowest-valued coordinates into the "low" location
+        low =
+                new Location(location1.getX() <= location2.getX() ? location1.getX() : location2.getX(), location1.getY() <= location2.getY() ? location1.getY() : location2
+                        .getY(), location1.getZ() <= location2.getZ() ? location1.getZ() : location2.getZ(), location1.getWorld());
+        // put all the highest-valued coordinates into the "high" location
+        high =
+                new Location(location1.getX() >= location2.getX() ? location1.getX() : location2.getX(), location1.getY() >= location2.getY() ? location1.getY() : location2
+                        .getY(), location1.getZ() >= location2.getZ() ? location1.getZ() : location2.getZ(), location1.getWorld());
     }
 
     public class ZoneCornersInDifferentWorldsException extends CorundumException {
@@ -39,14 +33,6 @@ public class Zone {
                     + location2.toString());
         }
 
-    }
-
-    public int getBlockCountInZone() {
-        int xLength = this.high.getBlockX() - this.low.getBlockX();
-        int yLength = this.high.getBlockY() - this.low.getBlockY();
-        int zLength = this.high.getBlockZ() - this.low.getBlockZ();
-
-        return xLength * yLength * zLength;
     }
 
     public float getVolume() {
