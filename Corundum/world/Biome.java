@@ -12,71 +12,64 @@
 
 package Corundum.world;
 
-import java.awt.*;
-import java.lang.reflect.Field;
+import java.awt.Color;
 
-import Corundum.entities.Mob;
 import Corundum.entities.Mob.MobType;
-import Corundum.utils.myList.myList;
 import Corundum.world.Block.BlockType;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class Biome {
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
     private/* final */BiomeType type;
-    // Perhaps remove as chunks are stored in the world and not the actual biome?
-    private/* final */myList<Chunk> chunks;
 
     public static enum BiomeType {
         // TODO finish biomes and give them all constructors.
-        JUNGLE(21, true),
-        OCEAN(0, false),
-        PLAINS,
-        DESERT,
-        EXTREME_HILLS(3, true),
-        FOREST,
-        TAIGA(5, true),
-        SWAMPLAND,
-        RIVER(7, false),
-        NETHER(8, false, MobType.MAGMA_CUBE, MobType.GHAST, MobType.ZOMBIE_PIGMAN),
-        END(9, false, MobType.ENDERMAN, MobType.ENDERDRAGON),
-        FROZEN_OCEAN,
-        FROZEN_RIVER(11, false),
-        ICE_PLAINS(12, true),
-        ICE_PLAINS_SPIKES,
-        ICE_MOUNTAINS,
-        MUSHROOM_ISLAND(14, false, MobType.MOOSHROOM),
-        MUSHROOM_ISLAND_SHORE(15, false, MobType.MOOSHROOM),
-        BEACH,
-        DESERT_HILLS,
-        FOREST_HILLS,
-        TAIGA_HILLS,
-        EXTREME_HILLS_EDGE,
-        JUNGLE_HILLS,
-        JUNGLE_HILLS_EDGE,
-        DEEP_OCEAN,
-        STONE_BEACH(25, false),
-        COLD_BEACH(26, false),
-        BIRCH_FOREST,
-        BIRCH_FOREST_HILLS,
-        ROOFED_FOREST,
-        COLD_TAIGA(30, true),
-        COLD_TAIGA_HILLS,
-        MEGA_TAIGA,
-        MEGA_TAIGA_HILLS,
-        EXTREME_HILLS_PLUS,
-        SAVANNA,
-        SAVANNA_PLATEAU,
-        MESA,
-        MESA_PLATEAU,
-        MESA_PLATEAU_F;
-        // TODO Make final.
-        // naturalSpawningMobs are mobs that spawn naturally and aren't structure only. This usually means cave spiders don't count.
-        // This does, however, include the Ender Dragon.
+        OCEAN(false),
+        PLAINS(false),
+        DESERT(false),
+        EXTREME_HILLS(true),
+        FOREST(true),
+        TAIGA(true),
+        SWAMPLAND(true),
+        RIVER(false),
+        NETHER(false, MobType.MAGMA_CUBE, MobType.GHAST, MobType.ZOMBIE_PIGMAN),
+        END(false, MobType.ENDERMAN, MobType.ENDERDRAGON),
+        FROZEN_OCEAN(false),
+        FROZEN_RIVER(false),
+        ICE_PLAINS(true),
+        ICE_MOUNTAINS(true),
+        MUSHROOM_ISLAND(false, MobType.MOOSHROOM),
+        MUSHROOM_ISLAND_SHORE(false, MobType.MOOSHROOM),
+        BEACH(false),
+        DESERT_HILLS(false),
+        FOREST_HILLS(true),
+        TAIGA_HILLS(true),
+        EXTREME_HILLS_EDGE(true),
+        JUNGLE(true),
+        JUNGLE_HILLS(true),
+        JUNGLE_HILLS_EDGE(true),
+        DEEP_OCEAN(false),
+        STONE_BEACH(false),
+        COLD_BEACH(false),
+        BIRCH_FOREST(true),
+        BIRCH_FOREST_HILLS(true),
+        ROOFED_FOREST(true),
+        COLD_TAIGA(true),
+        COLD_TAIGA_HILLS(true),
+        MEGA_TAIGA(true),
+        MEGA_TAIGA_HILLS(true),
+        EXTREME_HILLS_PLUS(true),
+        SAVANNA(true),
+        SAVANNA_PLATEAU(true),
+        MESA(false),
+        MESA_PLATEAU(false),
+        MESA_PLATEAU_F(false),
+        ICE_PLAINS_SPIKES(140, false);
+
+        /** This {@link MobType}<tt>[]</tt> includes all the mobs that can spawn naturally in a given {@link BiomeType}. This includes monsters that only spawn under certain
+         * lighting conditions, but does not include mobs that spawn inside structures such as abandoned mineshafts (like {@link MobType#CAVE_SPIDER cave spiders}) or mobs that
+         * spawn from spawners only (like {@link MobType#SILVERFISH silverfish}. */
         private final MobType[] naturalSpawningMobs;
-        // Precipitate = Rain OR snow. While all biomes technically can rain and/or snow, some, like deserts have such
-        // obscenely high heights that rain occurs that you can't see it. hasSnow only is true if the snow level is so
-        // low that it is all over the ground.
         private final boolean hasTrees;
         private BiomeGenBase biomeMC;
 
@@ -89,16 +82,32 @@ public class Biome {
             naturalSpawningMobs = new MobType[0];
         }
 
+        private BiomeType(boolean has_trees, MobType... naturally_spawning_mobs) {
+            hasTrees = has_trees;
+            naturalSpawningMobs = naturally_spawning_mobs;
+
+            // if no I.D. is given, assume the I.D. is the same as the enum's ordinal
+            biomeMC = getMCBiomeByID(ordinal());
+        }
+
+        /* DEV NOTES: This constructor should only be useful for variant biomes since their I.D.s skip values. Also, note that variant biome I.D.s are equal to their parent
+         * biomes' I.D.s + 128 */
         private BiomeType(int biomeId, boolean hasTrees, MobType... naturalSpawningMobs) {
             this.hasTrees = hasTrees;
             this.naturalSpawningMobs = naturalSpawningMobs;
 
-            this.biomeMC = getBiomeByID(biomeId);
+            this.biomeMC = getMCBiomeByID(biomeId);
         }
 
         private BiomeType(int id, boolean hasTrees) {
             this(id, hasTrees, MobType.ZOMBIE, MobType.BAT, MobType.CREEPER, MobType.SKELETON, MobType.ENDERMAN, MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP,
                     MobType.SQUID, MobType.WITCH);
+        }
+
+        private BiomeGenBase getMCBiomeByID(int id) {
+            // TODO TEMP RPLC: sadly, there seems to be no BiomeGenBase.getBiomeGenArray()
+            // return BiomeGenBase.getBiomeGenArray()[id];
+            return null;
         }
 
         public Color getColor() {
@@ -121,6 +130,14 @@ public class Biome {
             return biomeMC.temperature;
         }
 
+        public BiomeType getVariant() {
+            return getByID(biomeMC.biomeID + 128);
+        }
+
+        public BiomeType getVariantParent() {
+            return getByID(biomeMC.biomeID - 128);
+        }
+
         public boolean hasRain() {
             return biomeMC.getIntRainfall() > 0;
         }
@@ -133,9 +150,21 @@ public class Biome {
             return this.hasTrees;
         }
 
-        private BiomeGenBase getBiomeByID(int id) {
-            // TODO TEMP RPLC: sadly, there seems to be no BiomeGenBase.getBiomeGenArray()
-            // return BiomeGenBase.getBiomeGenArray()[id];
+        public boolean isVariant() {
+            return biomeMC.biomeID >= 128;
+        }
+
+        /** This method retrieves the {@link BiomeType} with the given item I.D. value.
+         * 
+         * @param id
+         *            is the item I.D. of the {@link BiomeType} you wish to locate.
+         * @return the {@link BiomeType} that matches the given item I.D. or <b>null</b> if no {@link BiomeType} has the given I.D. */
+        public static BiomeType getByID(int id) {
+            // TODO: replace this linear search with a binary search algorithm
+            if (id >= 0)
+                for (BiomeType item_type : values())
+                    if (item_type.biomeMC.biomeID == id)
+                        return item_type;
             return null;
         }
     }

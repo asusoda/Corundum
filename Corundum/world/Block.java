@@ -785,14 +785,16 @@ public class Block {
          * @param data
          *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
          *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
-         * @return the {@link ItemType} that matches the given item I.D. and data value. */
+         * @return the {@link ItemType} that matches the given item I.D. and data value or <b>null</b> if no {@link BiomeType} has the given I.D. and data value. */
         public static BlockType getByID(int id, int data) {
             // TODO: replace this linear search with a binary search algorithm
-            short id_minus_128 = (short) (id - 128);
+            if (id >= 0) {
+                short id_minus_128 = (short) (id - 128);
 
-            for (BlockType item_type : values())
-                if (item_type.id_minus_128 == id_minus_128 && (data < 0 || item_type.data == data))
-                    return item_type;
+                for (BlockType item_type : values())
+                    if (item_type.id_minus_128 == id_minus_128 && (data < 0 || item_type.data == data))
+                        return item_type;
+            }
             return null;
         }
 
