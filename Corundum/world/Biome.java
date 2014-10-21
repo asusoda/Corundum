@@ -29,24 +29,24 @@ public class Biome {
 
     public static enum BiomeType {
         // TODO finish biomes and give them all constructors.
-        JUNGLE(0, true),
-        OCEAN,
+        JUNGLE(21, true),
+        OCEAN(0, false),
         PLAINS,
         DESERT,
         EXTREME_HILLS(3, true),
         FOREST,
         TAIGA(5, true),
         SWAMPLAND,
-        RIVER,
-        NETHER,
-        END,
+        RIVER(7, false),
+        NETHER(8, false, MobType.MAGMA_CUBE, MobType.GHAST, MobType.ZOMBIE_PIGMAN),
+        END(9, false, MobType.ENDERMAN, MobType.ENDERDRAGON),
         FROZEN_OCEAN,
         FROZEN_RIVER(11, false),
         ICE_PLAINS(12, true),
         ICE_PLAINS_SPIKES,
         ICE_MOUNTAINS,
-        MUSHROOM_ISLAND,
-        MUSHROOM_ISLAND_SHORE,
+        MUSHROOM_ISLAND(14, false, MobType.MOOSHROOM),
+        MUSHROOM_ISLAND_SHORE(15, false, MobType.MOOSHROOM),
         BEACH,
         DESERT_HILLS,
         FOREST_HILLS,
@@ -55,7 +55,7 @@ public class Biome {
         JUNGLE_HILLS,
         JUNGLE_HILLS_EDGE,
         DEEP_OCEAN,
-        STONE_BEACH,
+        STONE_BEACH(25, false),
         COLD_BEACH(26, false),
         BIRCH_FOREST,
         BIRCH_FOREST_HILLS,
@@ -64,7 +64,7 @@ public class Biome {
         COLD_TAIGA_HILLS,
         MEGA_TAIGA,
         MEGA_TAIGA_HILLS,
-        EXTREM_HILLS_PLUS,
+        EXTREME_HILLS_PLUS,
         SAVANNA,
         SAVANNA_PLATEAU,
         MESA,
@@ -72,6 +72,7 @@ public class Biome {
         MESA_PLATEAU_F;
         // TODO Make final.
         // naturalSpawningMobs are mobs that spawn naturally and aren't structure only. This usually means cave spiders don't count.
+        // This does, however, include the Ender Dragon.
         private final MobType[] naturalSpawningMobs;
         // Precipitate = Rain OR snow. While all biomes technically can rain and/or snow, some, like deserts have such
         // obscenely high heights that rain occurs that you can't see it. hasSnow only is true if the snow level is so

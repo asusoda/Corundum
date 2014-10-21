@@ -74,6 +74,7 @@ public class Entity {
         BLAZE(true, true, true, false),
         SLIME(true, true, true, false),
         MAGMA_CUBE(true, true, true, false),
+        GHAST(true, true, true, false),
         ENDERDRAGON(true, false, true, false),
         WITHER(true, false, true, false),
         // NON LIVING ENTITIES

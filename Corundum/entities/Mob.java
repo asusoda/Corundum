@@ -61,6 +61,7 @@ public class Mob extends Entity {
         BLAZE(EntityType.BLAZE, false, true),
         SLIME(EntityType.SLIME, false, false),
         MAGMA_CUBE(EntityType.MAGMA_CUBE, false, false),
+        GHAST(EntityType.GHAST, false, true),
         ENDERDRAGON(EntityType.ENDERDRAGON, false, true),
         WITHER(EntityType.WITHER, false, true);  // TODO: 3. finish this list
 
