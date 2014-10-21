@@ -5,20 +5,26 @@ import java.util.UUID;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import Corundum.exceptions.UnfinishedException;
+import Corundum.items.Item;
+import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.messaging.MessageReceiver;
 import Corundum.world.Location;
+import Corundum.world.World;
 
 public class Player extends Mob implements Commander, ICommandSender, MessageReceiver, Matchable<Player> {
     private final EntityPlayerMP playerMC;
 
     public Player(EntityPlayerMP playerMC) {
+        super(MobType.PLAYER, new Location(playerMC.lastTickPosX, playerMC.lastTickPosY, playerMC.lastTickPosZ, World.fromMCWorld((WorldServer) playerMC.worldObj)), Item
+                .fromMCItems((ItemStack[]) ListUtilities.concatenate(playerMC.inventory.mainInventory, playerMC.inventory.armorInventory)));
+
         this.playerMC = playerMC;
     }
 
@@ -68,7 +74,7 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
         return new ChunkCoordinates(playerMC.chunkCoordX, playerMC.chunkCoordY, playerMC.chunkCoordZ);
     }
 
-    public World getEntityWorld() {
+    public net.minecraft.world.World getEntityWorld() {
         return playerMC.getEntityWorld();
     }
 

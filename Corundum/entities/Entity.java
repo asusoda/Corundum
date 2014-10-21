@@ -19,7 +19,8 @@ public class Entity {
     private EntityType type;
     private Location location;
     private float pitch = 0, yaw = 0;
-    //Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
+
+    // Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
 
     public Entity(EntityType type, Location location) {
         this.type = type;
@@ -49,6 +50,7 @@ public class Entity {
     }
 
     public enum EntityType {
+        PLAYER(false, false, false, true),
         PIG(false, false, true, false),
         COW(false, false, true, false),
         CHICKEN(false, false, true, false),
@@ -57,7 +59,7 @@ public class Entity {
         MOOSHROOM(false, false, true, false),
         VILLAGER(false, false, true, false),
         WOLF(false, false, true, true),
-        //Ocelots are special as they are one of the few passive mobs able to despawn.
+        // Ocelots are special as they are one of the few passive mobs able to despawn.
         OCELOT(false, true, true, false),
         SQUID(false, true, true, false),
         BAT(false, true, true, false),
@@ -74,7 +76,7 @@ public class Entity {
         MAGMA_CUBE(true, true, true, false),
         ENDERDRAGON(true, false, true, false),
         WITHER(true, false, true, false),
-        //NON LIVING ENTITIES
+        // NON LIVING ENTITIES
         BOAT(false, false, false, false),
         ITEM_ENTITY(false, true, false, false),
         MINECART(false, false, false, false),
@@ -93,12 +95,12 @@ public class Entity {
         ITEM_FRAME(false, false, false, false),
         GHAST_FIREBALL(false, false, false, false),
         BLAZE_FIREBALL(false, false, false, false),
-        ENDER_CRYSTAL(false, false, false, false); //List does not include entities from 1.8.
+        ENDER_CRYSTAL(false, false, false, false); // List does not include entities from 1.8.
 
-        //Note, living applies to entities that are able to move by themselves, not mobs that aren't undead.
-        //Also note that a despawnable entity is an entity that can exist in the world for an infinite amount of time
-        //without external influence. Note that if they can despawn, it has to be 100% of the time.
-        private boolean monster, despawns, living,  neutral;
+        // Note, living applies to entities that are able to move by themselves, not mobs that aren't undead.
+        // Also note that a despawnable entity is an entity that can exist in the world for an infinite amount of time
+        // without external influence. Note that if they can despawn, it has to be 100% of the time.
+        private boolean monster, despawns, living, neutral;
 
         private EntityType(boolean monster, boolean despawns, boolean living, boolean neutral) {
             this.monster = monster;

@@ -12,6 +12,7 @@
 
 package Corundum.entities;
 
+import net.minecraft.server.gui.PlayerListComponent;
 import Corundum.exceptions.CorundumException;
 import Corundum.items.Item;
 import Corundum.world.Location;
@@ -37,6 +38,7 @@ public class Mob extends Entity {
     public enum MobType {
         //Basically the same as Entity.EntityType, but without the non-living entities and the entities have more data
         // stored about them.
+        PLAYER(EntityType.PLAYER, false, true),
         PIG(EntityType.PIG, false, false),
         SKELETON(EntityType.SKELETON, true, false),
         ZOMBIE(EntityType.ZOMBIE, true, false),

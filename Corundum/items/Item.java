@@ -12,6 +12,7 @@
 
 package Corundum.items;
 
+import net.minecraft.item.ItemStack;
 import Corundum.IDedType;
 import Corundum.items.recipes.FurnaceRecipe;
 import Corundum.items.recipes.ShapedCraftingRecipe;
@@ -39,6 +40,11 @@ public class Item {
 
     public ItemType getType() {
         return type;
+    }
+
+    public static Item[] fromMCItems(ItemStack... item_stacks) {
+        // TODO
+        return null;
     }
 
     public enum ItemType implements IDedType<ItemType>, Matchable<ItemType> {
@@ -154,6 +160,6 @@ public class Item {
                     return item_type;
             return null;
         }
-
     }
+
 }

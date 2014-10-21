@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
 import Corundum.Corundum;
 import Corundum.exceptions.CorundumException;
 
@@ -105,6 +106,32 @@ public class ListUtilities {
         }
 
         return 0;
+    }
+
+    /** This method copies all the <tt>Objects</tt> in all the given <tt>Object[]</tt>s into one large array in which the elements are ordered according to the order of the
+     * arrays given as arguments.
+     * 
+     * @param arrays
+     *            is the list of <tt>Object[]</tt>s to be concatenated into one large array.
+     * @return one large <tt>Object[]</tt> containing all the elements of the given <b><tt>arrays</b></tt> in the order given. */
+    public static Object[] concatenate(Object[]... arrays) {
+        // find the sum of the lengths of all the arrays
+        int new_length = 0;
+        for (Object[] array : arrays)
+            new_length += array.length;
+
+        // create the new array
+        Object[] result = new Object[new_length];
+
+        // copy all the Objects from the arrays into the new array
+        int counter = 0;  // counter is necessary because each array is not necessarily the same size
+        for (int i = 0; i < arrays.length; i++)
+            for (int j = 0; j < arrays[i].length; j++) {
+                result[counter] = arrays[i][j];
+                counter++;
+            }
+
+        return result;
     }
 
     /** This method determines whether or not a given array contains a given int.
@@ -302,4 +329,5 @@ public class ListUtilities {
 
         return writeArray(values, "; ");
     }
+
 }

@@ -16,6 +16,7 @@ import java.awt.Color;
 
 import Corundum.IDedType;
 import Corundum.exceptions.UnfinishedException;
+import Corundum.items.Item.ItemType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.Matchable;
@@ -766,6 +767,33 @@ public class Block {
          * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
         public boolean requiresTool() {
             return !blockMC.getMaterial().isToolNotRequired();
+        }
+
+        /** This method retrieves the {@link ItemType} with the given item I.D. value.
+         * 
+         * @param id
+         *            is the item I.D. of the {@link ItemType} you wish to locate.
+         * @return the {@link ItemType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
+        public static BlockType getByID(int id) {
+            return getByID(id, -1);
+        }
+
+        /** This method retrieves the {@link ItemType} with the given item I.D. and data values.
+         * 
+         * @param id
+         *            is the item I.D. of the {@link ItemType} you wish to locate.
+         * @param data
+         *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
+         *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
+         * @return the {@link ItemType} that matches the given item I.D. and data value. */
+        public static BlockType getByID(int id, int data) {
+            // TODO: replace this linear search with a binary search algorithm
+            short id_minus_128 = (short) (id - 128);
+
+            for (BlockType item_type : values())
+                if (item_type.id_minus_128 == id_minus_128 && (data < 0 || item_type.data == data))
+                    return item_type;
+            return null;
         }
 
         // overrides
