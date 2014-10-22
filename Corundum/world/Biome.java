@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import Corundum.entities.Mob.MobType;
 import Corundum.utils.ListUtilities;
+import Corundum.exceptions.CorundumException;
 import Corundum.world.Block.BlockType;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.world.biome.BiomeDecorator;
@@ -86,6 +87,13 @@ public class Biome {
          * biomes' I.D.s + 128 */
         private BiomeType(int id) {
             this.biomeMC = BiomeGenBase.func_150568_d(id);
+            BiomeGenBase gottenBiome = BiomeGenBase.func_150568_d(id);
+
+            if (gottenBiome == BiomeGenBase.ocean && !(id == 0)) {
+                CorundumException.err("Error getting an MC biome by it's id!", "Attempted to get a MC biome with a nonexistant id!", "Passed ID (nonexistant): " + id);
+            }
+
+            return gottenBiome;
         }
 
         public Color getColor() {
