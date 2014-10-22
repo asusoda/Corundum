@@ -22,7 +22,6 @@ public class CorundumLauncher {
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
-        // TODO: download the minecraft_server.jar from minecraft.net
         downloadMCServer(new File("."));
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
@@ -109,8 +108,7 @@ public class CorundumLauncher {
             File outJar = new File(outDir, "minecraft_server.jar");
 
             if (!outJar.exists() && outDir.isDirectory()) {
-                URL
-                mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
+                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
                 HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
                 //A Scanner is an easier way to read a stream than the while ((var = stream.read()) != -1) method,
                 //in my opinion. It's also neater.

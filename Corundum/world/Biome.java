@@ -105,9 +105,7 @@ public class Biome {
         }
 
         private BiomeGenBase getMCBiomeByID(int id) {
-            // TODO TEMP RPLC: sadly, there seems to be no BiomeGenBase.getBiomeGenArray()
-            // return BiomeGenBase.getBiomeGenArray()[id];
-            return null;
+            return BiomeGenBase.func_150568_d(id);
         }
 
         public Color getColor() {
