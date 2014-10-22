@@ -13,10 +13,16 @@
 package Corundum.world;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import Corundum.entities.Mob.MobType;
+import Corundum.utils.ListUtilities;
 import Corundum.world.Block.BlockType;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.BiomeOE;
 
 public class Biome {
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
@@ -24,90 +30,62 @@ public class Biome {
 
     public static enum BiomeType {
         // TODO finish biomes and give them all constructors.
-        OCEAN(false),
-        PLAINS(false),
-        DESERT(false),
-        EXTREME_HILLS(true),
-        FOREST(true),
-        TAIGA(true),
-        SWAMPLAND(true),
-        RIVER(false),
-        NETHER(false, MobType.MAGMA_CUBE, MobType.GHAST, MobType.ZOMBIE_PIGMAN),
-        END(false, MobType.ENDERMAN, MobType.ENDERDRAGON),
-        FROZEN_OCEAN(false),
-        FROZEN_RIVER(false),
-        ICE_PLAINS(true),
-        ICE_MOUNTAINS(true),
-        MUSHROOM_ISLAND(false, MobType.MOOSHROOM),
-        MUSHROOM_ISLAND_SHORE(false, MobType.MOOSHROOM),
-        BEACH(false),
-        DESERT_HILLS(false),
-        FOREST_HILLS(true),
-        TAIGA_HILLS(true),
-        EXTREME_HILLS_EDGE(true),
-        JUNGLE(true),
-        JUNGLE_HILLS(true),
-        JUNGLE_HILLS_EDGE(true),
-        DEEP_OCEAN(false),
-        STONE_BEACH(false),
-        COLD_BEACH(false),
-        BIRCH_FOREST(true),
-        BIRCH_FOREST_HILLS(true),
-        ROOFED_FOREST(true),
-        COLD_TAIGA(true),
-        COLD_TAIGA_HILLS(true),
-        MEGA_TAIGA(true),
-        MEGA_TAIGA_HILLS(true),
-        EXTREME_HILLS_PLUS(true),
-        SAVANNA(true),
-        SAVANNA_PLATEAU(true),
-        MESA(false),
-        MESA_PLATEAU(false),
-        MESA_PLATEAU_F(false),
-        ICE_PLAINS_SPIKES(140, false);
+        OCEAN,
+        PLAINS,
+        DESERT,
+        EXTREME_HILLS,
+        FOREST,
+        TAIGA,
+        SWAMPLAND,
+        RIVER,
+        NETHER,
+        END,
+        FROZEN_OCEAN,
+        FROZEN_RIVER,
+        ICE_PLAINS,
+        ICE_MOUNTAINS,
+        MUSHROOM_ISLAND,
+        MUSHROOM_ISLAND_SHORE,
+        BEACH,
+        DESERT_HILLS,
+        FOREST_HILLS,
+        TAIGA_HILLS,
+        EXTREME_HILLS_EDGE,
+        JUNGLE,
+        JUNGLE_HILLS,
+        JUNGLE_HILLS_EDGE,
+        DEEP_OCEAN,
+        STONE_BEACH,
+        COLD_BEACH,
+        BIRCH_FOREST,
+        BIRCH_FOREST_HILLS,
+        ROOFED_FOREST,
+        COLD_TAIGA,
+        COLD_TAIGA_HILLS,
+        MEGA_TAIGA,
+        MEGA_TAIGA_HILLS,
+        EXTREME_HILLS_PLUS,
+        SAVANNA,
+        SAVANNA_PLATEAU,
+        MESA,
+        MESA_PLATEAU,
+        MESA_PLATEAU_F,
+        ICE_PLAINS_SPIKES(140);
 
-        /** This {@link MobType}<tt>[]</tt> includes all the mobs that can spawn naturally in a given {@link BiomeType}. This includes monsters that only spawn under certain
-         * lighting conditions, but does not include mobs that spawn inside structures such as abandoned mineshafts (like {@link MobType#CAVE_SPIDER cave spiders}) or mobs that
-         * spawn from spawners only (like {@link MobType#SILVERFISH silverfish}. */
-        private final MobType[] naturalSpawningMobs;
-        private final boolean hasTrees;
         private BiomeGenBase biomeMC;
 
         private static final MobType[] defaultNaturalSpawningMobs = new MobType[] { MobType.ZOMBIE, MobType.BAT, MobType.CREEPER, MobType.SKELETON, MobType.ENDERMAN,
                 MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP, MobType.SQUID, MobType.WITCH };
 
-        // TODO TEMP: I just put this here to eliminate errors temporarily
         private BiomeType() {
-            hasTrees = true;
-            naturalSpawningMobs = new MobType[0];
-        }
-
-        private BiomeType(boolean has_trees, MobType... naturally_spawning_mobs) {
-            hasTrees = has_trees;
-            naturalSpawningMobs = naturally_spawning_mobs;
-
             // if no I.D. is given, assume the I.D. is the same as the enum's ordinal
-            biomeMC = getMCBiomeByID(ordinal());
+            this.biomeMC = BiomeGenBase.func_150568_d(ordinal());
         }
 
         /* DEV NOTES: This constructor should only be useful for variant biomes since their I.D.s skip values. Also, note that variant biome I.D.s are equal to their parent
          * biomes' I.D.s + 128 */
-        private BiomeType(int biomeId, boolean hasTrees, MobType... naturalSpawningMobs) {
-            this.hasTrees = hasTrees;
-            this.naturalSpawningMobs = naturalSpawningMobs;
-
-            this.biomeMC = getMCBiomeByID(biomeId);
-        }
-
-        private BiomeType(int id, boolean hasTrees) {
-            this(id, hasTrees, MobType.ZOMBIE, MobType.BAT, MobType.CREEPER, MobType.SKELETON, MobType.ENDERMAN, MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP,
-                    MobType.SQUID, MobType.WITCH);
-        }
-
-        private BiomeGenBase getMCBiomeByID(int id) {
-            // TODO TEMP RPLC: sadly, there seems to be no BiomeGenBase.getBiomeGenArray()
-            // return BiomeGenBase.getBiomeGenArray()[id];
-            return null;
+        private BiomeType(int id) {
+            this.biomeMC = BiomeGenBase.func_150568_d(id);
         }
 
         public Color getColor() {
@@ -118,8 +96,13 @@ public class Biome {
             return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
         }
 
-        public BiomeGenBase getMCBiome() {
-            return this.biomeMC;
+        public/* TODO: change return type to AnimalType when we have AnimalTypes */MobType[] getAnimals() {
+            ArrayList<SpawnListEntry> animalsMC = BiomeOE.getAnimalsSpawnListEntries(biomeMC);
+
+            /* TODO: find a way to get from SpawnListEntries to AnimalTypes; I think the only way to do this is to use the Class<Entity>s inside the SpawnListEntries that
+             * represent the kind of entity they will spawn, but since all their names will be obfuscated during runtime, we'll probably have to add a parameter to each
+             * EntityType for the Minecraft class that they represent */
+            return null;
         }
 
         public BlockType getSurfaceBlockType() {
@@ -128,6 +111,10 @@ public class Biome {
 
         public float getTemperature() {
             return biomeMC.temperature;
+        }
+
+        public int getTreesPerChunk() {
+            return BiomeOE.getTreesPerChunk(biomeMC);
         }
 
         public BiomeType getVariant() {
@@ -147,7 +134,7 @@ public class Biome {
         }
 
         public boolean hasTrees() {
-            return this.hasTrees;
+            return BiomeOE.getTreesPerChunk(biomeMC) > 0;
         }
 
         public boolean isVariant() {
