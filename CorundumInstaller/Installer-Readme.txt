@@ -9,3 +9,6 @@ been drastic changes to fix things or to comply to MCP structure changes.
 Building the installer:
     Simply run gradlew build and look in build/libs. If gradlew doesn't work for you, download Gradle, install it,
     and run gradle build. If dependencies don't work for you... Well... I may include a simple non-gradle build script.
+    However, due to potential licensing issues, you'll have to download zip4j 1.3.2 manually. You can find it here:
+    http://mvnrepository.com/artifact/net.lingala.zip4j/zip4j/1.3.2. Just download the jar to this directory and
+    run the .bat/sh
