@@ -12,3 +12,4 @@ Building the installer:
     However, due to potential licensing issues, you'll have to download zip4j 1.3.2 manually. You can find it here:
     http://mvnrepository.com/artifact/net.lingala.zip4j/zip4j/1.3.2. Just download the jar to this directory and
     run the .bat/sh
+The MANIFEST.mf is merely for the non-gradle build script.
