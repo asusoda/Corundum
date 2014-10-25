@@ -2,8 +2,6 @@ package org.corundummc.installer.tasks;
 
 import org.corundummc.installer.Main;
 import org.corundummc.installer.util.FileUtils;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +14,8 @@ import java.net.URL;
 public class TaskDownloadAndExtractCorundumSource implements ITask {
     @Override
     public void execute() {
-        this.extractCorundumSource(downloadCorundumSource());
+        this.extractCorundumSource(this.downloadCorundumSource());
+        new File(Main.runningDir.getAbsolutePath() + "/corundum_src.zip").delete();
     }
 
     public File downloadCorundumSource() {
@@ -30,18 +29,16 @@ public class TaskDownloadAndExtractCorundumSource implements ITask {
     }
 
     public void extractCorundumSource(File zip) {
-        try {
-            ZipFile zipFile = new ZipFile(zip);
-            zipFile.extractAll(new File(Main.runningDir.getAbsolutePath() + "src/").getAbsolutePath());
-            this.removeCorundumInstallerSources();
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
+        FileUtils.extractFilesFromZip(zip, new File(Main.runningDir.getAbsolutePath() + "src/"));
+        this.removeCorundumInstallerSources();
     }
 
     public void moveOutOfCorundumMasterFolder() {
         if (Main.downloadSrcFromGithub) {
-
+            File corundumSrcLoc = new File(Main.runningDir.getAbsolutePath() + "src/Corundum-master/Corundum");
+            File corundumShouldBeSrcLoc = new File(Main.runningDir.getAbsolutePath() + "src/Corundum");
+            corundumShouldBeSrcLoc.mkdir();
+            FileUtils.copyFile(corundumSrcLoc, corundumShouldBeSrcLoc);
         }
     }
 

@@ -3,7 +3,11 @@ package org.corundummc.installer.util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Utillities for files.
@@ -53,6 +57,30 @@ public class FileUtils {
 
             out.close();
             fromScanner.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void extractFilesFromZip(File in, File out) {
+        try {
+            ZipFile inFile = new ZipFile(in);
+            Enumeration<? extends ZipEntry> enumZip = inFile.entries();
+
+            while (enumZip.hasMoreElements()) {
+                ZipEntry next = enumZip.nextElement();
+                ZipInputStream inStream = new ZipInputStream(inFile.getInputStream(next));
+                FileOutputStream outStream = new FileOutputStream(out);
+
+                Scanner inStreamScanner = new Scanner(inStream);
+
+                while (inStreamScanner.hasNextByte()) {
+                    outStream.write(inStreamScanner.nextByte());
+                }
+
+                inStream.close();
+                outStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

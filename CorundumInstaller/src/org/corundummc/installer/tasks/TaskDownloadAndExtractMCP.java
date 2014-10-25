@@ -35,11 +35,6 @@ public class TaskDownloadAndExtractMCP implements ITask {
     }
 
     public void extractMCPZip(File mcpZip) {
-        try {
-            ZipFile mcpZipFile = new ZipFile(mcpZip);
-            mcpZipFile.extractAll(Main.runningDir.getAbsolutePath());
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
+        FileUtils.extractFilesFromZip(mcpZip, Main.runningDir);
     }
 }
