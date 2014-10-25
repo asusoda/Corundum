@@ -19,7 +19,7 @@ public class TaskDownloadAndExtractMCP implements ITask {
     @Override
     public void execute() {
         this.extractMCPZip(this.downloadMCPZip(Main.runningDir));
-        new File(Main.runningDir.getAbsolutePath() + "src/minecraft_server").mkdir();
+        new File("src/minecraft_server").mkdir();
     }
 
     public File downloadMCPZip(File outDir) {

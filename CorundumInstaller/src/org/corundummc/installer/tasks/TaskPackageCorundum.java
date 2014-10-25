@@ -18,7 +18,7 @@ public class TaskPackageCorundum implements ITask {
 
     public void generateMetaInf() {
         try {
-            this.corundumMetaInf = new File(Main.runningDir.getAbsolutePath() + "/jars/MANIFEST.mf");
+            this.corundumMetaInf = new File("jars/MANIFEST.mf");
 
             if (!this.corundumMetaInf.exists()) {
                 this.corundumMetaInf.createNewFile();

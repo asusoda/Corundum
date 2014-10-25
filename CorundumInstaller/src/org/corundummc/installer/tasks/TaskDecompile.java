@@ -3,7 +3,7 @@ package org.corundummc.installer.tasks;
 import org.corundummc.installer.Main;
 
 /**
- * Decompiles via MCP
+ * Decompiles via MCP.
  */
 public class TaskDecompile implements ITask {
     @Override

@@ -5,6 +5,7 @@ import org.corundummc.installer.tasks.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,6 +15,7 @@ import java.util.Scanner;
  * @author Niadel
  */
 public class Main {
+    public static boolean isVerbose;
     public static final File runningDir = new File(".");
     //Will be false in the actual src-installer download from the Corundum site.
     /**
@@ -28,6 +30,8 @@ public class Main {
     private static final List<ITask> tasks = new ArrayList<>();
 
     public static final void main(String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        isVerbose = argsList.contains("--verboseinstaller");
         initSourceTasks();
         initClientTasks();
         execTasks();
@@ -37,12 +41,12 @@ public class Main {
      * Inits the bare minimum for devs and server owners alike.
      */
     private static void initSourceTasks() {
+        //Downloads the corundum sources.
+        tasks.add(new TaskDownloadAndExtractCorundumSource());
         //Downloads MCP.
         tasks.add(new TaskDownloadAndExtractMCP());
         //Patches mcp.conf for Java 7.
         tasks.add(new TaskPatchConf());
-        //Downloads the corundum sources.
-        tasks.add(new TaskDownloadAndExtractCorundumSource());
         //Downloads the minecraft server.
         tasks.add(new TaskDownloadMCServer());
         //Decompiles the minecraft server.
@@ -87,6 +91,12 @@ public class Main {
 
         while (inScanner.hasNext()) {
             System.out.println(inScanner.next());
+        }
+    }
+
+    public static void verbose(String message) {
+        if (isVerbose) {
+            System.out.println(message);
         }
     }
 }

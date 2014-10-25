@@ -4,7 +4,7 @@ jar
 {
     manifest
     {
-        attributes("Main-Class": "org.mccorundum.installer.Main")
+        attributes("Main-Class": "org.corundummc.installer.Main")
     }
 }
 

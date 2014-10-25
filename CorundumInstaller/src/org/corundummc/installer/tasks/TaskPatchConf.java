@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class TaskPatchConf implements ITask {
     public String newRecompScalaLine = "CmdRecompScala = %s -encoding UTF-8 -deprecation -target:jvm-1.7 -classpath \"{classpath}\" -sourcepath {sourcepath} -d {outpath} {pkgs}";
     public String newRecompJavaLine = "CmdRecomp     = %s -Xlint:-options -deprecation -g -source 1.7 -target 1.7 -classpath \"{classpath}\" -sourcepath {sourcepath} -d {outpath} {pkgs}";
-    public File mcpConf = new File(Main.runningDir.getAbsolutePath() + "/conf/mcp.conf");
+    public File mcpConf = new File("conf/mcp.conf");
 
     @Override
     public void execute() {

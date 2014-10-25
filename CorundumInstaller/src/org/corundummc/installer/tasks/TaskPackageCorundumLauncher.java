@@ -21,14 +21,14 @@ public class TaskPackageCorundumLauncher implements ITask {
     }
 
     public void prepareExtractToFolder() {
-        this.corundumPackageFolder = new File(Main.runningDir.getAbsolutePath() + "Corundum");
+        this.corundumPackageFolder = new File("Corundum/");
         this.corundumPackageFolder.mkdir();
         File launcherBaseFolder = new File(this.corundumPackageFolder, "launcher");
         launcherBaseFolder.mkdir();
     }
 
     public void extractCorundumLauncherFromReobf() {
-        File corundumRoot = new File(Main.runningDir.getAbsolutePath() + "/reobf/minecraft_server/Corundum");
+        File corundumRoot = new File("reobf/minecraft_server/Corundum");
         File launcherRoot = new File(corundumRoot, "launcher");
         File[] filesInLauncherFolder = launcherRoot.listFiles(new FilenameFilter() {
             @Override
@@ -44,7 +44,7 @@ public class TaskPackageCorundumLauncher implements ITask {
 
     public void prepareMetaInf() {
         try {
-            this.corundumLauncherMetaInf = new File(Main.runningDir.getAbsolutePath() + "jars/MANIFEST.mf");
+            this.corundumLauncherMetaInf = new File("jars/MANIFEST.mf");
             this.corundumLauncherMetaInf.createNewFile();
 
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(this.corundumLauncherMetaInf)));
