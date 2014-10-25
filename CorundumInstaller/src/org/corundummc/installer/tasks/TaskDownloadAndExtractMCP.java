@@ -1,8 +1,6 @@
 package org.corundummc.installer.tasks;
 
 import org.corundummc.installer.util.FileUtils;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.net.MalformedURLException;
