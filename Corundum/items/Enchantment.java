@@ -21,9 +21,18 @@ public class Enchantment {
     private int level;
 
     private static final ItemType[] allArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.IRON_LEGGINGS, ItemType.IRON_CHESTPLATE, ItemType.IRON_HELMET, ItemType.DIAMOND_BOOTS, ItemType.DIAMOND_LEGGINGS, ItemType.DIAMOND_CHESTPLATE, ItemType.DIAMOND_HELMET, ItemType.LEATHER_BOOTS, ItemType.LEATHER_PANTS, ItemType.LEATHER_TUNIC, ItemType.LEATHER_CAP, ItemType.GOLDEN_BOOTS, ItemType.GOLDEN_LEGGINGS, ItemType.GOLDEN_CHESTPLATE, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_BOOTS, ItemType.CHAINMAIL_LEGGINGS, ItemType.CHAINMAIL_CHESTPLATE, ItemType.CHAINMAIL_HELMET};
+    private static final ItemType[] allBootArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.GOLDEN_BOOTS, ItemType.DIAMOND_BOOTS, ItemType.LEATHER_BOOTS, ItemType.CHAINMAIL_BOOTS};
+    private static final ItemType[] allHelmetArmourTypes = new ItemType[] {ItemType.IRON_HELMET, ItemType.GOLDEN_HELMET, ItemType.DIAMOND_HELMET, ItemType.LEATHER_CAP, ItemType.CHAINMAIL_HELMET};
 
     public enum EnchantmentType {
-        PROTECTION(4, allArmourTypes);
+        PROTECTION(4, allArmourTypes),
+        FIRE_PROTECTION(4, allArmourTypes),
+        FEATHER_FALLING(4, allBootArmourTypes),
+        BLAST_PROTECTION(4, allArmourTypes),
+        PROJECTILE_PROTECTION(4, allArmourTypes),
+        RESPIRATION(3, allHelmetArmourTypes),
+        AQUA_AFFINITY(1, allHelmetArmourTypes),
+        THORNS(3, allArmourTypes);
         //TODO complete list
 
         private byte max_level;
