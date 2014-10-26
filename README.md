@@ -11,13 +11,13 @@ _NOTE: This product is not finished!_
 
 Installing Normally
 =========
-_NOTE: There is normal download yet!_
+_NOTE: There is no normal download yet!_
 
  1. If your Java version is less than 7, install your favorite Java 7+ Virtual Machine.
 
- 2. Download the Corundum launcher.jar. _NOTE: There is not currently a Corundum launcher download!_
+ 2. Download the Corundum launcher .jar. _NOTE: There is not currently a Corundum launcher download!_
 
- 3. Run the Corundum launcher.jar with your Java 7+ Virtual Machine.
+ 3. Run the Corundum launcher .jar with your Java 7+ Virtual Machine.
 
 The Corundum launcher will help you from there!
 
