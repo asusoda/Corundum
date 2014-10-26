@@ -16,11 +16,11 @@ import java.awt.Color;
 
 import javax.swing.JApplet;
 
+import Corundum.exceptions.CorundumException;
 import com.google.common.eventbus.AllowConcurrentEvents;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.MinecraftException;
-import Corundum.exceptions.UnfinishedException;
 import Corundum.items.Item.ItemType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
@@ -40,12 +40,12 @@ public class Block {
      * @return the {@link Biome} that this block is in. */
     public Biome getBiome() {
         // TODO
-        throw new UnfinishedException("Block.getBiome()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        throw new CorundumException("UNFINISHED CALL TO Block.getBiome(): Block.getBiome()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
     }
 
     public Chunk getChunk() {
         // TODO
-        throw new UnfinishedException("Block.getChunk()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        throw new CorundumException("UNFINISHED CALL TO Block.getChunk: Block.getChunk()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
     }
 
     public byte getData() {
