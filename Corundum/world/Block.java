@@ -74,30 +74,9 @@ public class Block {
 
     /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that
-     * they all have the same I.D.
-     * <hr>
-     * The data used to construct this list can be found on <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>. All names listed in this site for each type of
-     * block were used to name these {@link BlockType}s with some exceptions: <br>
-     * <ul>
-     * <li>wood blocks were renamed "LOG" to clarify the distinction between logs and planks</li>
-     * <li>the dead shrub with I.D. 32 was renamed to "DEAD_BUSH" to distinguish between it and the dead shrub with I.D. 31 and data value 0</li>
-     * <li>the grass plant was renamed "TALL_GRASS" for two reasons:<br>
-     * <ul>
-     * <li>Minecraft itself names it this way</li>
-     * <li>the grass plant block needs to be differentiated from the solid grass blocks</li></li>
-     * </ul>
-     * <li>the colors "lime" and "green" were renamed to "LIGHT_GREEN" and "DARK_GREEN", respectively, to avoid confusion about whether "green" means light or dark green</li>
-     * <li>the colors "gray" and "blue" were renamed to "DARK_GRAY" and "DARK_BLUE", respectively, to differentiate them clearly from the light gray and light blue colors</li>
-     * <li>on and off versions of redstone materials such as redstone torches and lamps are prefixed by "POWERED" or "UNPOWERED"</li>
-     * <li>the heavy and light weighted pressure plates are renamed to "GOLD" and "IRON" pressure plates, respectively, because more players identify them by their materials
-     * than their usage</li>
-     * <li>standing signs and posts are named "SIGN_POST" and "BANNER_POST" for the sake of concise clarity</li>
-     * <li>the word "block" was dropped off many names since it's redundant in our case since {@link BlockType}s and {@link ItemType}s are separate anyway</li>
-     * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
-     * <li>the word "crops" was dropped off the name "wheat crops"</li>
-     * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
+     * they all have the same I.D. */
     public enum BlockType implements HoldableType<BlockType>, Matchable<BlockType> {
-        AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
+        AIR,  // the first value is handled by a base case in the constructor
         // stone types
         STONE(0),
         GRANITE,
@@ -560,13 +539,22 @@ public class Block {
          * use of the {@link #BlockType(int)} and {@link #BlockType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a
          * block and declaring one with a data value >= 0 will start a new block. */
         private BlockType() {
-            BlockType previous_value = BlockType.values()[ordinal() - 1];
-            if (previous_value.data == -1) {
-                id_minus_128 = (byte) (previous_value.id_minus_128 + 1);
+            // if this is the first block (AIR), use a base case
+            if (ordinal() == 0) {
+                id_minus_128 = -128;
                 data = -1;
-            } else {
-                id_minus_128 = previous_value.id_minus_128;
-                data = (byte) (previous_value.data + 1);
+            } // otherwise, infer the I.D. and data values using the previous type
+            else {
+                BlockType previous_value = values()[ordinal() - 1];
+                /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
+                if (previous_value.data == -1) {
+                    id_minus_128 = (byte) (previous_value.id_minus_128 + 1);
+                    data = -1;
+                } /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
+                else {
+                    id_minus_128 = previous_value.id_minus_128;
+                    data = (byte) (previous_value.data + 1);
+                }
             }
 
             // find the Block with the given I.D.
@@ -750,7 +738,7 @@ public class Block {
 
         // overridden properties
         @Override
-        public byte getData() {
+        public short getData() {
             return data;
         }
 

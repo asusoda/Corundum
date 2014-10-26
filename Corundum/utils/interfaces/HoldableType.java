@@ -18,7 +18,7 @@ public interface HoldableType<T> extends IDedType<T> {
      * 
      * @return the data value associated with this {@link IDedType} or -1 if this {@link IDedType} is not associated with a particular data value like {@link IDedType#GRASS
      *         grass blocks}. */
-    public byte getData();
+    public short getData();
 
     /** This method returns the maximum number of this type of item that can be put into one single inventory slot. Many items and all blocks have a max stack size of 64.
      * 
