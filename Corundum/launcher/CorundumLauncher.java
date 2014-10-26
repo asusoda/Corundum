@@ -3,6 +3,8 @@ package Corundum.launcher;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Scanner;
 
 public class CorundumLauncher {
@@ -107,17 +109,18 @@ public class CorundumLauncher {
         try {
             File outJar = new File(outDir, "minecraft_server.jar");
 
-            if (!outJar.exists() && outDir.isDirectory()) {
-                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
-                HttpURLConnection downloadUrlConnection = (HttpURLConnection) mcServerDownload.openConnection();
-                //A Scanner is an easier way to read a stream than the while ((var = stream.read()) != -1) method,
-                //in my opinion. It's also neater.
-                Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
-                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outJar));
 
-                while (streamScanner.hasNextByte()) {
-                    outputStream.write(streamScanner.nextByte());
-                }
+            //Clear the file if it already exists. Allows for easily updating the server jar over MC Versions.
+            if (outJar.exists()) {
+                outJar.delete();
+            }
+
+            if (!outJar.exists() && outDir.isDirectory()) {
+                outJar.createNewFile();
+                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
+                ReadableByteChannel byteChannel = Channels.newChannel(mcServerDownload.openStream());
+                FileOutputStream outputStream = new FileOutputStream(outJar);
+                outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
