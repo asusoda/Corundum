@@ -1,4 +1,4 @@
-package Corundum;
+package Corundum.utils.interfaces;
 
 /** This interface is meant to represent anything that can be categorized into types with unique integer I.D. and data values.
  * 

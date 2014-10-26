@@ -14,12 +14,18 @@ package Corundum.world;
 
 import java.awt.Color;
 
-import Corundum.Holdable;
-import Corundum.IDedType;
+import javax.swing.JApplet;
+
+import com.google.common.eventbus.AllowConcurrentEvents;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.MinecraftException;
 import Corundum.exceptions.UnfinishedException;
 import Corundum.items.Item.ItemType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.StringUtilities;
+import Corundum.utils.interfaces.HoldableType;
+import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
 import Corundum.world.Biome.BiomeType;
@@ -90,7 +96,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType implements Holdable<BlockType>, Matchable<BlockType> {
+    public enum BlockType implements HoldableType<BlockType>, Matchable<BlockType> {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),
@@ -534,10 +540,20 @@ public class Block {
          * - <tt>MapColor Material.getMaterialMapColor</tt></tt>: the color that is represented for this block on the map */
         private final net.minecraft.block.Block blockMC;
 
-        private final byte id_minus_128 /* -128 to use the negative range of the byte to fit values of up to 255 */, data;
+        /** <b><i>DEV NOTES:</b></i><br>
+         * This <b>byte</b> needs to be here because Minecraft does not keep track of a {@link net.minecraft.block.Block}'s I.D.; at least, I can't figure out where it's
+         * stored.<br>
+         * Also, the I.D. is stored -128 to utilize the full range of the <b>byte</b>. {@link BlockType} I.D.s are between 0 and 255, but Java <b>byte</b>s are between -128
+         * and 127; this subtraction allows us to hold any {@link BlockType} I.D. in the space of a <b>byte</b> instead of a <b>short</b>. */
+        private final byte id_minus_128;
+        /** <b><i>DEV NOTES:</b></i><br>
+         * {@link BlockType}s with -1 for a data value represent types that have no siblings, e.g. {@link BlockType#SLIME_BLOCK slime blocks} or {@link BlockType#HOPPER
+         * hoppers} and as opposed to {@link BlockType}s like {@link BlockType#OAK_LOG oak logs}. */
+        private final byte data;
 
         // sub-types are delimited by declaration of data with 0, then declaration of data <= the previous
 
+        // constructors
         /** This constructor makes a BlockType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
          * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this BlockType the same I.D.
          * and the next data value. Essentially, "I.D. blocks" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
@@ -553,8 +569,8 @@ public class Block {
                 data = (byte) (previous_value.data + 1);
             }
 
-            // find the Block in the Minecraft blockRegistry with the given I.D.
-            blockMC = (net.minecraft.block.Block) net.minecraft.block.Block.blockRegistry.getObjectForID(id_minus_128 + 128);
+            // find the Block with the given I.D.
+            blockMC = net.minecraft.block.Block.getBlockById(id_minus_128 + 128);
         }
 
         /** This constructor makes a BlockType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
@@ -576,8 +592,8 @@ public class Block {
             else
                 id_minus_128 = previous_value.id_minus_128;
 
-            // find the Block in the Minecraft blockRegistry with the given I.D.
-            blockMC = (net.minecraft.block.Block) net.minecraft.block.Block.blockRegistry.getObjectForID(id_minus_128 + 128);
+            // find the Block with the given I.D.
+            blockMC = net.minecraft.block.Block.getBlockById(id_minus_128 + 128);
         }
 
         /** This constructor makes a BlockType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
@@ -591,10 +607,11 @@ public class Block {
             id_minus_128 = (byte) (id - 128);
             this.data = (byte) data;
 
-            // find the Block in the Minecraft blockRegistry with the given I.D.
-            blockMC = (net.minecraft.block.Block) net.minecraft.block.Block.blockRegistry.getObjectForID(id);
+            // find the Block with the given I.D.
+            blockMC = net.minecraft.block.Block.getBlockById(id_minus_128 + 128);
         }
 
+        // class-specific methods
         /** This method determines whether or not a block of this {@link BlockType} can stop grass from spreading onto nearby dirt if placed on top of the dirt. For example, if
          * you place {@link BlockType#STONE stone} on top of dirt, that dirt cannot grow grass even if there is well-lit grass right next to it; on the other hand,
          * {@link BlockType#AIR air} cannot stop grass from spreading onto dirt.
@@ -612,15 +629,6 @@ public class Block {
         public BoundingBox getBoundingBox() {
             return new BoundingBox((float) blockMC.getBlockBoundsMinX(), (float) blockMC.getBlockBoundsMinY(), (float) blockMC.getBlockBoundsMinZ(), (float) blockMC
                     .getBlockBoundsMaxX(), (float) blockMC.getBlockBoundsMaxY(), (float) blockMC.getBlockBoundsMaxZ());
-        }
-
-        @Override
-        public byte getData() {
-            return data;
-        }
-
-        public short getID() {
-            return (short) (id_minus_128 + 128);
         }
 
         /** This method returns the amount of light emitted by this type of block as a number between 0 and 1. Most blocks like {@link BlockType#GRASS grass} and
@@ -643,42 +651,12 @@ public class Block {
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
         }
 
-        @Override
-        public byte getMaxStackSize() {
-            // ALL blocks stack to 64; it's items that can vary
-            return (byte) 64;
-        }
-
         /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is
          * completely clear like {@link BlockType#GLASS}).
          * 
          * @return a number between 0 and 255 representing the opacity of this {@link BlockType}. */
         public short getOpacity() {
             return (short) blockMC.getLightOpacity();
-        }
-
-        public BlockType[] getSiblings() {
-            // since BlockTypes are organized by I.D. and data value, all BlockTypes with the same I.D.s will be together
-            // first, find the first and last BlockTypes with this same I.D.
-            int first_sibling_ordinal = ordinal(), last_sibling_ordinal_plus1 = ordinal() + 1;
-            while (first_sibling_ordinal > 0 && BlockType.values()[first_sibling_ordinal - 1].id_minus_128 == id_minus_128)
-                first_sibling_ordinal--;
-            while (last_sibling_ordinal_plus1 <= BlockType.values().length && BlockType.values()[last_sibling_ordinal_plus1].id_minus_128 == id_minus_128)
-                last_sibling_ordinal_plus1++;
-
-            // create an array of the appropriate size
-            BlockType[] results = new BlockType[last_sibling_ordinal_plus1 - first_sibling_ordinal];
-
-            /* fill in the array with the contents between first_sibling_ordinal and lasT_sibling_ordinal_plus1 (including the BlockType at ordinal first_sibling_ordinal, but
-             * NOT including the BlockType at ordinal last_sibling_ordinal_plus1) */
-            for (int i = first_sibling_ordinal; i < last_sibling_ordinal_plus1; i++)
-                results[i] = BlockType.values()[i];
-
-            return results;
-        }
-
-        public boolean isASiblingOf(BlockType type) {
-            return type.id_minus_128 == id_minus_128;
         }
 
         /** This method determines whether or not this {@link BlockType} can be mined and its drops obtained without a tool in Adventure Mode.
@@ -770,6 +748,47 @@ public class Block {
             return !blockMC.getMaterial().isToolNotRequired();
         }
 
+        // overridden properties
+        @Override
+        public byte getData() {
+            return data;
+        }
+
+        public short getID() {
+            return (short) (id_minus_128 + 128);
+        }
+
+        @Override
+        public byte getMaxStackSize() {
+            // ALL blocks stack to 64; it's items that can vary
+            return (byte) 64;
+        }
+
+        public BlockType[] getSiblings() {
+            // since BlockTypes are organized by I.D. and data value, all BlockTypes with the same I.D.s will be together
+            // first, find the first and last BlockTypes with this same I.D.
+            int first_sibling_ordinal = ordinal(), last_sibling_ordinal_plus1 = ordinal() + 1;
+            while (first_sibling_ordinal > 0 && BlockType.values()[first_sibling_ordinal - 1].id_minus_128 == id_minus_128)
+                first_sibling_ordinal--;
+            while (last_sibling_ordinal_plus1 <= BlockType.values().length && BlockType.values()[last_sibling_ordinal_plus1].id_minus_128 == id_minus_128)
+                last_sibling_ordinal_plus1++;
+
+            // create an array of the appropriate size
+            BlockType[] results = new BlockType[last_sibling_ordinal_plus1 - first_sibling_ordinal];
+
+            /* fill in the array with the contents between first_sibling_ordinal and lasT_sibling_ordinal_plus1 (including the BlockType at ordinal first_sibling_ordinal, but
+             * NOT including the BlockType at ordinal last_sibling_ordinal_plus1) */
+            for (int i = first_sibling_ordinal; i < last_sibling_ordinal_plus1; i++)
+                results[i] = BlockType.values()[i];
+
+            return results;
+        }
+
+        public boolean isASiblingOf(BlockType type) {
+            return type.id_minus_128 == id_minus_128;
+        }
+
+        // static utilities
         /** This method retrieves the {@link ItemType} with the given item I.D. value.
          * 
          * @param id
@@ -799,7 +818,7 @@ public class Block {
             return null;
         }
 
-        // overrides
+        // data management overrides
         /** This method returns the name of this {@link BlockType} formatted nicely for messages. This formatting includes lowercasing, replacing underscores with spaces, and
          * capitalizing the first letters of certain {@link BlockType}s. */
         @Override

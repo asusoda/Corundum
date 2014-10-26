@@ -12,8 +12,8 @@
 
 package Corundum.items.recipes;
 
-import Corundum.IDedType;
 import Corundum.utils.ListUtilities;
+import Corundum.utils.interfaces.IDedType;
 
 public class ShapedCraftingRecipe extends Recipe {
     public ShapedCraftingRecipe(IDedType[] materials, IDedType resulting_material) {

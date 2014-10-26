@@ -13,11 +13,13 @@
 package Corundum.items;
 
 import net.minecraft.item.ItemStack;
-import Corundum.Holdable;
-import Corundum.IDedType;
+import net.minecraft.item.ItemTool;
+import net.minecraft.item.Item.ToolMaterial;
 import Corundum.items.recipes.FurnaceRecipe;
 import Corundum.items.recipes.ShapedCraftingRecipe;
 import Corundum.items.recipes.Recipe;
+import Corundum.utils.interfaces.HoldableType;
+import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
 import Corundum.world.Biome.BiomeType;
@@ -49,60 +51,109 @@ public class Item {
         return null;
     }
 
-    public enum ItemType implements Holdable<ItemType>, Matchable<ItemType> {
+    public enum ItemType implements HoldableType<ItemType>, Matchable<ItemType> {
         // TODO: finish ItemType constructors
-        IRON_SHOVEL(256, new ShapedCraftingRecipe(null, ItemType.getByID(265), null, null, ItemType.getByID(280), null, null, ItemType.getByID(280), null, ItemType
-                .getByID(256)), 265),
-        IRON_PICKAXE(257, new ShapedCraftingRecipe(null, ItemType.getByID(265)), 265);
+        IRON_SHOVEL,
+        IRON_PICKAXE;
 
+        /** <b><i>DEV NOTES:</b></i><br>
+         * Unlike some other {@link IDedType}s, like {@link BlockType}, this type has its I.D. contained in a <b>short</b> instead of a <b>byte</b>. This is because the range
+         * of item I.D.s is greater than 256. Also note that we did not subtract the I.D. by any constant to utilize more of the range of the <b>short</b> simply because it is
+         * unnecessary; a <b>short</b> can hold the highest values of the item I.D.s without using any of its negative range. */
         private final short id;
-        private final byte data /* -1 indicates no static data value; the default is 0 */;
-        /* TODO: see if these can be obtained from Minecraft code */
-        private final short max_durability;
-        private final ItemType repairable_with;
-        private final Recipe recipe;
+        /** <b><i>DEV NOTES:</b></i><br>
+         * The default data value is 0. -1 indicates that this type is a "general" type, which means that it has no static data value and is used to describe all its siblings
+         * as a single group. For example, */
+        // TODO: finish the note above when there are more enums to link as examples
+        private final byte data;
 
-        // constructors for non-craftable items
-        private ItemType(int id) {
-            this.id = (byte) (id - 384);
-            data = 0;
-            max_durability = 0;
-            recipe = null;
-            repairable_with = null;
+        private final net.minecraft.item.Item itemMC;
+
+        /** This constructor makes a ItemType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
+         * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this ItemType the same I.D.
+         * and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
+         * use of the {@link #ItemType(int)} and {@link #ItemType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block
+         * and declaring one with a data value >= 0 will start a new block. */
+        private ItemType() {
+            ItemType previous_value = ItemType.values()[ordinal() - 1];
+            if (previous_value.data == -1) {
+                id = (byte) (previous_value.id + 1);
+                data = -1;
+            } else {
+                id = previous_value.id;
+                data = (byte) (previous_value.data + 1);
+            }
+
+            // find the Item with the given I.D.
+            itemMC = net.minecraft.item.Item.getItemById(id);
         }
 
-        private ItemType(int id, int data) {
-            this.id = (byte) (id - 384);
+        /** This constructor makes a ItemType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
+         * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
+         * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #ItemType(int)} and
+         * {@link #ItemType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
+         * >= 0 will start a new block.
+         * 
+         * @param data
+         *            is the data value for this {@link ItemType}. */
+        private ItemType(int data) {
             this.data = (byte) data;
-            max_durability = 0;
-            recipe = null;
-            repairable_with = null;
+
+            ItemType previous_value = ItemType.values()[ordinal() - 1];
+            // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
+            if (data <= previous_value.data)
+                id = (byte) (previous_value.id + 1);
+            // otherwise, this is the continuation of an I.D. block, so use the same I.D.
+            else
+                id = previous_value.id;
+
+            // find the Item with the given I.D.
+            itemMC = net.minecraft.item.Item.getItemById(id);
         }
 
-        private ItemType(int id, Recipe recipe) {
-            this.id = (byte) (id - 384);
-            data = 0;
-            max_durability = 0;
-            repairable_with = null;
+        /** This constructor makes a ItemType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
+         * 
+         * @param id
+         *            is the item I.D. that this {@link ItemType} is associated with.
+         * @param data
+         *            is the data value associated with this {@link ItemType}.
+         * @see {@link #ItemType(int)} */
+        private ItemType(int id, int data) {
+            this.id = (short) id;
+            this.data = (byte) data;
 
-            this.recipe = recipe;
+            // find the Item with the given I.D.
+            itemMC = net.minecraft.item.Item.getItemById(id);
         }
 
-        private ItemType(int id, Recipe recipe, int max_durability) {
-            this.id = (byte) (id - 384);
-            this.max_durability = (short) max_durability;
-            this.recipe = recipe;
-            data = 0;
-            repairable_with = null;
+        // class-specific methods
+        /** This method returns the maximum amount of damage an {@link Item} of this {@link ItemType} can take before it breaks. {@link ItemType}s that represent items that do
+         * not take damage such as {@link ItemType#STICK sticks} will return 0.
+         * 
+         * @return the maximum amount of damage an {@link Item} of this {@link ItemType} can take before breaking or 0 if this {@link ItemType} is not damageable. */
+        public short getMaxDurability() {
+            return (short) itemMC.getMaxDamage();
         }
 
-        private ItemType(int id, Recipe recipe, int max_durability, int repairable_with) {
-            this.id = (byte) (id - 384);
-            this.max_durability = (short) max_durability;
-            this.recipe = recipe;
-            data = 0;
+        public ItemType getRepairableType() {
+            if (itemMC instanceof ItemTool) {
+                ToolMaterial material = ((ItemTool) itemMC).func_150913_i();
 
-            this.repairable_with = ItemType.getByID(repairable_with);
+                /* TODO: replace this "return null" with an if-else if block to take this ToolMaterial and return the corresponding ItemType; there are only five
+                 * ToolMaterials. Also, please note that ToolMaterial.EMERALD is diamond; I don't know why the hell it's called "EMERALD" in the code. */
+                return null;
+            } else
+                return null;
+        }
+
+        public boolean isDamageable() {
+            return getMaxDurability() > 0;
+        }
+
+        // overridden properties
+        @Override
+        public byte getData() {
+            return data;
         }
 
         @Override
@@ -111,33 +162,37 @@ public class Item {
         }
 
         @Override
-        public byte getData() {
-            return data;
-        }
-
-        @Override
-        public Object[] getSortPriorities() {
-            return new Object[] { (short) (id + 384), data };
-        }
-
-        @Override
         public byte getMaxStackSize() {
-            // TODO Auto-generated method stub
-            return 0;
+            return (byte) itemMC.getItemStackLimit();
         }
 
         @Override
         public ItemType[] getSiblings() {
-            // TODO Auto-generated method stub
-            return null;
+            // since ItemTypes are organized by I.D. and data value, all ItemTypes with the same I.D.s will be together
+            // first, find the first and last ItemTypes with this same I.D.
+            int first_sibling_ordinal = ordinal(), last_sibling_ordinal_plus1 = ordinal() + 1;
+            while (first_sibling_ordinal > 0 && ItemType.values()[first_sibling_ordinal - 1].id == id)
+                first_sibling_ordinal--;
+            while (last_sibling_ordinal_plus1 <= ItemType.values().length && ItemType.values()[last_sibling_ordinal_plus1].id == id)
+                last_sibling_ordinal_plus1++;
+
+            // create an array of the appropriate size
+            ItemType[] results = new ItemType[last_sibling_ordinal_plus1 - first_sibling_ordinal];
+
+            /* fill in the array with the contents between first_sibling_ordinal and lasT_sibling_ordinal_plus1 (including the ItemType at ordinal first_sibling_ordinal, but
+             * NOT including the ItemType at ordinal last_sibling_ordinal_plus1) */
+            for (int i = first_sibling_ordinal; i < last_sibling_ordinal_plus1; i++)
+                results[i] = ItemType.values()[i];
+
+            return results;
         }
 
         @Override
         public boolean isASiblingOf(ItemType material) {
-            // TODO Auto-generated method stub
-            return false;
+            return material.id == id;
         }
 
+        // static utilities
         /** This method retrieves the {@link ItemType} with the given item I.D. value.
          * 
          * @param id
@@ -164,6 +219,12 @@ public class Item {
                         return item_type;
             }
             return null;
+        }
+
+        // data management overrides
+        @Override
+        public Object[] getSortPriorities() {
+            return new Object[] { (short) (id + 384), data };
         }
     }
 

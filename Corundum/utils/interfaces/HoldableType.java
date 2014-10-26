@@ -1,8 +1,8 @@
-package Corundum;
+package Corundum.utils.interfaces;
 
 import Corundum.world.Block;
 
-public interface Holdable<T> extends IDedType<T> {
+public interface HoldableType<T> extends IDedType<T> {
     /** This method returns the data value associated with this {@link IDedType}. The data value is an extra identifier in Minecraft used to differentiate between blocks on a
      * more specific level than I.D.s. If two blocks have the same I.D., but different data values, they could be the same kind of block, but be different sub-types; for
      * example, {@link IDedType#OAK_LOG oak logs} and {@link IDedType#SPRUCE_LOG spruce logs} are both types of wood logs and they both have the same I.D. and a lot of the same

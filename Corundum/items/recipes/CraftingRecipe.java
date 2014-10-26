@@ -1,6 +1,6 @@
 package Corundum.items.recipes;
 
-import Corundum.IDedType;
+import Corundum.utils.interfaces.IDedType;
 
 public abstract class CraftingRecipe extends Recipe {
     protected CraftingRecipe(IDedType<?>[] materials, IDedType<?> resulting_material, int number_of_resulting_items) {
