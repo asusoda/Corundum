@@ -20,8 +20,11 @@ import static Corundum.utils.StringUtilities.*;
 public class Enchantment {
     private int level;
 
+    private static final ItemType[] allArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.IRON_LEGGINGS, ItemType.IRON_CHESTPLATE, ItemType.IRON_HELMET, ItemType.DIAMOND_BOOTS, ItemType.DIAMOND_LEGGINGS, ItemType.DIAMOND_CHESTPLATE, ItemType.DIAMOND_HELMET, ItemType.LEATHER_BOOTS, ItemType.LEATHER_PANTS, ItemType.LEATHER_TUNIC, ItemType.LEATHER_CAP, ItemType.GOLDEN_BOOTS, ItemType.GOLDEN_LEGGINGS, ItemType.GOLDEN_CHESTPLATE, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_BOOTS, ItemType.CHAINMAIL_LEGGINGS, ItemType.CHAINMAIL_CHESTPLATE, ItemType.CHAINMAIL_HELMET};
+
     public enum EnchantmentType {
-        PROTECTION(4, ItemType.IRON_SHOVEL /* TODO TEMP: this should not be IRON_SHOVEL; I put it in as a placeholder */);
+        PROTECTION(4, allArmourTypes);
+        //TODO complete list
 
         private byte max_level;
         private ItemType[] applicable_items;
