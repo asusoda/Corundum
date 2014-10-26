@@ -14,6 +14,7 @@ package Corundum.world;
 
 import java.awt.Color;
 
+import Corundum.Holdable;
 import Corundum.IDedType;
 import Corundum.exceptions.UnfinishedException;
 import Corundum.items.Item.ItemType;
@@ -89,7 +90,7 @@ public class Block {
      * <li>"mushroom cap" blocks were renamed "GIANT_[color]_MUSHROOM"</li>
      * <li>the word "crops" was dropped off the name "wheat crops"</li>
      * <li>"wall-mounted" banners and signs dropped off the "-mounted" part, leaving "WALL_SIGN" and "WALL_BANNER"</li></ul> */
-    public enum BlockType implements IDedType<BlockType>, Matchable<BlockType> {
+    public enum BlockType implements Holdable<BlockType>, Matchable<BlockType> {
         AIR(0, 0),  // air must be initialized with both an I.D. and data value because it has no previous value to get I.D. and data info from!
         // stone types
         STONE(0),

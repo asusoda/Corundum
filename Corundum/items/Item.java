@@ -13,6 +13,7 @@
 package Corundum.items;
 
 import net.minecraft.item.ItemStack;
+import Corundum.Holdable;
 import Corundum.IDedType;
 import Corundum.items.recipes.FurnaceRecipe;
 import Corundum.items.recipes.ShapedCraftingRecipe;
@@ -48,9 +49,11 @@ public class Item {
         return null;
     }
 
-    public enum ItemType implements IDedType<ItemType>, Matchable<ItemType> {
+    public enum ItemType implements Holdable<ItemType>, Matchable<ItemType> {
+        // TODO: finish ItemType constructors
         IRON_SHOVEL(256, new ShapedCraftingRecipe(null, ItemType.getByID(265), null, null, ItemType.getByID(280), null, null, ItemType.getByID(280), null, ItemType
-                .getByID(256)), 265), IRON_PICKAXE(257, new ShapedCraftingRecipe(null, ItemType.getByID(265)), 265);
+                .getByID(256)), 265),
+        IRON_PICKAXE(257, new ShapedCraftingRecipe(null, ItemType.getByID(265)), 265);
 
         private final short id;
         private final byte data /* -1 indicates no static data value; the default is 0 */;

@@ -15,6 +15,7 @@ package Corundum.world;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import Corundum.IDedType;
 import Corundum.entities.Mob.MobType;
 import Corundum.utils.ListUtilities;
 import Corundum.exceptions.CorundumException;
@@ -29,8 +30,7 @@ public class Biome {
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
     private/* final */BiomeType type;
 
-    public static enum BiomeType {
-        // TODO finish biomes and give them all constructors.
+    public static enum BiomeType implements IDedType<BiomeType> {
         OCEAN,
         PLAINS,
         DESERT,
@@ -71,7 +71,27 @@ public class Biome {
         MESA,
         MESA_PLATEAU,
         MESA_PLATEAU_F,
-        ICE_PLAINS_SPIKES(140);
+        SUNFLOWER_PLAINS(129),
+        DESERT_M,
+        EXTREME_HILLS_M,
+        FLOWER_FOREST,
+        TAIGA_M,
+        SWAMPLAND_M,
+        ICE_PLAINS_SPIKES(140),
+        JUNGLE_M(149),
+        JUNGLE_EDGE_M(151),
+        BIRCH_FOREST_M(155),
+        BIRCH_FOREST_HILLS_M,
+        ROOFED_FOREST_M,
+        COLD_TAIGA_M,
+        MEGA_SPRUCE_TAIGA(160),
+        MEGA_SPRUCE_TAIGA_HILLS,
+        EXTREME_HILLS_PLUS_M,
+        SAVANNAH_M,
+        SAVANNAH_PLATEAU_M,
+        MESA_BRYCE,
+        MESA_PLATEAU_F_M,
+        MESA_PLATEAU_M;
 
         private BiomeGenBase biomeMC;
 
@@ -79,8 +99,8 @@ public class Biome {
                 MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP, MobType.SQUID, MobType.WITCH };
 
         private BiomeType() {
-            // if no I.D. is given, assume the I.D. is the same as the enum's ordinal
-            this.biomeMC = BiomeGenBase.func_150568_d(ordinal());
+            // if no I.D. is given, assume the I.D. is the next I.D. after the previous (0 for the first ordinal)
+            this.biomeMC = BiomeGenBase.func_150568_d(ordinal() == 0 ? 0 : BiomeType.values()[ordinal() - 1].getID() + 1);
         }
 
         /* DEV NOTES: This constructor should only be useful for variant biomes since their I.D.s skip values. Also, note that variant biome I.D.s are equal to their parent
@@ -151,9 +171,14 @@ public class Biome {
             // TODO: replace this linear search with a binary search algorithm
             if (id >= 0)
                 for (BiomeType item_type : values())
-                    if (item_type.biomeMC.biomeID == id)
+                    if (item_type.getID() == id)
                         return item_type;
             return null;
+        }
+
+        @Override
+        public short getID() {
+            return (short) biomeMC.biomeID;
         }
     }
 }
