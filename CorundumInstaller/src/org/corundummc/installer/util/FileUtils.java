@@ -33,46 +33,6 @@ public class FileUtils {
         }
 
         throw new RuntimeException("Unable to download " + fileLocation);
-
-        /*try {
-            Main.verbose("Downloading file from " + fileLocation);
-            File downloadedFile = new File(outDir, fileName);
-
-            if (!downloadedFile.exists()) {
-                downloadedFile.createNewFile();
-                Main.verbose("Created download file.");
-            }
-            else if (downloadedFile.exists()) {
-                downloadedFile.delete();
-                downloadedFile.createNewFile();
-                Main.verbose("Cleared download file.");
-            }
-
-            if (outDir.isDirectory()) {
-                HttpURLConnection downloadUrlConnection = (HttpURLConnection) fileLocation.openConnection();
-                Main.verbose("Established HttpURLConnection.");
-                //A Scanner is an easier way to read a stream than the while ((var = stream.read()) != -1) method,
-                //in my opinion. It's also neater.
-                Scanner streamScanner = new Scanner(downloadUrlConnection.getInputStream());
-                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadedFile));
-                int downloadedBytesCount = 0;
-
-                while (streamScanner.hasNextByte()) {
-                    byte nextByte = streamScanner.nextByte();
-                    outputStream.write(nextByte);
-                    downloadedBytesCount++;
-                    Main.verbose("Got byte " + nextByte);
-                }
-
-                Main.verbose("Finished downloading " + fileLocation + ", downloaded " + downloadedBytesCount + " bytes.");
-            }
-
-            return downloadedFile;
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-        throw new RuntimeException("Error downloading a file!");*/
     }
 
     public static void copyFile(File from, File to) {
