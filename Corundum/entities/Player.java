@@ -6,10 +6,10 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
-import Corundum.exceptions.UnfinishedException;
 import Corundum.items.Item;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
@@ -54,7 +54,8 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
 
     @Override
     public void message(String message) {
-        throw new UnfinishedException("Player.sendMessage()");
+        this.addChatMessage(new ChatComponentText(message));
+        //throw new UnfinishedException("Player.sendMessage()");
     }
 
     // ICommandSender implementations
