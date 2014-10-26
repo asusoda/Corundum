@@ -2,12 +2,18 @@ package Corundum;
 
 import java.io.File;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
 import Corundum.exceptions.CorundumException;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
+import Corundum.listeners.results.EventResult;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.messaging.MessageReceiver;
 import Corundum.utils.myList.myList;
@@ -16,7 +22,7 @@ import Corundum.world.Location;
 public class CorundumServer extends DedicatedServer implements MessageReceiver, Commander {
     /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
-    public static myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
+    public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -31,14 +37,20 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
         super(new File(file_path));
     }
 
+    public void broadcast(String message) {
+        // TODO
+    }
+
     public Location getLocation() {
         return null;
     }
 
+    @Override
     public String getName() {
         return getHostname();
     }
 
+    @Override
     public void message(String message) {
         logInfo(message);
     }
@@ -58,32 +70,70 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
      *                }
      *            })
      * </pre>
-     * @return <b>true</b> if a cancellation of the event was requested; <b>false</b> otherwise. */
-    public static CorundumListener generateEvent(ListenerCaller caller) {
+     * @return the {@link EventResult} resulting from passes through the last listener method. */
+    @SuppressWarnings("unchecked")
+    public EventResult generateEvent(@SuppressWarnings("rawtypes") ListenerCaller caller) {
+        EventResult result = null;
         for (CorundumPlugin plugin : plugins)
             if (plugin.isEnabled())
                 for (CorundumListener listener : plugin.getListeners())
                     try {
-                        /* if the listener method called by the event returned true, return this listener to indicate that this CorundumListener cancelled the event */
-                        if (caller.generateEvent(listener))
-                            return listener;
+                        result = caller.generateEvent(listener, result);
                     } catch (CorundumException exception) {
                         exception.err();
                     }
-
-        /* if the event gets through all the listener methods and doesn't get cancelled, return null to indicate that no listeners cancelled the event */
-        return null;
+        return result;
     }
 
     // server command handling
     @Override
     public void command(final String command) {
         final Commander _this = this;
-        generateEvent(new ListenerCaller<CommandListener>() {
+        EventResult result = generateEvent(new ListenerCaller<CommandListener, EventResult>() {
             @Override
-            public boolean generateEvent(CommandListener listener) {
-                return listener.onCommand(_this, command);
+            public EventResult generateEvent(CommandListener listener, EventResult result) {
+                return listener.onCommand(_this, command, result);
             }
         });
+
+        // if the event was cancelled, we're done here
+        if (result.isCancelled())
+            return;
+
+        // if the event wasn't cancelled, broadcast the message and execute the command
+        if (result.getServerMessage() != null)
+            broadcast(result.getServerMessage());
+
+        addPendingCommand(command, this);
+    }
+
+    @Override
+    public String getCommandSenderName() {
+        return toString();
+    }
+
+    @Override
+    public IChatComponent func_145748_c_() {
+        return new ChatComponentText("§dServer");
+    }
+
+    @Override
+    public void addChatMessage(IChatComponent p_145747_1_) {
+        message(p_145747_1_.toString());
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(@SuppressWarnings("unused") int p_70003_1_, @SuppressWarnings("unused") String p_70003_2_) {
+        return true;
+    }
+
+    @Override
+    public ChunkCoordinates getCommandSenderPosition() {
+        return null;
+    }
+
+    @Override
+    public World getEntityWorld() {
+        return null;
     }
 }

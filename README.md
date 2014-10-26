@@ -27,9 +27,8 @@ You can either use the installer under the CorundumInstaller directory here, OR 
 
  1. Download [MCP v9.08](http://www.mediafire.com/download/2czafa60rh4ajhj/mcp908.zip).
  2. Download the source code from this repository.
- 3. Go into conf/mcp.conf. Look near the bottom and you should see CmdRecomp. Change all instances of 1.6 with 1.7.
-    Optionally, do the same with the line beginning with CmdRecompScala, but that's only for if you want to use
-    Scala.
+ 3. Go into conf/mcp.conf. Look near the bottom and you should see CmdRecomp. Change all instances of "1.6" to "1.7". This ensures 
+    that MCP uses Java 7 rather than Java 6. Optionally, do the same with CmdRecompScala if your project includes Scala code.
  4. Run MCP's decompile script (decompile.bat for Windows, decompile.sh for *nix-based systems, including Mac).
  5. Extract the Corundum folder from the source code into MCP's "src/minecraft_server" folder.
  6. Run MCP's recompile and reobfuscate scripts.

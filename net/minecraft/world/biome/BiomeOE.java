@@ -3,6 +3,7 @@ package net.minecraft.world.biome;
 import java.util.ArrayList;
 
 import net.minecraft.world.biome.BiomeDecorator;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
 /** This class's sole purpose is to be inside the package <tt>net.minecraft.world.biome</tt> so that it can retrieve the values of protected methods and variables inside

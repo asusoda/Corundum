@@ -1,7 +1,5 @@
 package Corundum.listeners;
 
-import javax.annotation.Nonnull;
-
 import Corundum.Corundum;
 import Corundum.CorundumPlugin;
 import Corundum.entities.Entity;
@@ -18,6 +16,5 @@ import Corundum.entities.Mob;
  * 
  * @author REALDrummer */
 public interface CorundumListener {
-    @Nonnull
-    public CorundumPlugin getPlugin();
+    // nothing goes in here
 }

@@ -18,6 +18,7 @@ import Corundum.exceptions.CorundumException;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.plugins.PluginLoadListener;
+import Corundum.listeners.results.EventResult;
 import Corundum.utils.messaging.MessengerUtilities;
 import Corundum.utils.myList.myList;
 
@@ -129,17 +130,19 @@ public abstract class CorundumPlugin implements CorundumListener {
 
             // generate an event describing the loading
             final CorundumPlugin pluginF = plugin;
-            CorundumListener cancelling_listener = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener>() {
+            EventResult result = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
                 @Override
-                public boolean generateEvent(PluginLoadListener listener) {
-                    return listener.onPluginLoad(pluginF);
+                public EventResult generateEvent(PluginLoadListener listener, EventResult result) {
+                    if (result == null)
+                        result = new EventResult();
+
+                    return listener.onPluginLoad(pluginF, result);
                 }
             });
 
             // if the a cancellation was requested, close the URLClassLoader
-            if (cancelling_listener != null) {
-                plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" load cancelled by plugin \"" + cancelling_listener.getPlugin().getName()
-                        + "\"'s listener class \"" + cancelling_listener.getClass().getSimpleName() + "\"");
+            if (result.isCancelled()) {
+                plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" load cancelled");
                 Corundum.SERVER.plugins.remove(plugin);
                 try {
                     loader.close();
@@ -150,9 +153,9 @@ public abstract class CorundumPlugin implements CorundumListener {
             }
 
             // call the plugin's onLoad() method
-            boolean cancelled;
+            boolean success;
             try {
-                cancelled = plugin.onLoad();
+                success = plugin.onLoad();
             } catch (CorundumException exception) {
                 exception.err();
                 return null;
@@ -161,7 +164,7 @@ public abstract class CorundumPlugin implements CorundumListener {
                 return null;
             }
 
-            if (cancelled) {
+            if (!success) {
                 plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" cancelled its own loading");
                 Corundum.SERVER.plugins.remove(plugin);
                 try {
@@ -263,10 +266,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      *            is the debug message to send to the verbosely debugging parties.
      * @see {@link #debug(String)} */
     public void bloviate(String message) {
-        if (getPlugin() == null)
-            Corundum.secure("No CorundumPlugin's Messengers should return null for a plugin!");
-
-        MessengerUtilities.bloviate(getPlugin(), message);
+        MessengerUtilities.bloviate(this, message);
     }
 
     /** This method broadcasts the given message to the server, displaying it in the console, in all players' chats, and in the logs.
@@ -275,9 +275,6 @@ public abstract class CorundumPlugin implements CorundumListener {
      *            is the message to be broadcasted to the server.
      * @see {@link Messenger#broadcast(String)} */
     public void broadcast(String message) {
-        if (getPlugin() == null)
-            Corundum.secure("No CorundumPlugin's Messengers should return null for a plugin!");
-
         tellConsole(message);
 
         // TODO: when supportable, send the message to all players on the server
@@ -292,15 +289,15 @@ public abstract class CorundumPlugin implements CorundumListener {
      * 
      * @see {@link #bloviate(String)} */
     public void debug(String message) {
-        MessengerUtilities.debug(getPlugin(), message);
+        MessengerUtilities.debug(this, message);
     }
 
     public void tellConsole(String message) {
-        MessengerUtilities.tellConsole(getPlugin(), message);
+        Corundum.SERVER.message(getPrefix() + message);
     }
 
     public void tellPlayer(Player player, String message) {
-        MessengerUtilities.tellPlayer(getPlugin(), player, message);
+        player.message(getPrefix() + message);
     }
 
     // plugin handling event handling for plugin makers

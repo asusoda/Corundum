@@ -130,7 +130,6 @@ public class MessengerUtilities {
         }
 
         // TODO: when it can be supported, send debug messages to all debugging players
-        throw new UnfinishedException("MessengerUtilities.debug");
     }
 
     public static void tellConsole(CorundumPlugin plugin, String message) {

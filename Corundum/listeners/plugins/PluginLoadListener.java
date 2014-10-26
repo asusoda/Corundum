@@ -1,7 +1,9 @@
 package Corundum.listeners.plugins;
 
 import Corundum.CorundumPlugin;
+import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
+import Corundum.listeners.results.EventResult;
 
 public interface PluginLoadListener extends CorundumListener {
     /** This listener method is called whenever a {@link CorundumPlugin} is loaded from a jar onto the server. Note that "loading" a plugin simply loads it into the RAM, making
@@ -10,6 +12,8 @@ public interface PluginLoadListener extends CorundumListener {
      * 
      * @param plugin
      *            is the {@link CorundumPlugin} being loaded from its jar file to the server.
-     * @return <b>true</b> if the event that this call represents should be cancelled; <b>false</b> otherwise. */
-    public boolean onPluginLoad(CorundumPlugin plugin);
+     * @param result
+     *            is the {@link EventResult} from calling this method in other {@link CommandListener}s.
+     * @return the {@link EventResult} describing any changes to this event's properties. */
+    public EventResult onPluginLoad(CorundumPlugin plugin, EventResult result);
 }
