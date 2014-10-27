@@ -12,9 +12,15 @@
 
 package Corundum.items;
 
+import org.omg.CosNaming.NamingContextPackage.NotEmpty;
+
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
+import Corundum.Corundum;
+import Corundum.exceptions.CIE;
 import Corundum.items.recipes.FurnaceRecipe;
 import Corundum.items.recipes.ShapedCraftingRecipe;
 import Corundum.items.recipes.Recipe;
@@ -413,6 +419,7 @@ public class Item {
 
         private final net.minecraft.item.Item itemMC;
 
+        // constructors
         /** This constructor makes a ItemType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
          * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this ItemType the same I.D.
          * and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
@@ -479,6 +486,42 @@ public class Item {
             itemMC = net.minecraft.item.Item.getItemById(id);
         }
 
+        // private utilities
+        private static ItemType fromMCArmorMaterial(ArmorMaterial material) {
+            switch (material) {
+                case DIAMOND:
+                    return ItemType.DIAMOND;
+                case IRON:
+                case CHAIN:
+                    return ItemType.IRON_INGOT;
+                case GOLD:
+                    return ItemType.GOLD_INGOT;
+                case CLOTH:
+                    return ItemType.LEATHER;
+                default:
+                    throw new CIE("This piece of armor is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
+                            + Corundum.MCVERSION, "unidentified tool material", "material=" + material.toString());
+            }
+        }
+
+        private static HoldableType<?> fromMCToolMaterial(ToolMaterial material) {
+            switch (material) {
+                case EMERALD:
+                    return ItemType.DIAMOND;
+                case IRON:
+                    return ItemType.IRON_INGOT;
+                case STONE:
+                    return BlockType.COBBLESTONE;
+                case GOLD:
+                    return ItemType.GOLD_INGOT;
+                case WOOD:
+                    return BlockType.OAK_WOOD_PLANKS;
+                default:
+                    throw new CIE("This tool is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
+                            + Corundum.MCVERSION, "unidentified tool material", "material=" + material.toString());
+            }
+        }
+
         // class-specific methods
         /** This method returns the maximum amount of damage an {@link Item} of this {@link ItemType} can take before it breaks. {@link ItemType}s that represent items that do
          * not take damage such as {@link ItemType#STICK sticks} will return 0.
@@ -488,19 +531,43 @@ public class Item {
             return (short) itemMC.getMaxDamage();
         }
 
-        public ItemType getRepairableType() {
-            if (itemMC instanceof ItemTool) {
-                ToolMaterial material = ((ItemTool) itemMC).func_150913_i();
-
-                /* TODO: replace this "return null" with an if-else if block to take this ToolMaterial and return the corresponding ItemType; there are only five
-                 * ToolMaterials. Also, please note that ToolMaterial.EMERALD is diamond; I don't know why the hell it's called "EMERALD" in the code. */
-                return null;
-            } else
+        /** This method returns the type of material -- either a {@link BlockType} or an {@link ItemType} -- that can be used to repair this type of item in an
+         * {@link BlockType#ANVIL anvil}. Note that this is only applicable for tools and armor; calling this method for any other kind of item will return <b>null</b>. If an
+         * {@link ItemType} can only be repaired with another item of the same type -- like {@link ItemType#CARROT_ON_A_STICK a carrot on a stick} -- this method still returns
+         * <b>null</b>.
+         * 
+         * @return the {@link BlockType} or {@link ItemType} that can be used to repair this item in an anvil or <b>null</b> if an item of this type cannot be repaired in an
+         *         {@link BlockType#ANVIL anvil} with any other type of item besides itself. */
+        public HoldableType<?> getRepairMaterial() {
+            if (itemMC instanceof ItemTool)
+                return fromMCToolMaterial(((ItemTool) itemMC).func_150913_i());
+            else if (itemMC instanceof ItemArmor)
+                return fromMCArmorMaterial(((ItemArmor) itemMC).getArmorMaterial());
+            else
                 return null;
         }
 
+        /** This method determines whether or not an item of this {@link ItemType} can be damaged. Tools such as {@link ItemType#IRON_AXE iron axes} and {@link ItemType#SHEARS
+         * shears} and armor such as {@link ItemType#IRON_CHESTPLATE iron chestplates} are damageable while most other items are not.
+         * 
+         * @return <b>true</b> if this an item of this {@link ItemType} can be damaged like armor or tools; <b>false</b> otherwise. */
         public boolean isDamageable() {
             return getMaxDurability() > 0;
+        }
+
+        /** This method determines whether or not this {@link ItemType} represents a music disk such as {@link ItemType#MUSIC_DISK_MELLOHI "Mellohi"}.
+         * 
+         * @return <b>true</b> if this {@link ItemType} represents a type of music disk; <b>false</b> otherwise. */
+        public boolean isMusicDisk() {
+            return id >= 2256;
+        }
+
+        /** This method determines whether or not this {@link ItemType} represents a potion like {@link ItemType#SWIFTNESS_POTION a Swiftness Potion}. Note that despite the
+         * fact that they have the same I.D. as potions, this method does <i>not</i> return <b>true</b> for {@link ItemType#WATER_BOTTLE water bottles}.
+         * 
+         * @return <b>true</b> if this {@link ItemType} represents a potion (not including {@link ItemType#WATER_BOTTLE water bottles}; <b>false</b> otherwise. */
+        public boolean isPotion() {
+            return isASiblingOf(ItemType.SWIFTNESS_POTION) && data > 0 /* the data check eliminates water bottles */;
         }
 
         // overridden properties
@@ -580,5 +647,4 @@ public class Item {
             return new Object[] { (short) (id + 384), data };
         }
     }
-
 }

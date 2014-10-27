@@ -17,7 +17,7 @@ import Corundum.utils.messaging.MessageColor;
  * opposed to a {@link CorundumException}, which is for use with the A.P.I. to handle errors that occur inside {@link CorundumPlugin}s.
  * 
  * @author REALDrummer */
-public class CIE extends Throwable {
+public class CIE extends RuntimeException {
 
     private static final long serialVersionUID = 7593335510270990574L;
 

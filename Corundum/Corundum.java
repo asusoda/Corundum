@@ -19,7 +19,7 @@ import static Corundum.utils.StringUtilities.capitalize;
  * 
  * @author REALDrummer */
 public class Corundum {
-    public final String VERSION = "pre-α";
+    public static final String VERSION = "pre-α", MCVERSION = "1.7.10";
 
     public static final Corundum CORUNDUM = new Corundum();
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
