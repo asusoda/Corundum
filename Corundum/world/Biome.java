@@ -27,6 +27,10 @@ import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.biome.BiomeOE;
 
 public class Biome {
+    public Biome(BiomeType type) {
+        this.type = type;
+    }
+
     // TODO TEMP: "final"s are commented to avoid compilation errors for now
     private/* final */BiomeType type;
 

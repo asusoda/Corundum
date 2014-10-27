@@ -39,13 +39,16 @@ public class Block {
      * 
      * @return the {@link Biome} that this block is in. */
     public Biome getBiome() {
-        // TODO
-        throw new CorundumException("UNFINISHED CALL TO Block.getBiome(): Block.getBiome()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        int posXInChunk = this.location.getBlockX() % 16;
+        int posZInChunk = this.location.getBlockZ() % 16;
+        //Returns new Biome instance for now. Not sure if correct/intended method.
+        return new Biome(getChunk().getBiomeMap()[posXInChunk][posZInChunk]);
     }
 
     public Chunk getChunk() {
-        // TODO
-        throw new CorundumException("UNFINISHED CALL TO Block.getChunk: Block.getChunk()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().getMCWorld().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
+        //Is this the intended way? Instantiating a new Chunk object?
+        return new Chunk(mcChunk);
     }
 
     public byte getData() {
