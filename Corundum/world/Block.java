@@ -14,22 +14,9 @@ package Corundum.world;
 
 import java.awt.Color;
 
-import javax.swing.JApplet;
-
-import Corundum.Corundum;
-import Corundum.CorundumServer;
-import Corundum.exceptions.CorundumException;
-import com.google.common.eventbus.AllowConcurrentEvents;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.MinecraftException;
 import Corundum.items.Item.ItemType;
-import Corundum.utils.ListUtilities;
-import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.HoldableType;
-import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
-import Corundum.utils.myList.myList;
 import Corundum.world.Biome.BiomeType;
 
 public class Block {
