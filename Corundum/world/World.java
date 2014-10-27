@@ -12,6 +12,7 @@
 
 package Corundum.world;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
@@ -43,6 +44,19 @@ public class World implements Matchable<World> {
 
         if (!worlds.contains(this))
             worlds.add(this);
+    }
+
+    public World() {
+        this((WorldServer) MinecraftServer.getServer().getEntityWorld());
+    }
+
+    public World(WorldType type) {
+        this.worldMC = (WorldServer) MinecraftServer.getServer().getEntityWorld();
+        this.type = type;
+
+        if (!worlds.contains(this)) {
+            worlds.add(this);
+        }
     }
 
     public static World fromMCWorld(WorldServer worldMC) {

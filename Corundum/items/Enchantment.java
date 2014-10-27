@@ -12,16 +12,47 @@
 
 package Corundum.items;
 
-import Corundum.Corundum;
 import Corundum.exceptions.CorundumException;
 import Corundum.items.Item.ItemType;
+import Corundum.utils.ListUtilities;
+
 import static Corundum.utils.StringUtilities.*;
 
 public class Enchantment {
     private int level;
 
+    private static final ItemType[] allArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.IRON_LEGGINGS, ItemType.IRON_CHESTPLATE, ItemType.IRON_HELMET, ItemType.DIAMOND_BOOTS, ItemType.DIAMOND_LEGGINGS, ItemType.DIAMOND_CHESTPLATE, ItemType.DIAMOND_HELMET, ItemType.LEATHER_BOOTS, ItemType.LEATHER_PANTS, ItemType.LEATHER_TUNIC, ItemType.LEATHER_CAP, ItemType.GOLDEN_BOOTS, ItemType.GOLDEN_LEGGINGS, ItemType.GOLDEN_CHESTPLATE, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_BOOTS, ItemType.CHAINMAIL_LEGGINGS, ItemType.CHAINMAIL_CHESTPLATE, ItemType.CHAINMAIL_HELMET};
+    private static final ItemType[] allBootArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.GOLDEN_BOOTS, ItemType.DIAMOND_BOOTS, ItemType.LEATHER_BOOTS, ItemType.CHAINMAIL_BOOTS};
+    private static final ItemType[] allHelmetArmourTypes = new ItemType[] {ItemType.IRON_HELMET, ItemType.GOLDEN_HELMET, ItemType.DIAMOND_HELMET, ItemType.LEATHER_CAP, ItemType.CHAINMAIL_HELMET};
+    private static final ItemType[] allSwordTypes = new ItemType[] {ItemType.WOODEN_SWORD, ItemType.STONE_SWORD, ItemType.IRON_SWORD, ItemType.GOLDEN_SWORD, ItemType.DIAMOND_SWORD};
+    private static final ItemType[] allAxeTypes = new ItemType[] {ItemType.WOODEN_AXE, ItemType.STONE_AXE, ItemType.IRON_AXE, ItemType.GOLDEN_AXE, ItemType.DIAMOND_AXE};
+    private static final ItemType[] allPickAxeTypes = new ItemType[] {ItemType.WOODEN_PICKAXE, ItemType.STONE_PICKAXE, ItemType.IRON_PICKAXE, ItemType.GOLDEN_PICKAXE, ItemType.DIAMOND_PICKAXE};
+    private static final ItemType[] allShovelTypes = new ItemType[] {ItemType.WOODEN_SHOVEL, ItemType.STONE_SHOVEL, ItemType.IRON_SHOVEL, ItemType.GOLDEN_SHOVEL, ItemType.DIAMOND_SHOVEL};
+    private static final ItemType[] allHoeTypes = new ItemType[] {ItemType.WOODEN_HOE, ItemType.STONE_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.DIAMOND_HOE};
+
     public enum EnchantmentType {
-        PROTECTION(4, ItemType.IRON_SHOVEL /* TODO TEMP: this should not be IRON_SHOVEL; I put it in as a placeholder */);
+        PROTECTION(4, allArmourTypes),
+        FIRE_PROTECTION(4, allArmourTypes),
+        FEATHER_FALLING(4, allBootArmourTypes),
+        BLAST_PROTECTION(4, allArmourTypes),
+        PROJECTILE_PROTECTION(4, allArmourTypes),
+        RESPIRATION(3, allHelmetArmourTypes),
+        AQUA_AFFINITY(1, allHelmetArmourTypes),
+        THORNS(3, allArmourTypes),
+        SHARPNESS(5, (ItemType[]) ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
+        SMITE(5, (ItemType[]) ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
+        BANE_OF_ARTHROPODS(5, (ItemType[]) ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
+        KNOCKBACK(2, allSwordTypes),
+        FIRE_ASPECT(2, allSwordTypes),
+        LOOTING(3, allSwordTypes),
+        EFFICIENCY(5, (ItemType[]) ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] {ItemType.SHEARS})),
+        SILK_TOUCH(1, (ItemType[]) ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] {ItemType.SHEARS})),
+        UNBREAKING(3, (ItemType[]) ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, allSwordTypes, allArmourTypes, allHoeTypes, new ItemType[] {ItemType.SHEARS, ItemType.FISHING_ROD, ItemType.CARROT_ON_A_STICK, ItemType.BOW})),
+        FORTUNE(3, (ItemType[]) ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes)),
+        POWER(5, ItemType.BOW),
+        PUNCH(2, ItemType.BOW),
+        FLAME(1, ItemType.BOW),
+        INFINITY(1, ItemType.BOW);
 
         private byte max_level;
         private ItemType[] applicable_items;

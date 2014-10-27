@@ -1,8 +1,12 @@
 package Corundum;
 
 import java.io.File;
+import java.util.List;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
@@ -27,9 +31,7 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
      * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link Corundum#SERVER}.
-     * 
-     * @param loader
-     *            is the class loader used to load the server from its jar file.
+     *
      * @param file_path
      *            is the path of the file from which this server should be loaded. */
     public CorundumServer(String file_path) {
@@ -38,7 +40,15 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
     }
 
     public void broadcast(String message) {
-        // TODO
+        super.addChatMessage(new ChatComponentText(message));
+
+        List<? extends Entity> allEntities = super.getEntityWorld().loadedEntityList;
+
+        for (Entity entity : allEntities) {
+            if (entity.getClass() == EntityPlayer.class || entity.getClass() == EntityPlayerMP.class) {
+                ((EntityPlayer) entity).addChatMessage(new ChatComponentText(message));
+            }
+        }
     }
 
     public Location getLocation() {

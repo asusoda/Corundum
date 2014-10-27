@@ -14,7 +14,7 @@ import org.corundummc.installer.Main;
  * @author Niadel
  */
 public class TaskDownloadAndExtractMCP implements ITask {
-    private static String mcpDownloadUrl = "http://download1783.mediafire.com/k8tsqz0f3m0g/2czafa60rh4ajhj/mcp908.zip";
+    private static String mcpDownloadUrl = "http://www.mediafire.com/download/2czafa60rh4ajhj/mcp908.zip";
 
     @Override
     public void execute() {

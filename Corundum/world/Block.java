@@ -14,20 +14,9 @@ package Corundum.world;
 
 import java.awt.Color;
 
-import javax.swing.JApplet;
-
-import com.google.common.eventbus.AllowConcurrentEvents;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.MinecraftException;
-import Corundum.exceptions.UnfinishedException;
 import Corundum.items.Item.ItemType;
-import Corundum.utils.ListUtilities;
-import Corundum.utils.StringUtilities;
 import Corundum.utils.interfaces.HoldableType;
-import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
-import Corundum.utils.myList.myList;
 import Corundum.world.Biome.BiomeType;
 
 public class Block {
@@ -39,13 +28,16 @@ public class Block {
      * 
      * @return the {@link Biome} that this block is in. */
     public Biome getBiome() {
-        // TODO
-        throw new UnfinishedException("Block.getBiome()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        int posXInChunk = this.location.getBlockX() % 16;
+        int posZInChunk = this.location.getBlockZ() % 16;
+        //Returns new Biome instance for now. Not sure if correct/intended method.
+        return new Biome(getChunk().getBiomeMap()[posXInChunk][posZInChunk]);
     }
 
     public Chunk getChunk() {
-        // TODO
-        throw new UnfinishedException("Block.getChunk()", "block type=\"" + type + "\"", "location =\"" + location + "\"");
+        net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().getMCWorld().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
+        //Is this the intended way? Instantiating a new Chunk object?
+        return new Chunk(mcChunk);
     }
 
     public byte getData() {
