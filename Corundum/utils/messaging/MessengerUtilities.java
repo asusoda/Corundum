@@ -8,6 +8,7 @@ import Corundum.CorundumPlugin;
 import Corundum.entities.Player;
 import Corundum.exceptions.UnfinishedException;
 import Corundum.utils.myList.myList;
+import net.minecraft.util.ChatComponentText;
 
 public class MessengerUtilities {
     /** This {@link myList} keeps track of the players who are currently in debugging mode; <b>null</b> repesents {@link Corundum#CONSOLE the console} while non-<b>null</b>
@@ -68,7 +69,7 @@ public class MessengerUtilities {
     }
 
     public static void tellPlayer(Player player, String message) {
-        tellPlayer(null, message);
+        player.addChatMessage(new ChatComponentText(message));
     }
 
     // plugin-specific messaging utilities
@@ -106,7 +107,7 @@ public class MessengerUtilities {
      *            is the message to be broadcasted to the server.
      * @see {@link Messenger#broadcast(String)} */
     public static void broadcast(CorundumPlugin plugin, String message) {
-        throw new UnfinishedException("MessengerUtilities.broadcast()");
+        Corundum.SERVER.broadcast(plugin.getPrefix() + message);
     }
 
     /** This method sends the given message to all the players (or console) that are currently in "debugging mode". These messages should contain basic important information
