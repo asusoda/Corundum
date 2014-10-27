@@ -33,7 +33,7 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
 
     @Override
     public Location getLocation() {
-        return new Location(playerMC.getCommandSenderPosition().posX, playerMC.getCommandSenderPosition().posY, playerMC.getCommandSenderPosition().posZ, Corundum.world.World
+        return new Location(playerMC.getCommandSenderPosition().posX, playerMC.getCommandSenderPosition().posY, playerMC.getCommandSenderPosition().posZ, World
                 .fromMCWorld((WorldServer) playerMC.worldObj));
     }
 

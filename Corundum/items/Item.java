@@ -34,7 +34,7 @@ public class Item {
 
     public Item(ItemType type, Enchantment... enchantments) {
         this.type = type;
-        this.enchantments = new myList<Enchantment>(enchantments);
+        this.enchantments = new myList<>(enchantments);
     }
 
     // TODO: add methods for adding, removing, and modifying enchantments

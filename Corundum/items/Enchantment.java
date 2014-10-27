@@ -12,7 +12,6 @@
 
 package Corundum.items;
 
-import Corundum.Corundum;
 import Corundum.exceptions.CorundumException;
 import Corundum.items.Item.ItemType;
 import Corundum.utils.ListUtilities;

@@ -16,6 +16,8 @@ import java.awt.Color;
 
 import javax.swing.JApplet;
 
+import Corundum.Corundum;
+import Corundum.CorundumServer;
 import Corundum.exceptions.CorundumException;
 import com.google.common.eventbus.AllowConcurrentEvents;
 
