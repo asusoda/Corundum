@@ -133,7 +133,7 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(@SuppressWarnings("unused") int commandLevel, @SuppressWarnings("unused") String command) {
+    public boolean canCommandSenderUseCommand(int commandLevel, String command) {
         return super.canCommandSenderUseCommand(commandLevel, command);
     }
 

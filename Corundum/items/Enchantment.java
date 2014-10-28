@@ -20,6 +20,7 @@ import static Corundum.utils.StringUtilities.*;
 
 public class Enchantment {
     private int level;
+    private EnchantmentType type;
 
     private static final ItemType[] allArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.IRON_LEGGINGS, ItemType.IRON_CHESTPLATE, ItemType.IRON_HELMET, ItemType.DIAMOND_BOOTS, ItemType.DIAMOND_LEGGINGS, ItemType.DIAMOND_CHESTPLATE, ItemType.DIAMOND_HELMET, ItemType.LEATHER_BOOTS, ItemType.LEATHER_PANTS, ItemType.LEATHER_TUNIC, ItemType.LEATHER_CAP, ItemType.GOLDEN_BOOTS, ItemType.GOLDEN_LEGGINGS, ItemType.GOLDEN_CHESTPLATE, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_BOOTS, ItemType.CHAINMAIL_LEGGINGS, ItemType.CHAINMAIL_CHESTPLATE, ItemType.CHAINMAIL_HELMET};
     private static final ItemType[] allBootArmourTypes = new ItemType[] {ItemType.IRON_BOOTS, ItemType.GOLDEN_BOOTS, ItemType.DIAMOND_BOOTS, ItemType.LEATHER_BOOTS, ItemType.CHAINMAIL_BOOTS};
@@ -29,6 +30,15 @@ public class Enchantment {
     private static final ItemType[] allPickAxeTypes = new ItemType[] {ItemType.WOODEN_PICKAXE, ItemType.STONE_PICKAXE, ItemType.IRON_PICKAXE, ItemType.GOLDEN_PICKAXE, ItemType.DIAMOND_PICKAXE};
     private static final ItemType[] allShovelTypes = new ItemType[] {ItemType.WOODEN_SHOVEL, ItemType.STONE_SHOVEL, ItemType.IRON_SHOVEL, ItemType.GOLDEN_SHOVEL, ItemType.DIAMOND_SHOVEL};
     private static final ItemType[] allHoeTypes = new ItemType[] {ItemType.WOODEN_HOE, ItemType.STONE_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.DIAMOND_HOE};
+
+    public Enchantment(int level, EnchantmentType type) {
+        if (!(level > type.getMaxLevel())) {
+            this.level = level;
+            this.type = type;
+        } else {
+            throw new EnchantmentLevelException("Attempted to create an enchantment with a level higher than the maximum possible for it's enchantment type!", type, level);
+        }
+    }
 
     public enum EnchantmentType {
         PROTECTION(4, allArmourTypes),
@@ -92,6 +102,14 @@ public class Enchantment {
                         applicable_items_index++;
                     }
             }
+        }
+
+        public byte getMaxLevel() {
+            return this.max_level;
+        }
+
+        public ItemType[] getApplicableItems() {
+            return this.applicable_items;
         }
 
         @Override
