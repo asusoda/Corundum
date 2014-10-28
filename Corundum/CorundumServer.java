@@ -128,13 +128,13 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
     }
 
     @Override
-    public void addChatMessage(IChatComponent p_145747_1_) {
-        message(p_145747_1_.toString());
+    public void addChatMessage(IChatComponent chatComponent) {
+        message(chatComponent.toString());
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(@SuppressWarnings("unused") int p_70003_1_, @SuppressWarnings("unused") String p_70003_2_) {
-        return true;
+    public boolean canCommandSenderUseCommand(@SuppressWarnings("unused") int commandLevel, @SuppressWarnings("unused") String command) {
+        return super.canCommandSenderUseCommand(commandLevel, command);
     }
 
     @Override
@@ -144,6 +144,6 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
 
     @Override
     public World getEntityWorld() {
-        return null;
+        return super.getEntityWorld();
     }
 }

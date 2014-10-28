@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class CorundumLauncher {
     /**
      * The current version of Minecraft. I would use the Corundum.MCVERSION, but at the point of <clinit> (when static
-     * variables are initialised internally), the Corundum class is not loaded, and would cause issues if that was loaded here.
+     * variables are initialised internally), the Corundum class is not loaded, and would cause issues if that was used here.
      */
     public static final String MC_VER = "1.7.10";
 
