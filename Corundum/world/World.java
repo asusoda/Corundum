@@ -76,6 +76,10 @@ public class World implements Matchable<World> {
         return type;
     }
 
+    public void setBlock(Block.BlockType blockType, Location location) {
+        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.getBlockMC());
+    }
+
     public enum WorldType {
         OVERWORLD, NETHER, END, CUSTOM;
     }
