@@ -12,8 +12,6 @@
 
 package Corundum.items;
 
-import org.omg.CosNaming.NamingContextPackage.NotEmpty;
-
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
@@ -21,14 +19,10 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
 import Corundum.Corundum;
 import Corundum.exceptions.CIE;
-import Corundum.items.recipes.FurnaceRecipe;
-import Corundum.items.recipes.ShapedCraftingRecipe;
-import Corundum.items.recipes.Recipe;
 import Corundum.utils.interfaces.HoldableType;
 import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
-import Corundum.world.Block;
 import Corundum.world.Biome.BiomeType;
 import Corundum.world.Block.BlockType;
 
