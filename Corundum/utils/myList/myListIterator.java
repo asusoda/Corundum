@@ -16,7 +16,7 @@ package Corundum.utils.myList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/** This {@link Iterator} is able to iterate through {@link myList}s one element at a time from beginning to end. This class not only allows the use of {@link myLists}s in Java
+/** This {@link Iterator} is able to iterate through {@link myList}s one element at a time from beginning to end. This class not only allows the use of {@link myList}s in Java
  * for-each loops (e.g. <tt>for (Object object : objects)</tt>), but also provides a method of iterating through {@link myList}s much more efficient than retrieval by index;
  * because {@link myList}s are binary tree structures, every retrieval by index is <tt>Θ(lg(n))</tt>, but iterators allow searching from the last found node, which results in
  * <tt>Θ(1)</tt> time for iteration.

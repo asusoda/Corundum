@@ -178,6 +178,14 @@ public class ListUtilities {
 
     // TODO: containsAND and containsOR
 
+    public static boolean containsAND(Object[] objects, Object obj1, Object obj2) {
+        return contains(objects, obj1) && contains(objects, obj2);
+    }
+
+    public static boolean containsOR(Object[] objects, Object obj1, Object obj2) {
+        return contains(objects, obj1) || contains(objects, obj2);
+    }
+
     /** This method separates items in a properly formatted list into individual Strings.
      * 
      * @param list

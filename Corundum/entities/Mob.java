@@ -12,7 +12,6 @@
 
 package Corundum.entities;
 
-import net.minecraft.server.gui.PlayerListComponent;
 import Corundum.exceptions.CorundumException;
 import Corundum.items.Item;
 import Corundum.world.Location;
@@ -63,7 +62,7 @@ public class Mob extends Entity {
         MAGMA_CUBE(EntityType.MAGMA_CUBE, false, false),
         GHAST(EntityType.GHAST, false, true),
         ENDERDRAGON(EntityType.ENDERDRAGON, false, true),
-        WITHER(EntityType.WITHER, false, true);  // TODO: 3. finish this list
+        WITHER(EntityType.WITHER, false, true);
 
         //Used to get basic data about the mob, mainly used because I don't want to redo all of EntityType again.
         private final EntityType entityType;

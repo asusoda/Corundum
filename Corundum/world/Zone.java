@@ -58,5 +58,9 @@ public class Zone {
         }
     }
 
+    public void fillWithAir() {
+        this.fillWithBlock(Block.BlockType.AIR);
+    }
+
     // TODO: utilities
 }

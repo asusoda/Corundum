@@ -54,6 +54,7 @@ public class Block {
 
     public void setData(byte data) {
         this.data = data;
+        this.location.getWorld().setBlockData(this.location, data);
         // TODO: change the BlockType if necessary
         // TODO: send a packet to clients concerning the block change
     }

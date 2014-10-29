@@ -80,6 +80,14 @@ public class World implements Matchable<World> {
         this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.getBlockMC());
     }
 
+    public void setBlockWithMetadata(Block.BlockType blockType, Location location, byte data) {
+        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.getBlockMC(), data, 3);
+    }
+
+    public void setBlockData(Location blockLocation, byte newData) {
+        this.worldMC.setBlockMetadata(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ(), newData, 3);
+    }
+
     public enum WorldType {
         OVERWORLD, NETHER, END, CUSTOM;
     }
