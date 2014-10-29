@@ -276,6 +276,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      * @see {@link Messenger#broadcast(String)} */
     public void broadcast(String message) {
         tellConsole(message);
+        Corundum.SERVER.broadcast(message);
 
         // TODO: when supportable, send the message to all players on the server
     }

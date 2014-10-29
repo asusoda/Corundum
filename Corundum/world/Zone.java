@@ -35,12 +35,27 @@ public class Zone {
 
     }
 
-    public float getVolume() {
-        float xLength = (float) (this.high.getX() - this.low.getX());
-        float yLength = (float) (this.high.getY() - this.low.getY());
-        float zLength = (float) (this.high.getZ() - this.low.getZ());
+    public double getVolume() {
+        double xLength = this.high.getX() - this.low.getX();
+        double yLength = this.high.getY() - this.low.getY();
+        double zLength = this.high.getZ() - this.low.getZ();
 
         return xLength * yLength * zLength;
+    }
+
+    public void fillWithBlock(Block.BlockType block) {
+        Location currLocation = new Location(0, 0, 0, this.low.getWorld());
+
+        for (int x = this.low.getBlockX(); x == this.high.getBlockX(); x++) {
+            for (int y = this.low.getBlockY(); y == this.high.getBlockY(); y++) {
+                for (int z = this.low.getBlockZ(); z == this.high.getBlockZ(); z++) {
+                    currLocation.setX(x);
+                    currLocation.setY(y);
+                    currLocation.setZ(z);
+                    this.low.getWorld().setBlock(block, currLocation);
+                }
+            }
+        }
     }
 
     // TODO: utilities

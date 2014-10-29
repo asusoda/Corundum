@@ -798,6 +798,10 @@ public class Block {
             return null;
         }
 
+        public net.minecraft.block.Block getBlockMC() {
+            return this.blockMC;
+        }
+
         // data management overrides
         /** This method returns the name of this {@link BlockType} formatted nicely for messages. This formatting includes lowercasing, replacing underscores with spaces, and
          * capitalizing the first letters of certain {@link BlockType}s. */
