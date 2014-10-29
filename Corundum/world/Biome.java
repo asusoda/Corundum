@@ -27,12 +27,15 @@ import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.biome.BiomeOE;
 
 public class Biome {
+    private final BiomeType type;
+
     public Biome(BiomeType type) {
         this.type = type;
     }
 
-    // TODO TEMP: "final"s are commented to avoid compilation errors for now
-    private/* final */BiomeType type;
+    public BiomeType getBiomeType() {
+        return this.type;
+    }
 
     public static enum BiomeType implements IDedType<BiomeType> {
         OCEAN,
