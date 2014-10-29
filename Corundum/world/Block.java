@@ -30,13 +30,13 @@ public class Block {
     public Biome getBiome() {
         int posXInChunk = this.location.getBlockX() % 16;
         int posZInChunk = this.location.getBlockZ() % 16;
-        //Returns new Biome instance for now. Not sure if correct/intended method.
+        // Returns new Biome instance for now. Not sure if correct/intended method.
         return new Biome(getChunk().getBiomeMap()[posXInChunk][posZInChunk]);
     }
 
     public Chunk getChunk() {
         net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().getMCWorld().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
-        //Is this the intended way? Instantiating a new Chunk object?
+        // Is this the intended way? Instantiating a new Chunk object?
         return new Chunk(mcChunk);
     }
 
@@ -769,23 +769,23 @@ public class Block {
         }
 
         // static utilities
-        /** This method retrieves the {@link ItemType} with the given item I.D. value.
+        /** This method retrieves the {@link BlockType} with the given item I.D. value.
          * 
          * @param id
-         *            is the item I.D. of the {@link ItemType} you wish to locate.
-         * @return the {@link ItemType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
+         *            is the item I.D. of the {@link BlockType} you wish to locate.
+         * @return the {@link BlockType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
         public static BlockType getByID(int id) {
             return getByID(id, -1);
         }
 
-        /** This method retrieves the {@link ItemType} with the given item I.D. and data values.
+        /** This method retrieves the {@link BlockType} with the given item I.D. and data values.
          * 
          * @param id
-         *            is the item I.D. of the {@link ItemType} you wish to locate.
+         *            is the item I.D. of the {@link BlockType} you wish to locate.
          * @param data
          *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
          *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
-         * @return the {@link ItemType} that matches the given item I.D. and data value or <b>null</b> if no {@link BiomeType} has the given I.D. and data value. */
+         * @return the {@link BlockType} that matches the given item I.D. and data value or <b>null</b> if no {@link BiomeType} has the given I.D. and data value. */
         public static BlockType getByID(int id, int data) {
             // TODO: replace this linear search with a binary search algorithm
             if (id >= 0) {

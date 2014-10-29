@@ -1,6 +1,7 @@
 package Corundum;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,12 +9,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
 import Corundum.entities.Player;
+import Corundum.entities.Player.GameMode;
+import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
 import Corundum.utils.interfaces.Commander;
+import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.myList.myList;
 
 /** This class represents the entirity of a Corundum server.
@@ -35,6 +39,40 @@ public class CorundumServer extends DedicatedServer implements Commander {
         super(new File(file_path));
     }
 
+    public enum Difficulty implements IDedType<Difficulty> {
+        PEACEFUL, EASY, NORMAL, HARD;
+
+        @Override
+        public short getID() {
+            return (short) ordinal();
+        }
+
+        /** This method returns the {@link Difficulty} associated with the given I.D.
+         * 
+         * @param id
+         *            is the I.D. of the {@link Difficulty} to search for.
+         * @return the {@link Difficulty} with the give I.D. of <b>null</b> if no {@link Difficulty} has the given I.D. */
+        public static Difficulty getByID(int id) {
+            return values()[id];
+        }
+    }
+
+    /** This method starts this {@link CorundumServer}.
+     * 
+     * @param arguments
+     *            are the command-line arguments used to configure the properties of this server on startup. */
+    public void start(String[] arguments) {
+        // TODO: read & use command line arguments
+
+        try {
+            super.startServer();
+        } catch (IOException exception) {
+            CIE.err("There was a problem starting this Corundum server!", exception, "This may have something to do with the Minecraft YGGDrasil authentication setup.");
+        } catch (Exception exception) {
+            CIE.err("There was a problem starting this Corundum server!", exception);
+        }
+    }
+
     /** This method broadcasts a given message to every player on the server and to the console.
      * 
      * @param message
@@ -45,6 +83,29 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
         for (EntityPlayerMP player : (List<EntityPlayerMP>) super.getEntityWorld().playerEntities)
             new Player(player).message(message);
+    }
+
+    // obfuscated DedicatedServer method renaming
+    public boolean canGenerateStructures() {
+        // This method is necessary because super.isHardcore() will be obfuscated!
+        return super.canStructuresSpawn();
+    }
+
+    public GameMode getDefaultGameMode() {
+        return GameMode.getByID(getGameType().getID());
+    }
+
+    public Difficulty getDifficulty() {
+        return Difficulty.getByID(func_147135_j().func_151525_a());
+    }
+
+    public boolean hasNether() {
+        return super.getAllowNether();
+    }
+
+    public boolean isHardcore() {
+        // This method is necessary because super.isHardcore() will be obfuscated!
+        return super.isHardcore();
     }
 
     // property overrides

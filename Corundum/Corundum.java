@@ -76,7 +76,7 @@ public class Corundum {
     public static void start(String[] arguments) {
         System.out.println("Starting Corundum server...");
 
-        CorundumServer.main(arguments);
+        SERVER.start(arguments);
     }
 
     /** This method shuts down Corundum completely. */

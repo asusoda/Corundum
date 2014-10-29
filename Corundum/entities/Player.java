@@ -20,6 +20,7 @@ import net.minecraft.world.WorldServer;
 import Corundum.items.Item;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
+import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.messaging.MessageReceiver;
 import Corundum.world.Location;
@@ -33,6 +34,31 @@ public class Player extends Mob implements Commander, Matchable<Player> {
                 .fromMCItems((ItemStack[]) ListUtilities.concatenate(playerMC.inventory.mainInventory, playerMC.inventory.armorInventory)));
 
         this.playerMC = playerMC;
+    }
+
+    /** This enum class represents the different "game modes" a {@link Player} can be in: {@link GameMode#SURVIVAL Survival Mode}, {@link GameMode#CREATIVE Creative Mode}, and
+     * {@link GameMode#ADVENTURE Adventure Mode}.
+     * 
+     * @author REALDrummer */
+    public enum GameMode implements IDedType<GameMode> {
+        SURVIVAL, CREATIVE, ADVENTURE;
+
+        @Override
+        public short getID() {
+            return (short) ordinal();
+        }
+
+        /** This method returns the {@link GameMode} associated with the given I.D.
+         * 
+         * @param id
+         *            is the I.D. of the {@link GameMode} to search for.
+         * @return the {@link GameMode} with the give I.D. of <b>null</b> if no {@link GameMode} has the given I.D. */
+        public static GameMode getByID(int id) {
+            if (id < 0 || id >= values().length)
+                return null;
+            else
+                return values()[id];
+        }
     }
 
     @Override
