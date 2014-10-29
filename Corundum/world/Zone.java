@@ -44,10 +44,15 @@ public class Zone {
     }
 
     public void fillWithBlock(Block.BlockType block) {
+        Location currLocation = new Location(0, 0, 0, this.low.getWorld());
+
         for (int x = this.low.getBlockX(); x == this.high.getBlockX(); x++) {
             for (int y = this.low.getBlockY(); y == this.high.getBlockY(); y++) {
                 for (int z = this.low.getBlockZ(); z == this.high.getBlockZ(); z++) {
-                    this.low.getWorld().setBlock(block, new Location(x, y, z, this.low.getWorld()));
+                    currLocation.setX(x);
+                    currLocation.setY(y);
+                    currLocation.setZ(z);
+                    this.low.getWorld().setBlock(block, currLocation);
                 }
             }
         }
