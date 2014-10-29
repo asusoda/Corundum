@@ -3,6 +3,10 @@ package Corundum.entities;
 import java.util.UUID;
 
 import Corundum.Corundum;
+import Corundum.listeners.CommandListener;
+import Corundum.listeners.CorundumListener;
+import Corundum.listeners.ListenerCaller;
+import Corundum.listeners.results.EventResult;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -43,8 +47,17 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
 
     // Commander overrides
     @Override
-    public void command(String command) {
-        if (this.canCommandSenderUseCommand(((CommandBase) Corundum.SERVER.getCommandManager().getCommands().get(command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command)) {
+    public void command(final String command) {
+        final Player thePlayer = this;
+
+        EventResult eventResult = Corundum.SERVER.generateEvent(new ListenerCaller<CommandListener, EventResult>() {
+            @Override
+            public EventResult generateEvent(CommandListener listener, EventResult result) {
+                return listener.onCommand(thePlayer, command, result);
+            }
+        });
+
+        if (!eventResult.isCancelled() && this.canCommandSenderUseCommand(((CommandBase) Corundum.SERVER.getCommandManager().getCommands().get(command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command)) {
             CommandBase.func_147176_a(
                     this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I don't
                                                                                                                                                                 * actually know

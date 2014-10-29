@@ -8,6 +8,12 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Scanner;
 
 public class CorundumLauncher {
+    /**
+     * The current version of Minecraft. I would use the Corundum.MCVERSION, but at the point of <clinit> (when static
+     * variables are initialised internally), the Corundum class is not loaded, and would cause issues if that was used here.
+     */
+    public static final String MC_VER = "1.7.10";
+
     /** This is the main method of Corundum. When Corundum is started, this is the method that is called to start the program.
      * 
      * @param arguments
@@ -109,7 +115,6 @@ public class CorundumLauncher {
         try {
             File outJar = new File(outDir, "minecraft_server.jar");
 
-
             //Clear the file if it already exists. Allows for easily updating the server jar over MC Versions.
             if (outJar.exists()) {
                 outJar.delete();
@@ -117,7 +122,7 @@ public class CorundumLauncher {
 
             if (!outJar.exists() && outDir.isDirectory()) {
                 outJar.createNewFile();
-                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar");
+                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/${mcVer}/minecraft_server.${mcVer}.jar".replace("${mcVer}", MC_VER) /* Makes updating the version of the Minecraft server downloaded easier*/);
                 ReadableByteChannel byteChannel = Channels.newChannel(mcServerDownload.openStream());
                 FileOutputStream outputStream = new FileOutputStream(outJar);
                 outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
