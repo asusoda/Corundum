@@ -25,7 +25,7 @@ import Corundum.utils.messaging.MessageReceiver;
 import Corundum.world.Location;
 import Corundum.world.World;
 
-public class Player extends Mob implements Commander, ICommandSender, MessageReceiver, Matchable<Player> {
+public class Player extends Mob implements Commander, Matchable<Player> {
     private final EntityPlayerMP playerMC;
 
     public Player(EntityPlayerMP playerMC) {
@@ -41,6 +41,11 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
                 .fromMCWorld((WorldServer) playerMC.worldObj));
     }
 
+    /** This method returns the {@link UUID} associated with this {@link Player}. Every {@link Player} in Minecraft has a {@link UUID}, a
+     * "<u>U</u>niversally <u>U</u>nique <u>ID</u>" to differentiate them from all other players even if they change their usernames. <i>You should use {@link UUID}s to
+     * identify {@link Player}s, not their usernames, whenever possible!</i>
+     * 
+     * @return the {@link UUID} associated with this {@link Player}. */
     public UUID getUUID() {
         return playerMC.getUniqueID();
     }
@@ -57,12 +62,15 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
             }
         });
 
-        if (!eventResult.isCancelled() && this.canCommandSenderUseCommand(((CommandBase) Corundum.SERVER.getCommandManager().getCommands().get(command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command)) {
-            CommandBase.func_147176_a(
-                    this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I don't
-                                                                                                                                                                * actually know
-                                                                                                                                                                * what this
-                                                                                                                                                                * does */);
+        if (!eventResult.isCancelled()
+                && this.canCommandSenderUseCommand(((CommandBase) Corundum.SERVER.getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
+                        .getRequiredPermissionLevel(), command)) {
+            CommandBase
+                    .func_147176_a(this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I
+                                                                                                                                                                    * don't
+                                                                                                                                                                    * actually
+                                                                                                                                                                    * know what
+                                                                                                                                                                    * this does */);
         }
     }
 
@@ -76,7 +84,7 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
         this.addChatMessage(new ChatComponentText(message));
     }
 
-    // ICommandSender implementations
+    // overridden properties
     @Override
     public void addChatMessage(IChatComponent message) {
         playerMC.addChatMessage(message);
@@ -94,7 +102,7 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
 
     @Override
     public ChunkCoordinates getCommandSenderPosition() {
-        return new ChunkCoordinates(playerMC.chunkCoordX, playerMC.chunkCoordY, playerMC.chunkCoordZ);
+        return playerMC.getCommandSenderPosition();
     }
 
     @Override
@@ -107,13 +115,12 @@ public class Player extends Mob implements Commander, ICommandSender, MessageRec
         return playerMC.func_145748_c_();
     }
 
-    // Matchable override
+    // data management overrides
     @Override
     public Object[] getSortPriorities() {
         return new Object[] { getUUID() };
     }
 
-    // Object overrides
     @Override
     public boolean equals(Object object) {
         return object instanceof Player && playerMC.getUniqueID().equals(((Player) object).playerMC.getUniqueID());

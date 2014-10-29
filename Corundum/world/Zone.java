@@ -36,9 +36,9 @@ public class Zone {
     }
 
     public float getVolume() {
-        float xLength = this.high.getX() - this.low.getX();
-        float yLength = this.high.getY() - this.low.getY();
-        float zLength = this.high.getZ() - this.low.getZ();
+        float xLength = (float) (this.high.getX() - this.low.getX());
+        float yLength = (float) (this.high.getY() - this.low.getY());
+        float zLength = (float) (this.high.getZ() - this.low.getZ());
 
         return xLength * yLength * zLength;
     }

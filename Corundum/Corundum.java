@@ -81,7 +81,6 @@ public class Corundum {
 
     /** This method shuts down Corundum completely. */
     public static final void quit() {
-        // TODO: close Minecraft
         SERVER.stopServer();
 
         // close Corundum

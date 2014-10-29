@@ -3,27 +3,23 @@ package Corundum;
 import java.io.File;
 import java.util.List;
 
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.World;
+import Corundum.entities.Player;
 import Corundum.exceptions.CorundumException;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
 import Corundum.utils.interfaces.Commander;
-import Corundum.utils.messaging.MessageReceiver;
 import Corundum.utils.myList.myList;
-import Corundum.world.Location;
 
-public class CorundumServer extends DedicatedServer implements MessageReceiver, Commander {
+/** This class represents the entirity of a Corundum server.
+ * 
+ * @author REALDrummer */
+public class CorundumServer extends DedicatedServer implements Commander {
     /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
     public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
@@ -39,20 +35,38 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
         super(new File(file_path));
     }
 
+    /** This method broadcasts a given message to every player on the server and to the console.
+     * 
+     * @param message
+     *            is the message to be broadcasted. */
+    @SuppressWarnings("unchecked")
     public void broadcast(String message) {
-        super.addChatMessage(new ChatComponentText(message));
+        message(message);
 
-        List<? extends Entity> allEntities = super.getEntityWorld().loadedEntityList;
-
-        for (Entity entity : allEntities) {
-            if (entity.getClass() == EntityPlayer.class || entity.getClass() == EntityPlayerMP.class) {
-                ((EntityPlayer) entity).addChatMessage(new ChatComponentText(message));
-            }
-        }
+        for (EntityPlayerMP player : (List<EntityPlayerMP>) super.getEntityWorld().playerEntities)
+            new Player(player).message(message);
     }
 
-    public Location getLocation() {
-        return null;
+    // property overrides
+    @Override
+    public void command(final String command) {
+        final Commander _this = this;
+        EventResult result = generateEvent(new ListenerCaller<CommandListener, EventResult>() {
+            @Override
+            public EventResult generateEvent(CommandListener listener, EventResult result) {
+                return listener.onCommand(_this, command, result);
+            }
+        });
+
+        // if the event was cancelled, we're done here
+        if (result.isCancelled())
+            return;
+
+        // if the event wasn't cancelled, broadcast the message and execute the command
+        if (result.getServerMessage() != null)
+            broadcast(result.getServerMessage());
+
+        addPendingCommand(command, this);
     }
 
     @Override
@@ -62,7 +76,7 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
 
     @Override
     public void message(String message) {
-        logInfo(message);
+        super.addChatMessage(new ChatComponentText(message));
     }
 
     // listener handling
@@ -93,57 +107,5 @@ public class CorundumServer extends DedicatedServer implements MessageReceiver, 
                         exception.err();
                     }
         return result;
-    }
-
-    // server command handling
-    @Override
-    public void command(final String command) {
-        final Commander _this = this;
-        EventResult result = generateEvent(new ListenerCaller<CommandListener, EventResult>() {
-            @Override
-            public EventResult generateEvent(CommandListener listener, EventResult result) {
-                return listener.onCommand(_this, command, result);
-            }
-        });
-
-        // if the event was cancelled, we're done here
-        if (result.isCancelled())
-            return;
-
-        // if the event wasn't cancelled, broadcast the message and execute the command
-        if (result.getServerMessage() != null)
-            broadcast(result.getServerMessage());
-
-        addPendingCommand(command, this);
-    }
-
-    @Override
-    public String getCommandSenderName() {
-        return toString();
-    }
-
-    @Override
-    public IChatComponent func_145748_c_() {
-        return new ChatComponentText("§dServer");
-    }
-
-    @Override
-    public void addChatMessage(IChatComponent chatComponent) {
-        message(chatComponent.toString());
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(int commandLevel, String command) {
-        return super.canCommandSenderUseCommand(commandLevel, command);
-    }
-
-    @Override
-    public ChunkCoordinates getCommandSenderPosition() {
-        return null;
-    }
-
-    @Override
-    public World getEntityWorld() {
-        return super.getEntityWorld();
     }
 }
