@@ -11,7 +11,7 @@ import Corundum.entities.Mob;
  * the called {@link MobKilledByEntityListener}s cancels the event by returning <b>false</b>.
  * <hr>
  * 
- * All of Corundum's "Listener" interfaces can be found in the {@link Corundum.launcher.listeners} package.
+ * All of Corundum's "Listener" interfaces can be found in the {@link Corundum.listeners} package.
  *
  * 
  * @author REALDrummer */

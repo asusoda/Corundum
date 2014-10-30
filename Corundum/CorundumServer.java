@@ -80,7 +80,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         //To make arg reading easier.
         this.argInfo = new ArgInfo(arguments);
         // --no-debug takes priority.
-        this.debugMode = this.argInfo.hasArg("--no-debug", "-D") ? false : this.argInfo.hasArg("--debug", "-D");
+        this.debugMode = this.argInfo.hasArg("--no-debug", "-D") ? false : this.argInfo.hasArg("--debug", "-d");
         this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
 
         try {
