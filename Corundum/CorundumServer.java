@@ -90,6 +90,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.canStructuresSpawn();
     }
+    
+    public void enableGUI() {
+        setGuiEnabled();
+    }
 
     public GameMode getDefaultGameMode() {
         return GameMode.getByID(getGameType().getID());
@@ -99,6 +103,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return Difficulty.getByID(func_147135_j().func_151525_a());
     }
 
+    public int getSpawnRadius() {
+        return getSpawnProtectionSize();
+    }
+
     public boolean hasNether() {
         return super.getAllowNether();
     }
@@ -106,6 +114,18 @@ public class CorundumServer extends DedicatedServer implements Commander {
     public boolean isHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
+    }
+
+    public boolean isRunningGUI() {
+        return getGuiEnabled();
+    }
+
+    public boolean isSnooping() {
+        return super.isSnooperEnabled();
+    }
+
+    public boolean isUsingCommandBlocks() {
+        return isCommandBlockEnabled();
     }
 
     // property overrides
