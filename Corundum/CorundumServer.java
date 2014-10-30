@@ -2,6 +2,8 @@ package Corundum;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,11 +22,20 @@ import Corundum.utils.interfaces.Commander;
 import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.myList.myList;
 
-/** This class represents the entirity of a Corundum server.
+/** This class represents the entirety of a Corundum server.
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
-    /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
+    /** Whether or not the server is running in debug mode - basically if the string --debug is passed to this server's
+     * {@link #start(String[])} method.
+     */
+    private boolean debugMode;
+
+    /** Whether or not the server is running in verbose mode. Only true if --verbose is passed to {@link #start(String[])} and --no-verbose isn't.
+     */
+    private boolean verboseMode;
+
+    /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
     public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
 
@@ -62,7 +73,11 @@ public class CorundumServer extends DedicatedServer implements Commander {
      * @param arguments
      *            are the command-line arguments used to configure the properties of this server on startup. */
     public void start(String[] arguments) {
-        // TODO: read & use command line arguments
+        //To make arg reading easier.
+        List<String> args = Arrays.asList(arguments);
+        // --no-debug takes priority.
+        this.debugMode = args.contains("--no-debug") ? false : args.contains("--debug") || args.contains("-d");
+        this.verboseMode = args.contains("--no-verbose") ? false : args.contains("--verbose");
 
         try {
             super.startServer();
@@ -71,6 +86,36 @@ public class CorundumServer extends DedicatedServer implements Commander {
         } catch (Exception exception) {
             CIE.err("There was a problem starting this Corundum server!", exception);
         }
+
+        //Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
+        //server.properties takes priority.
+        if (args.contains("--online-mode") || args.contains("-o")) {
+            super.setProperty("online-mode", true);
+        } else if (args.contains("--offline-mode") || args.contains("-O")) {
+            super.setProperty("online-mode", false);
+        }
+
+        if (args.contains("--world")) {
+            super.setProperty("level-name", this.getArgValue("--world", args));
+        } else {
+            super.setProperty("level-name", "world");
+        }
+    }
+
+    public String getArgValue(String argName, List<String> args) {
+        for (int i = 0; i == args.size(); i++) {
+            if (args.get(i).equals(argName)) {
+                String potentialValue = args.get(i + 1);
+
+                if (!potentialValue.startsWith("--")) {
+                    return potentialValue;
+                } else {
+                    CorundumException.err("Arg " + argName + " doesn't have a value!", "The arg " + argName + " had it's value requested, however, the value directly after it in the args list was another value!");
+                }
+            }
+        }
+
+        throw new CorundumException("Arg " + argName + " does not exist in the args list!", "The argument " + argName + "'s value was requested to be found, but the arg itself does not exist!");
     }
 
     /** This method broadcasts a given message to every player on the server and to the console.
@@ -188,5 +233,13 @@ public class CorundumServer extends DedicatedServer implements Commander {
                         exception.err();
                     }
         return result;
+    }
+
+    public boolean getIsDebugMode() {
+        return this.debugMode;
+    }
+
+    public boolean getIsVerboseMode() {
+        return this.verboseMode;
     }
 }
