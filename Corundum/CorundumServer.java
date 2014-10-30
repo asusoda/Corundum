@@ -2,6 +2,8 @@ package Corundum;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,11 +22,20 @@ import Corundum.utils.interfaces.Commander;
 import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.myList.myList;
 
-/** This class represents the entirity of a Corundum server.
+/** This class represents the entirety of a Corundum server.
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
-    /** This list contians all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
+    /** Whether or not the server is running in debug mode - basically if the string --debug is passed to this server's
+     * {@link #start(String[])} method.
+     */
+    private boolean debugMode;
+
+    /** Whether or not the server is running in verbose mode. Only true if --verbose is passed to {@link #start(String[])} and --no-verbose isn't.
+     */
+    private boolean verboseMode;
+
+    /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
     public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
 
@@ -63,6 +74,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
      *            are the command-line arguments used to configure the properties of this server on startup. */
     public void start(String[] arguments) {
         // TODO: read & use command line arguments
+        List<String> args = Arrays.asList(arguments);
+        // --no-debug takes priority.
+        this.debugMode = args.contains("--no-debug") ? false : args.contains("--debug");
+        this.verboseMode = args.contains("--no-verbose") ? false : args.contains("--verbose");
 
         try {
             super.startServer();
@@ -168,5 +183,13 @@ public class CorundumServer extends DedicatedServer implements Commander {
                         exception.err();
                     }
         return result;
+    }
+
+    public boolean getIsDebugMode() {
+        return this.debugMode;
+    }
+
+    public boolean getIsVerboseMode() {
+        return this.verboseMode;
     }
 }
