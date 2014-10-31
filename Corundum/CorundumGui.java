@@ -27,6 +27,7 @@ public class CorundumGui {
             this.frame.pack();
             this.frame.setLocationRelativeTo((Component) null);
             this.frame.setVisible(true);
+            this.addWindowListener();
         }
     }
 

@@ -176,8 +176,6 @@ public class ListUtilities {
         return false;
     }
 
-    // TODO: containsAND and containsOR
-
     public static boolean containsAND(Object[] objects, Object obj1, Object obj2) {
         return contains(objects, obj1) && contains(objects, obj2);
     }

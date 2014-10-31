@@ -277,8 +277,6 @@ public abstract class CorundumPlugin implements CorundumListener {
     public void broadcast(String message) {
         tellConsole(message);
         Corundum.SERVER.broadcast(message);
-
-        // TODO: when supportable, send the message to all players on the server
     }
 
     /** This method sends the given message to all the players (or console) that are currently in "debugging mode". These messages should contain basic important information
