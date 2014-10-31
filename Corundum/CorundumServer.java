@@ -115,8 +115,6 @@ public class CorundumServer extends DedicatedServer implements Commander {
         }
     }
 
-                            + " had it's value requested, however, the value directly after it in the args list was another value!");
-                + "'s value was requested to be found, but the arg itself does not exist!");
     /** This method broadcasts a given message to every player on the server and to the console.
      * 
      * @param message

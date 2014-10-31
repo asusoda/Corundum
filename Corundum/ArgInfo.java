@@ -1,8 +1,6 @@
 package Corundum;
 
 import Corundum.exceptions.CorundumException;
-import Corundum.utils.SettingsManager;
-import Corundum.utils.interfaces.Configurable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

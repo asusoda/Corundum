@@ -13,7 +13,6 @@
 package Corundum.entities;
 
 import Corundum.world.Location;
-import net.minecraft.entity.EntityList;
 
 public class Entity {
     private EntityType type;

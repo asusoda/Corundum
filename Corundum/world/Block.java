@@ -14,7 +14,6 @@ package Corundum.world;
 
 import java.awt.Color;
 
-import Corundum.items.Item.ItemType;
 import Corundum.utils.interfaces.HoldableType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.world.Biome.BiomeType;

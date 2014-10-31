@@ -16,8 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.minecraft.item.ItemStack;
-import Corundum.Corundum;
 import Corundum.exceptions.CorundumException;
 
 public class ListUtilities {

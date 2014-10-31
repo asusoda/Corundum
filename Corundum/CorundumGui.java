@@ -1,7 +1,5 @@
 package Corundum;
 
-import Corundum.CorundumServer;
-
 import javax.swing.*;
 import java.awt.*;
 
