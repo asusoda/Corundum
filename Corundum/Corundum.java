@@ -75,7 +75,7 @@ public class Corundum {
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li>
      *            <li>
      *            <tt>--gui-enabled, -g</tt> to enable the Corundum Gui, which replaces the default Minecraft Server Gui.
-     *            </li>*/
+     *            <tt>--mc-gui, -mc-g</tt> to use the default Minecraft Server Gui</li>*/
     public static void start(String[] arguments) {
         System.out.println("Starting Corundum server...");
 

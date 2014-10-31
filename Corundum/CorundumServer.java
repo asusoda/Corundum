@@ -28,6 +28,7 @@ import Corundum.utils.myList.myList;
 public class CorundumServer extends DedicatedServer implements Commander {
     private CorundumGui corundumGui;
     private boolean corundumGuiEnabled;
+    private boolean usingMCGui = false;
 
     /** The arg info concerning the args passed in {@link #start}.
      */
@@ -137,13 +138,17 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
     @Override
     public void setGuiEnabled() {
-        this.corundumGui = new CorundumGui(this);
-        this.corundumGuiEnabled = true;
+        if (this.argInfo.hasArg("--mc-gui", "-mc-g")) {
+            super.setGuiEnabled();
+        } else {
+            this.corundumGui = new CorundumGui(this);
+            this.corundumGuiEnabled = true;
+        }
     }
 
     @Override
     public boolean getGuiEnabled() {
-        return this.corundumGuiEnabled;
+        return this.corundumGuiEnabled ? true : super.getGuiEnabled();
     }
 
     public GameMode getDefaultGameMode() {
