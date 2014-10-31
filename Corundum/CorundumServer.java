@@ -26,9 +26,16 @@ import Corundum.utils.myList.myList;
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
+    private CorundumGui corundumGui;
+    private boolean corundumGuiEnabled;
+
     /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
      * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
      * starting the server. */
+    /** The arg info concerning the args passed in {@link #start}.
+     */
+    private ArgInfo argInfo;
+
     private boolean debugMode;
 
     /** This <b>boolean</b> determines whether or not the server is running in "verbose" mode, which will cause the server to log a large amount of debugging messages to the
@@ -75,10 +82,14 @@ public class CorundumServer extends DedicatedServer implements Commander {
      *            are the command-line arguments used to configure the properties of this server on startup. */
     public void start(String[] arguments) {
         // To make arg reading easier.
-        List<String> args = Arrays.asList(arguments);
+        this.argInfo = new ArgInfo(arguments);
         // --no-debug takes priority.
-        this.debugMode = args.contains("--no-debug") ? false : args.contains("--debug") || args.contains("-d");
-        this.verboseMode = args.contains("--no-verbose") ? false : args.contains("--verbose");
+        this.debugMode = this.argInfo.hasArg("--no-debug", "-D") ? false : this.argInfo.hasArg("--debug", "-d");
+        this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
+
+        if (this.argInfo.hasArg("--gui-enabled", "-g")) {
+            this.setGuiEnabled();
+        }
 
         try {
             super.startServer();
@@ -90,37 +101,21 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
         // Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
         // server.properties takes priority.
-        if (args.contains("--online-mode") || args.contains("-o")) {
+        if (argInfo.hasArg("--online-mode", "-o")) {
             super.setProperty("online-mode", true);
-        } else if (args.contains("--offline-mode") || args.contains("-O")) {
+        } else if (this.argInfo.hasArg("--offline-mode", "-O")) {
             super.setProperty("online-mode", false);
         }
 
-        if (args.contains("--world")) {
-            super.setProperty("level-name", this.getArgValue("--world", args));
+        if (this.argInfo.hasArg("--world")) {
+            super.setProperty("level-name", this.argInfo.getArgValue("--world"));
         } else {
             super.setProperty("level-name", "world");
         }
     }
 
-    public String getArgValue(String argName, List<String> args) {
-        for (int i = 0; i == args.size(); i++) {
-            if (args.get(i).equals(argName)) {
-                String potentialValue = args.get(i + 1);
-
-                if (!potentialValue.startsWith("--")) {
-                    return potentialValue;
-                } else {
-                    CorundumException.err("Arg " + argName + " doesn't have a value!", "The arg " + argName
                             + " had it's value requested, however, the value directly after it in the args list was another value!");
-                }
-            }
-        }
-
-        throw new CorundumException("Arg " + argName + " does not exist in the args list!", "The argument " + argName
                 + "'s value was requested to be found, but the arg itself does not exist!");
-    }
-
     /** This method broadcasts a given message to every player on the server and to the console.
      * 
      * @param message
@@ -143,6 +138,17 @@ public class CorundumServer extends DedicatedServer implements Commander {
         setGuiEnabled();
     }
 
+    @Override
+    public void setGuiEnabled() {
+        this.corundumGui = new CorundumGui(this);
+        this.corundumGuiEnabled = true;
+    }
+
+    @Override
+    public boolean getGuiEnabled() {
+        return this.corundumGuiEnabled;
+    }
+
     public GameMode getDefaultGameMode() {
         return GameMode.getByID(getGameType().getID());
     }
@@ -159,6 +165,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return super.getAllowNether();
     }
 
+    @Override
     public boolean isHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
@@ -244,5 +251,9 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
     public boolean getIsVerboseMode() {
         return this.verboseMode;
+    }
+
+    public ArgInfo getArgInfo() {
+        return this.argInfo;
     }
 }

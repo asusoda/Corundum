@@ -72,7 +72,10 @@ public class Corundum {
      *            <li>
      *            <tt>--online-mode, -o</tt> to activate online mode, which makes the server connect to Mojang's authentication servers and verify users when they try to
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
-     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
+     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li>
+     *            <li>
+     *            <tt>--gui-enabled, -g</tt> to enable the Corundum Gui, which replaces the default Minecraft Server Gui.
+     *            </li>*/
     public static void start(String[] arguments) {
         System.out.println("Starting Corundum server...");
 
