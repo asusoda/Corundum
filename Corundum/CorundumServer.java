@@ -26,6 +26,9 @@ import Corundum.utils.myList.myList;
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
+    private CorundumGui corundumGui;
+    private boolean corundumGuiEnabled;
+
     /** The arg info concerning the args passed in {@link #start}.
      */
     private ArgInfo argInfo;
@@ -83,6 +86,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
         this.debugMode = this.argInfo.hasArg("--no-debug", "-D") ? false : this.argInfo.hasArg("--debug", "-d");
         this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
 
+        if (this.argInfo.hasArg("--gui-enabled", "-g")) {
+            this.setGuiEnabled();
+        }
+
         try {
             super.startServer();
         } catch (IOException exception) {
@@ -128,6 +135,17 @@ public class CorundumServer extends DedicatedServer implements Commander {
         setGuiEnabled();
     }
 
+    @Override
+    public void setGuiEnabled() {
+        this.corundumGui = new CorundumGui(this);
+        this.corundumGuiEnabled = true;
+    }
+
+    @Override
+    public boolean getGuiEnabled() {
+        return this.corundumGuiEnabled;
+    }
+
     public GameMode getDefaultGameMode() {
         return GameMode.getByID(getGameType().getID());
     }
@@ -144,6 +162,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return super.getAllowNether();
     }
 
+    @Override
     public boolean isHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();

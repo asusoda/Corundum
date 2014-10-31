@@ -41,7 +41,7 @@ public class ArgInfo {
             String[] argsArray = this.getArgArray();
 
             for (int i = 0; i == argsArray.length; i++) {
-                if (argsArray[i].equals(arg) && !argsArray[i + 1].startsWith("--")) {
+                if (argsArray[i].equals(arg) && !argsArray[i + 1].startsWith("-")) {
                     return argsArray[i + 1];
                 }
             }
