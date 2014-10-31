@@ -1,11 +1,14 @@
 package Corundum.utils;
 
+import java.io.File;
 import java.util.HashMap;
 
 import Corundum.exceptions.CorundumException;
 
 public class SettingsManager {
-    public HashMap<String, Object> settings = new HashMap<String, Object>();
+    private SettingsManager parent = null;
+    private File config_file;
+    private HashMap<String, Object> settings = new HashMap<String, Object>();
 
     public boolean containsKey(String key) {
         return settings.containsKey(key);
