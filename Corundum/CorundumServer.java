@@ -26,13 +26,14 @@ import Corundum.utils.myList.myList;
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
-    /** Whether or not the server is running in debug mode - basically if the string --debug is passed to this server's
-     * {@link #start(String[])} method.
-     */
+    /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
+     * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
+     * starting the server. */
     private boolean debugMode;
 
-    /** Whether or not the server is running in verbose mode. Only true if --verbose is passed to {@link #start(String[])} and --no-verbose isn't.
-     */
+    /** This <b>boolean</b> determines whether or not the server is running in "verbose" mode, which will cause the server to log a large amount of debugging messages to the
+     * console. Verbose mode is off (<b>false</b>) by default. Verbose mode can be enabled by passing the argument <tt>--verbose</tt> (a.k.a. <tt>-v</tt>) to the console as a
+     * command line argument when starting the server. Note that if verbose mode is enabled, so is {@link #debugMode debug mode}. */
     private boolean verboseMode;
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
@@ -73,7 +74,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
      * @param arguments
      *            are the command-line arguments used to configure the properties of this server on startup. */
     public void start(String[] arguments) {
-        //To make arg reading easier.
+        // To make arg reading easier.
         List<String> args = Arrays.asList(arguments);
         // --no-debug takes priority.
         this.debugMode = args.contains("--no-debug") ? false : args.contains("--debug") || args.contains("-d");
@@ -87,8 +88,8 @@ public class CorundumServer extends DedicatedServer implements Commander {
             CIE.err("There was a problem starting this Corundum server!", exception);
         }
 
-        //Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
-        //server.properties takes priority.
+        // Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
+        // server.properties takes priority.
         if (args.contains("--online-mode") || args.contains("-o")) {
             super.setProperty("online-mode", true);
         } else if (args.contains("--offline-mode") || args.contains("-O")) {
@@ -110,12 +111,14 @@ public class CorundumServer extends DedicatedServer implements Commander {
                 if (!potentialValue.startsWith("--")) {
                     return potentialValue;
                 } else {
-                    CorundumException.err("Arg " + argName + " doesn't have a value!", "The arg " + argName + " had it's value requested, however, the value directly after it in the args list was another value!");
+                    CorundumException.err("Arg " + argName + " doesn't have a value!", "The arg " + argName
+                            + " had it's value requested, however, the value directly after it in the args list was another value!");
                 }
             }
         }
 
-        throw new CorundumException("Arg " + argName + " does not exist in the args list!", "The argument " + argName + "'s value was requested to be found, but the arg itself does not exist!");
+        throw new CorundumException("Arg " + argName + " does not exist in the args list!", "The argument " + argName
+                + "'s value was requested to be found, but the arg itself does not exist!");
     }
 
     /** This method broadcasts a given message to every player on the server and to the console.
@@ -132,10 +135,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
     // obfuscated DedicatedServer method renaming
     public boolean canGenerateStructures() {
-        // This method is necessary because super.isHardcore() will be obfuscated!
+        // This method is necessary because super.canStructuresSpawn() will be obfuscated!
         return super.canStructuresSpawn();
     }
-    
+
     public void enableGUI() {
         setGuiEnabled();
     }
