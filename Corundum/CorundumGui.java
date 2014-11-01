@@ -46,4 +46,10 @@ public class CorundumGui {
     public void addWindowListener() {
 
     }
+
+    /** Logs something to the GUI's log.
+     */
+    public void log() {
+
+    }
 }

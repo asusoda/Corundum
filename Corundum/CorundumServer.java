@@ -29,7 +29,8 @@ public class CorundumServer extends DedicatedServer implements Commander {
     private CorundumGui corundumGui;
     private boolean corundumGuiEnabled;
 
-    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI.
+    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but
+     * can be changed via --mc-gui.
      */
     private boolean usingMCGui = false;
 
@@ -92,7 +93,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
 
         if (this.argInfo.hasArg("--gui-enabled", "-g")) {
-            this.setGuiEnabled();
+            this.enableGUI();
         }
 
         try {
@@ -157,6 +158,11 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return this.corundumGuiEnabled ? true : super.getGuiEnabled();
     }
 
+    public boolean getUsingGui() {
+        //Necessary as getGuiEnabled will be obfuscated.
+        return this.getGuiEnabled();
+    }
+
     public GameMode getDefaultGameMode() {
         return GameMode.getByID(getGameType().getID());
     }
@@ -173,8 +179,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return super.getAllowNether();
     }
 
-    @Override
-    public boolean isHardcore() {
+    public boolean getIsHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
