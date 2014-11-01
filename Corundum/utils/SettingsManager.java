@@ -6,9 +6,24 @@ import java.util.HashMap;
 import Corundum.exceptions.CorundumException;
 
 public class SettingsManager {
-    private SettingsManager parent = null;
-    private File config_file;
+    private SettingsManager parent;
+    private File file;
     private HashMap<String, Object> settings = new HashMap<String, Object>();
+
+    public SettingsManager(SettingsManager parent, File file, Object... default_settings) {
+        this.parent = parent;
+        this.file = file;
+
+        // add the given default settings, which should alternate between String keys and Object values
+        if (default_settings.length % 2 == 0)
+            for (int i = 0; i < default_settings.length; i += 2)
+                if (default_settings[i] instanceof String)
+                    settings.put((String) default_settings[i], default_settings[i + 1]);
+                else
+                    throw new InvalidDefaultSettingsException(default_settings, parent, file);
+        else
+            throw new InvalidDefaultSettingsException(default_settings, parent, file);
+    }
 
     public boolean containsKey(String key) {
         return settings.containsKey(key);
@@ -32,6 +47,15 @@ public class SettingsManager {
             settings.put(key, default_value);
             return default_value;
         }
+    }
+
+    public boolean getBoolean(String key) {
+        if (!settings.containsKey(key))
+            throw new NoSuchSettingException(key);
+        else if (!(settings.get(key) instanceof Boolean))
+            throw new WrongSettingTypeException(key, "boolean");
+        else
+            return (Boolean) settings.get(key);
     }
 
     public boolean getBoolean(String key, boolean default_value) {
@@ -88,6 +112,15 @@ public class SettingsManager {
         }
     }
 
+    public float getFloat(String key) {
+        if (!settings.containsKey(key))
+            throw new NoSuchSettingException(key);
+        else if (!(settings.get(key) instanceof Float))
+            throw new WrongSettingTypeException(key, "float");
+        else
+            return (Float) settings.get(key);
+    }
+
     public float getFloat(String key, float default_value) {
         if (settings.containsKey(key))
             if (settings.get(key) instanceof Float)
@@ -100,6 +133,57 @@ public class SettingsManager {
         }
     }
 
+    public int getInt(String key) {
+        if (!settings.containsKey(key))
+            throw new NoSuchSettingException(key);
+        else if (!(settings.get(key) instanceof Integer))
+            throw new WrongSettingTypeException(key, "int");
+        else
+            return (Integer) settings.get(key);
+    }
+
+    public int getInt(String key, int default_value) {
+        if (settings.containsKey(key))
+            if (settings.get(key) instanceof Integer)
+                return (Integer) settings.get(key);
+            else
+                throw new WrongSettingTypeException(key, "int");
+        else {
+            settings.put(key, default_value);
+            return default_value;
+        }
+    }
+
+    public long getLong(String key) {
+        if (!settings.containsKey(key))
+            throw new NoSuchSettingException(key);
+        else if (!(settings.get(key) instanceof Long))
+            throw new WrongSettingTypeException(key, "long");
+        else
+            return (Long) settings.get(key);
+    }
+
+    public long getLong(String key, long default_value) {
+        if (settings.containsKey(key))
+            if (settings.get(key) instanceof Long)
+                return (Long) settings.get(key);
+            else
+                throw new WrongSettingTypeException(key, "long");
+        else {
+            settings.put(key, default_value);
+            return default_value;
+        }
+    }
+
+    public String getString(String key) {
+        if (!settings.containsKey(key))
+            throw new NoSuchSettingException(key);
+        else if (!(settings.get(key) instanceof String))
+            throw new WrongSettingTypeException(key, "String");
+        else
+            return (String) settings.get(key);
+    }
+
     public String getString(String key, String default_value) {
         if (settings.containsKey(key))
             if (settings.get(key) instanceof String)
@@ -110,6 +194,17 @@ public class SettingsManager {
             settings.put(key, default_value);
             return default_value;
         }
+    }
+
+    public class InvalidDefaultSettingsException extends CorundumException {
+
+        public InvalidDefaultSettingsException(Object[] default_settings, Object... additional_information) {
+            super("Someone gave this SettingsManager invalid default settings! Default settings should alternate between Strings (for keys) and Objects (for values).",
+                    "invalid settings set", "default settings: " + ListUtilities.writeArray(default_settings), additional_information);
+        }
+
+        private static final long serialVersionUID = 1644830262873644691L;
+
     }
 
     public class NoSuchSettingException extends CorundumException {

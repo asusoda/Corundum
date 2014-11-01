@@ -32,8 +32,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
     /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
      * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
      * starting the server. */
-    /** The arg info concerning the args passed in {@link #start}.
-     */
+    /** The arg info concerning the args passed in {@link #start}. */
     private ArgInfo argInfo;
 
     private boolean debugMode;
@@ -114,8 +113,6 @@ public class CorundumServer extends DedicatedServer implements Commander {
         }
     }
 
-                            + " had it's value requested, however, the value directly after it in the args list was another value!");
-                + "'s value was requested to be found, but the arg itself does not exist!");
     /** This method broadcasts a given message to every player on the server and to the console.
      * 
      * @param message
