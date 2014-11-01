@@ -29,12 +29,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
     private CorundumGui corundumGui;
     private boolean corundumGuiEnabled;
 
-    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but
-     * can be changed via --mc-gui.
-     */
+    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but can be changed via --mc-gui. */
     private boolean usingMCGui = false;
 
-    /** The {@link ArgInfo} concerning the args passed in {@link #start}.
+    /** The {@link ArgInfo} concerning the args passed in {@link #start}. */
     private ArgInfo argInfo;
 
     /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
@@ -158,7 +156,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
     }
 
     public boolean getUsingGui() {
-        //Necessary as getGuiEnabled will be obfuscated.
+        // Necessary as getGuiEnabled will be obfuscated.
         return this.getGuiEnabled();
     }
 
