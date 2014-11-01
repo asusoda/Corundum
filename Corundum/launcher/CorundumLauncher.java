@@ -11,6 +11,7 @@ public class CorundumLauncher {
     /**
      * The current version of Minecraft. I would use the Corundum.MCVERSION, but at the point of <clinit> (when static
      * variables are initialised internally), the Corundum class is not loaded, and would cause issues if that was used here.
+     * TODO make this variable on the Corundum GUI/args
      */
     public static final String MC_VER = "1.7.10";
 
@@ -28,7 +29,10 @@ public class CorundumLauncher {
      *            <li>
      *            <tt>--online-mode, -o</tt> to activate online mode, which makes the server connect to Mojang's authentication servers and verify users when they try to
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
-     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
+     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li>
+     *            <li>
+     *            <tt>--gui-enabled, -g</tt> to enable the Corundum Gui, which replaces the default Minecraft Server Gui.
+     *            <tt>--mc-gui, -mc-g</tt> to use the default Minecraft Server Gui</li>*/
     public static void main(final String[] arguments) {
         downloadMCServer(new File("."));
         // load the Minecraft server jar

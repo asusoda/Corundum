@@ -14,7 +14,11 @@ public class ArgInfo {
     private final List<String> argsList;
 
     public ArgInfo(String[] args) {
-        this.argsList = Arrays.asList(args);
+        this(Arrays.asList(args));
+    }
+
+    public ArgInfo(List<String> args) {
+        this.argsList = args;
     }
 
     public boolean hasArg(String arg) {

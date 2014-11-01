@@ -16,11 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import Corundum.Corundum;
-import Corundum.CorundumPlugin;
 import Corundum.exceptions.CorundumException;
-import Corundum.utils.interfaces.Matchable;
-import Corundum.world.Location;
 import static Corundum.utils.ListUtilities.*;
 import static Corundum.utils.messaging.MessengerUtilities.*;
 

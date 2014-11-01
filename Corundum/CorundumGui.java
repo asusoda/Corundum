@@ -1,7 +1,5 @@
 package Corundum;
 
-import Corundum.CorundumServer;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,6 +25,7 @@ public class CorundumGui {
             this.frame.pack();
             this.frame.setLocationRelativeTo((Component) null);
             this.frame.setVisible(true);
+            this.addWindowListener();
         }
     }
 
@@ -45,6 +44,12 @@ public class CorundumGui {
     /** Adds a {@link java.awt.event.WindowAdapter} to this.frame via {@link JFrame#addWindowListener(java.awt.event.WindowListener)}
      */
     public void addWindowListener() {
+
+    }
+
+    /** Logs something to the GUI's log.
+     */
+    public void log() {
 
     }
 }

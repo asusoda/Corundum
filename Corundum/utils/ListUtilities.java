@@ -16,8 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.minecraft.item.ItemStack;
-import Corundum.Corundum;
 import Corundum.exceptions.CorundumException;
 
 public class ListUtilities {
@@ -175,8 +173,6 @@ public class ListUtilities {
                 return true;
         return false;
     }
-
-    // TODO: containsAND and containsOR
 
     public static boolean containsAND(Object[] objects, Object obj1, Object obj2) {
         return contains(objects, obj1) && contains(objects, obj2);

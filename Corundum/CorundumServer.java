@@ -29,12 +29,17 @@ public class CorundumServer extends DedicatedServer implements Commander {
     private CorundumGui corundumGui;
     private boolean corundumGuiEnabled;
 
+    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but
+     * can be changed via --mc-gui.
+     */
+    private boolean usingMCGui = false;
+
+    /** The {@link ArgInfo} concerning the args passed in {@link #start}.
+    private ArgInfo argInfo;
+
     /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
      * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
      * starting the server. */
-    /** The arg info concerning the args passed in {@link #start}. */
-    private ArgInfo argInfo;
-
     private boolean debugMode;
 
     /** This <b>boolean</b> determines whether or not the server is running in "verbose" mode, which will cause the server to log a large amount of debugging messages to the
@@ -87,7 +92,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
 
         if (this.argInfo.hasArg("--gui-enabled", "-g")) {
-            this.setGuiEnabled();
+            this.enableGUI();
         }
 
         try {
@@ -137,13 +142,24 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
     @Override
     public void setGuiEnabled() {
-        this.corundumGui = new CorundumGui(this);
-        this.corundumGuiEnabled = true;
+        if (this.argInfo.hasArg("--mc-gui", "-mc-g")) {
+            super.setGuiEnabled();
+            this.usingMCGui = true;
+            this.corundumGuiEnabled = false;
+        } else {
+            this.corundumGui = new CorundumGui(this);
+            this.corundumGuiEnabled = true;
+        }
     }
 
     @Override
     public boolean getGuiEnabled() {
-        return this.corundumGuiEnabled;
+        return this.corundumGuiEnabled ? true : super.getGuiEnabled();
+    }
+
+    public boolean getUsingGui() {
+        //Necessary as getGuiEnabled will be obfuscated.
+        return this.getGuiEnabled();
     }
 
     public GameMode getDefaultGameMode() {
@@ -162,8 +178,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return super.getAllowNether();
     }
 
-    @Override
-    public boolean isHardcore() {
+    public boolean getIsHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
@@ -222,7 +237,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
      * 
      *            <pre>
      * {@link Corundum}.{@link Corundum#generateEvent(ListenerCaller) generateEvent}(<b>new</b> {@link ListenerCaller}() {
-     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener) generateEvent}({@link ListenerCaller} caller) {
+     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener, Corundum.listeners.results.EventResult) generateEvent}({@link ListenerCaller} caller) {
      *                    <i>// do stuff in here</i>
      *                }
      *            })

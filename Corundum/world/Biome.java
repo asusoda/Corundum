@@ -16,12 +16,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import Corundum.entities.Mob.MobType;
-import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.IDedType;
-import Corundum.exceptions.CorundumException;
 import Corundum.world.Block.BlockType;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.biome.BiomeOE;
