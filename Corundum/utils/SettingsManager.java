@@ -19,8 +19,11 @@ public class SettingsManager {
     public SettingsManager(SettingsManager parent, File file, Object... default_settings) {
         this.parent = parent;
         this.file = file;
-        // add the parent's settings to this SettingManager.
-        this.settings = new HashMap<>(parent.settings);
+
+        if (this.parent != null) {
+            // add the parent's settings to this SettingManager.
+            this.settings = new HashMap<>(parent.settings);
+        }
 
         // add the given default settings, which should alternate between String keys and Object values
         if (default_settings.length % 2 == 0)
@@ -33,6 +36,10 @@ public class SettingsManager {
             throw new InvalidDefaultSettingsException(default_settings, parent, file);
 
         this.load();
+    }
+
+    public SettingsManager(File settingsFile, Object... defaultSettings) {
+        this(null, settingsFile, defaultSettings);
     }
 
     public boolean containsKey(String key) {
