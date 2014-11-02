@@ -327,6 +327,8 @@ public class SettingsManager {
                                 writer = writer.value((Boolean) obj);
                             }
                         }
+
+                        writer = writer.endArray();
                     }
                 }
 
