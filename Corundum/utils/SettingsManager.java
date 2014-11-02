@@ -5,12 +5,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import Corundum.exceptions.CorundumException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
@@ -31,6 +30,8 @@ public class SettingsManager {
                     throw new InvalidDefaultSettingsException(default_settings, parent, file);
         else
             throw new InvalidDefaultSettingsException(default_settings, parent, file);
+
+        this.load();
     }
 
     public boolean containsKey(String key) {
@@ -204,14 +205,65 @@ public class SettingsManager {
         }
     }
 
-    //TODO implement array getting
+    public Object[] getArray(String key) {
+        if (this.containsKey(key)) {
+            Object value = this.settings.get(key);
+
+            if (value instanceof Object[]) {
+                return (Object[]) value;
+            } else {
+                throw new WrongSettingTypeException(key, "Object[]");
+            }
+        } else {
+            throw new NoSuchSettingException(key);
+        }
+    }
+
+    public Object[] getArray(String key, Object[] defaultValue) {
+        if (this.containsKey(key)) {
+            return this.getArray(key);
+        } else {
+            this.settings.put(key, defaultValue);
+            return defaultValue;
+        }
+    }
 
     public void load() {
         try {
             if (this.file.exists()) {
                 if (this.file.getName().endsWith(".json")) {
+                    //JSON loading
                     JsonParser parser = new JsonParser();
-                    JsonObject jsonElement = parser.parse(new FileReader(this.file)).getAsJsonObject();
+                    JsonObject jsonObject = parser.parse(new FileReader(this.file)).getAsJsonObject();
+
+                    for (Map.Entry<String, JsonElement> pair : jsonObject.entrySet()) {
+                        String key = pair.getKey();
+                        JsonElement element = pair.getValue();
+
+                        //TODO implement arrays
+                        if (element.isJsonPrimitive()) {
+                            JsonPrimitive jsonPrimitive = element.getAsJsonPrimitive();
+
+                            if (jsonPrimitive.isBoolean()) {
+                                this.settings.put(key, element.getAsBoolean());
+                            } else if (jsonPrimitive.isString()) {
+                                this.settings.put(key, element.getAsString());
+                            } else if (jsonPrimitive.isNumber()) {
+                                this.settings.put(key, element.getAsNumber());
+                            }
+                        } else if (element.isJsonNull()) {
+                            this.settings.put(key, null);
+                        } else if (element.isJsonArray()) {
+                            JsonArray array = element.getAsJsonArray();
+                            Object[] objArray = new Object[array.size()];
+
+                            for (int i = 0; i == array.size(); i++) {
+                                objArray[i] = array.get(i);
+                            }
+
+                            this.settings.put(key, objArray);
+                        }
+                    }
                 }
             } else {
                 this.file.createNewFile();
@@ -225,6 +277,7 @@ public class SettingsManager {
     public void save() {
         try {
             if (this.file.getName().endsWith(".json")) {
+                //JSON saving
                 JsonWriter writer = new JsonWriter(new FileWriter(this.file));
                 //Set to a 4 space json file.
                 writer.setIndent("    ");
@@ -254,6 +307,27 @@ public class SettingsManager {
                     } else if (nextObject instanceof Boolean) {
                         writer = writer.name(key);
                         writer = writer.value((Boolean) nextObject);
+                    } else if (nextObject instanceof Object[]) {
+                        writer = writer.beginArray();
+                        Object[] objArray = (Object[]) nextObject;
+
+                        for (Object obj : objArray) {
+                            if (obj instanceof String) {
+                                writer = writer.value((String) obj);
+                            } else if (obj instanceof Integer) {
+                                writer = writer.value((Integer) obj);
+                            } else if (obj instanceof Long) {
+                                writer = writer.value((Long) obj);
+                            } else if (obj instanceof Float) {
+                                writer = writer.value((Float) obj);
+                            } else if (obj instanceof Double) {
+                                writer = writer.value((Double) obj);
+                            } else if (obj instanceof Byte) {
+                                writer = writer.value((Byte) obj);
+                            } else if (obj instanceof Boolean) {
+                                writer = writer.value((Boolean) obj);
+                            }
+                        }
                     }
 
                     //TODO implement arrays
