@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import Corundum.exceptions.CorundumException;
 import com.google.gson.*;
@@ -15,11 +14,13 @@ import com.google.gson.stream.JsonWriter;
 public class SettingsManager {
     private SettingsManager parent;
     private File file;
-    private HashMap<String, Object> settings = new HashMap<String, Object>();
+    private HashMap<String, Object> settings = new HashMap<>();
 
     public SettingsManager(SettingsManager parent, File file, Object... default_settings) {
         this.parent = parent;
         this.file = file;
+        // add the parent's settings to this SettingManager.
+        this.settings = new HashMap<>(parent.settings);
 
         // add the given default settings, which should alternate between String keys and Object values
         if (default_settings.length % 2 == 0)
@@ -232,7 +233,7 @@ public class SettingsManager {
         try {
             if (this.file.exists()) {
                 if (this.file.getName().endsWith(".json")) {
-                    //JSON loading
+                    // JSON loading
                     JsonParser parser = new JsonParser();
                     JsonObject jsonObject = parser.parse(new FileReader(this.file)).getAsJsonObject();
 
@@ -264,6 +265,7 @@ public class SettingsManager {
                         }
                     }
                 }
+                // else if -other file types-
             } else {
                 this.file.createNewFile();
                 this.save();
@@ -276,9 +278,9 @@ public class SettingsManager {
     public void save() {
         try {
             if (this.file.getName().endsWith(".json")) {
-                //JSON saving
+                // JSON saving
                 JsonWriter writer = new JsonWriter(new FileWriter(this.file));
-                //Set to a 4 space json file.
+                // Set to a 4 space json file.
                 writer.setIndent("    ");
                 writer = writer.beginObject();
 
@@ -334,6 +336,7 @@ public class SettingsManager {
 
                 writer = writer.endObject();
             }
+            // else if -other file types-
         } catch (IOException e) {
             e.printStackTrace();
         }
