@@ -1,9 +1,17 @@
 package Corundum.utils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import Corundum.exceptions.CorundumException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     private SettingsManager parent;
@@ -193,6 +201,68 @@ public class SettingsManager {
         else {
             settings.put(key, default_value);
             return default_value;
+        }
+    }
+
+    //TODO implement array getting
+
+    public void load() {
+        try {
+            if (this.file.exists()) {
+                if (this.file.getName().endsWith(".json")) {
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonElement = parser.parse(new FileReader(this.file)).getAsJsonObject();
+                }
+            } else {
+                this.file.createNewFile();
+                this.save();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save() {
+        try {
+            if (this.file.getName().endsWith(".json")) {
+                JsonWriter writer = new JsonWriter(new FileWriter(this.file));
+                //Set to a 4 space json file.
+                writer.setIndent("    ");
+                writer = writer.beginObject();
+
+                for (String key : this.settings.keySet()) {
+                    Object nextObject = this.settings.get(key);
+
+                    if (nextObject instanceof String) {
+                        writer = writer.name(key);
+                        writer = writer.value((String) nextObject);
+                    } else if (nextObject instanceof Integer) {
+                        writer = writer.name(key);
+                        writer = writer.value((Integer) nextObject);
+                    } else if (nextObject instanceof Long) {
+                        writer = writer.name(key);
+                        writer = writer.value((Long) nextObject);
+                    } else if (nextObject instanceof Float) {
+                        writer = writer.name(key);
+                        writer = writer.value((Float) nextObject);
+                    } else if (nextObject instanceof Double) {
+                        writer = writer.name(key);
+                        writer = writer.value((Double) nextObject);
+                    } else if (nextObject instanceof Byte) {
+                        writer = writer.name(key);
+                        writer = writer.value((Byte) nextObject);
+                    } else if (nextObject instanceof Boolean) {
+                        writer = writer.name(key);
+                        writer = writer.value((Boolean) nextObject);
+                    }
+
+                    //TODO implement arrays
+                }
+
+                writer = writer.endObject();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
