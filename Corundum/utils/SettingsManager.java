@@ -240,7 +240,6 @@ public class SettingsManager {
                         String key = pair.getKey();
                         JsonElement element = pair.getValue();
 
-                        //TODO implement arrays
                         if (element.isJsonPrimitive()) {
                             JsonPrimitive jsonPrimitive = element.getAsJsonPrimitive();
 
@@ -329,8 +328,6 @@ public class SettingsManager {
                             }
                         }
                     }
-
-                    //TODO implement arrays
                 }
 
                 writer = writer.endObject();
