@@ -65,11 +65,6 @@ public class SettingsManager {
         this.parent = parent;
         this.file = file;
 
-        if (this.parent != null) {
-            // add the parent's settings to this SettingManager.
-            this.settings = new HashMap<>(parent.settings);
-        }
-
         // add the given default settings, which should alternate between String keys and Object values
         if (default_settings.length % 2 == 0)
             for (int i = 0; i < default_settings.length; i += 2)
@@ -81,10 +76,6 @@ public class SettingsManager {
             throw new InvalidDefaultSettingsException(default_settings, parent, file);
 
         this.load();
-    }
-
-    public SettingsManager(File settingsFile, Object... defaultSettings) {
-        this(null, settingsFile, defaultSettings);
     }
 
     public boolean containsKey(String key) {
@@ -489,24 +480,6 @@ public class SettingsManager {
             // else if -other file types-
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void load() {
-        if (file == null) {
-            parent.load();
-            // TODO: load from the end of "parent.file"
-        } else {
-            // TODO: load from the beginning of "file"
-        }
-    }
-
-    public void save() {
-        if (file == null) {
-            parent.save();
-            // TODO: append to "parent.file"
-        } else {
-            // TODO: save to the beginning of "file"
         }
     }
 
