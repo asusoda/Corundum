@@ -2,6 +2,7 @@ package Corundum.launcher;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -13,6 +14,8 @@ import java.util.zip.ZipInputStream;
 public class CorundumJarLoader extends URLClassLoader {
     private final boolean is_Minecraft_server_jar;
 
+    private ClassLoader child = null;
+
     public CorundumJarLoader(File file, ClassLoader parent) throws MalformedURLException {
         this(file, parent, false);
     }
@@ -21,15 +24,20 @@ public class CorundumJarLoader extends URLClassLoader {
         super(new URL[] { file.toURI().toURL() }, parent);
 
         this.is_Minecraft_server_jar = is_Minecraft_server_jar;
+
+        if (parent instanceof CorundumJarLoader)
+            ((CorundumJarLoader) parent).child = this;
     }
 
-    @Override
     public Class<?> loadClass(String class_name) throws ClassNotFoundException {
-        try {
-            return CorundumLauncher.class.getClassLoader().loadClass(class_name);
-        } catch (ClassNotFoundException exception) {
-            return super.loadClass(class_name);
-        }
+        if (getParent() != null)
+            try {
+                return getParent().loadClass(class_name);
+            } catch (ClassNotFoundException exception) {
+                //
+            }
+
+        return super.loadClass(class_name);
     }
 
     public void loadJar() throws IOException, NoClassDefFoundError, ClassNotFoundException, URISyntaxException {

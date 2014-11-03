@@ -24,7 +24,7 @@ public class Corundum {
     public static final Corundum CORUNDUM = new Corundum();
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public static final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
-    public static final CorundumServer SERVER = new CorundumServer("Corundum.jar");
+    public static final CorundumServer SERVER = new CorundumServer(".");
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
      * "other"}. The public static final <tt>OperatingSystem</tt> {@link Corundum#OS OS} represents the operating system that this server is currently running on.

@@ -1,20 +1,14 @@
 package Corundum.launcher;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.*;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.util.Scanner;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class CorundumLauncher {
-    /**
-     * The current version of Minecraft. I would use the Corundum.MCVERSION, but at the point of <clinit> (when static
-     * variables are initialised internally), the Corundum class is not loaded, and would cause issues if that was used here.
-     * TODO make this variable on the Corundum GUI/args
-     */
-    public static final String MC_VER = "1.7.10";
-
     /** This is the main method of Corundum. When Corundum is started, this is the method that is called to start the program.
      * 
      * @param arguments
@@ -29,12 +23,10 @@ public class CorundumLauncher {
      *            <li>
      *            <tt>--online-mode, -o</tt> to activate online mode, which makes the server connect to Mojang's authentication servers and verify users when they try to
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
-     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li>
-     *            <li>
-     *            <tt>--gui-enabled, -g</tt> to enable the Corundum Gui, which replaces the default Minecraft Server Gui.
-     *            <tt>--mc-gui, -mc-g</tt> to use the default Minecraft Server Gui</li>*/
+     *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
-        downloadMCServer(new File("."));
+        // TODO: download the minecraft_server.jar from minecraft.net
+
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
@@ -113,26 +105,5 @@ public class CorundumLauncher {
         }
 
         return loader;
-    }
-
-    public static void downloadMCServer(File outDir) {
-        try {
-            File outJar = new File(outDir, "minecraft_server.jar");
-
-            //Clear the file if it already exists. Allows for easily updating the server jar over MC Versions.
-            if (outJar.exists()) {
-                outJar.delete();
-            }
-
-            if (!outJar.exists() && outDir.isDirectory()) {
-                outJar.createNewFile();
-                URL mcServerDownload = new URL("https://s3.amazonaws.com/Minecraft.Download/versions/${mcVer}/minecraft_server.${mcVer}.jar".replace("${mcVer}", MC_VER) /* Makes updating the version of the Minecraft server downloaded easier*/);
-                ReadableByteChannel byteChannel = Channels.newChannel(mcServerDownload.openStream());
-                FileOutputStream outputStream = new FileOutputStream(outJar);
-                outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
     }
 }

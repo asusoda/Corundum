@@ -3,9 +3,7 @@ package Corundum;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * The GUI of Corundum.
- */
+/** The GUI of Corundum. */
 public class CorundumGui {
     private JFrame frame;
     private CorundumServer corundumServer;
@@ -15,7 +13,7 @@ public class CorundumGui {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {
-                //I know it's bad practice to just catch Exception e, but there's a LOT of possibly thrown exceptions.
+                // I know it's bad practice to just catch Exception e, but there's a LOT of possibly thrown exceptions.
                 e.printStackTrace();
             }
 
@@ -35,21 +33,18 @@ public class CorundumGui {
         // Some components will have listeners.
     }
 
-    /** Initialises the log.
-     */
+    /** Initialises the log. */
     public void initLogComponent() {
-
+        // TODO
     }
 
-    /** Adds a {@link java.awt.event.WindowAdapter} to this.frame via {@link JFrame#addWindowListener(java.awt.event.WindowListener)}
-     */
+    /** Adds a {@link java.awt.event.WindowAdapter} to this.frame via {@link JFrame#addWindowListener(java.awt.event.WindowListener)} */
     public void addWindowListener() {
-
+        // TODO
     }
 
-    /** Logs something to the GUI's log.
-     */
+    /** Logs something to the GUI's log. */
     public void log() {
-
+        // TODO
     }
 }

@@ -94,26 +94,29 @@ public class CorundumServer extends DedicatedServer implements Commander {
         }
 
         try {
-            super.startServer();
-        } catch (IOException exception) {
-            CIE.err("There was a problem starting this Corundum server!", exception, "This may have something to do with the Minecraft YGGDrasil authentication setup.");
+            main(arguments);
         } catch (Exception exception) {
             CIE.err("There was a problem starting this Corundum server!", exception);
         }
 
         // Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
         // server.properties takes priority.
-        if (argInfo.hasArg("--online-mode", "-o")) {
-            super.setProperty("online-mode", true);
-        } else if (this.argInfo.hasArg("--offline-mode", "-O")) {
-            super.setProperty("online-mode", false);
-        }
-
-        if (this.argInfo.hasArg("--world")) {
-            super.setProperty("level-name", this.argInfo.getArgValue("--world"));
-        } else {
-            super.setProperty("level-name", "world");
-        }
+        /* TODO: I had to comment these parts below because they break the build: Minecraft puts the Minecraft server in a separate thread, which causes startServer() to not
+         * be called until later, which causes the lines below to throw a NullPointerException because the MinecraftServer PropertyManager is not initialized until
+         * startServer() is called. In addition, I can't just call startServer() before this because when the server thread starts immediately after this method and
+         * startServer() is called there, it can't bind to port because it's basically trying ot run two servers in the same place at the same time and it crashes. We also
+         * can't put it before the main() call, for obvious reasons. */
+        // if (argInfo.hasArg("--online-mode", "-o")) {
+        // super.setProperty("online-mode", true);
+        // } else if (this.argInfo.hasArg("--offline-mode", "-O")) {
+        // super.setProperty("online-mode", false);
+        // }
+        //
+        // if (this.argInfo.hasArg("--world")) {
+        // super.setProperty("level-name", this.argInfo.getArgValue("--world"));
+        // } else {
+        // super.setProperty("level-name", "world");
+        // }
     }
 
     /** This method broadcasts a given message to every player on the server and to the console.

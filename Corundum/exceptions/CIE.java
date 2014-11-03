@@ -62,7 +62,8 @@ public class CIE extends RuntimeException {
             description += aOrAn(issue) + "...\n";
             if (cause.getMessage() != null)
                 description += "...to which Java says \"" + cause.getMessage() + "\"...\n";
-            description += "...at line " + cause.getStackTrace()[lines_to_skip].getLineNumber() + " of " + cause.getStackTrace()[lines_to_skip].getClassName();
+            if (lines_to_skip < cause.getStackTrace().length)
+                description += "...at line " + cause.getStackTrace()[lines_to_skip].getLineNumber() + " of " + cause.getStackTrace()[lines_to_skip].getClassName();
             if (lines_to_skip + 1 < cause.getStackTrace().length)
                 for (int i = lines_to_skip + 1; i < cause.getStackTrace().length; i++)
                     if (cause.getStackTrace()[i].getLineNumber() < 0 || !cause.getStackTrace()[i].getClassName().contains("REALDrummer"))
@@ -93,8 +94,8 @@ public class CIE extends RuntimeException {
         }
 
         // display the error to ops (note: \u2639 is a Unicode frowny face)
-        /* TODO TEMP RPLC tellOps */System.out
-                .println(MessageColor.RED + "Corundum had an accident! \u2639\n" + message + "\nPlease give the Corundum team your error log.txt!"/* TODO TEMP CMT , true */);
+        /* TODO TEMP RPLC tellOps */System.out.println(MessageColor.RED + "Corundum had an accident! \u2639\n" + message
+                + "\nPlease give the Corundum team your error log.txt!"/* TODO TEMP CMT , true */);
     }
 
     public static void err(String message, String issue, Object... additional_information) {
