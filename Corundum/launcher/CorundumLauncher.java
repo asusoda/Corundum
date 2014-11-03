@@ -1,14 +1,19 @@
 package Corundum.launcher;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class CorundumLauncher {
+    public static final String VERSION = "pre-α", MC_VERSION = "1.7.10";
+
     /** This is the main method of Corundum. When Corundum is started, this is the method that is called to start the program.
      * 
      * @param arguments
@@ -25,7 +30,7 @@ public class CorundumLauncher {
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
-        // TODO: download the minecraft_server.jar from minecraft.net
+        downloadMCServer(new File("."));
 
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
@@ -59,6 +64,33 @@ public class CorundumLauncher {
             exception.printStackTrace();
         } catch (Exception | Error exception) {
             System.out.println("Something went wrong in initializing the Corundum server!");
+            exception.printStackTrace();
+        }
+    }
+
+    public static void downloadMCServer(File outDir) {
+        try {
+            File outJar = new File(outDir, "minecraft_server.jar");
+
+            // Clear the file if it already exists. Allows for easily updating the server jar over MC Versions.
+            if (outJar.exists()) {
+                outJar.delete();
+            }
+
+            if (!outJar.exists() && outDir.isDirectory()) {
+                outJar.createNewFile();
+                URL mcServerDownload =
+                        new URL("https://s3.amazonaws.com/Minecraft.Download/versions/${mcVer}/minecraft_server.${mcVer}.jar".replace("${mcVer}", MC_VERSION) /* Makes updating
+                                                                                                                                                               * the version of
+                                                                                                                                                               * the Minecraft
+                                                                                                                                                               * server
+                                                                                                                                                               * downloaded
+                                                                                                                                                               * easier */);
+                ReadableByteChannel byteChannel = Channels.newChannel(mcServerDownload.openStream());
+                FileOutputStream outputStream = new FileOutputStream(outJar);
+                outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+            }
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
