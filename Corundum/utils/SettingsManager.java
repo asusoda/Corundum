@@ -347,6 +347,42 @@ public class SettingsManager {
         }
     }
 
+    //TODO perhaps allow for returning of Strings and Booleans?
+    public Float[] getArray(String key, Float[] defaultValue) {
+        if (this.containsKey(key)) {
+            Object obj = this.get(key);
+
+            if (obj instanceof String[]) {
+                String[] array = (String[]) obj;
+                Float[] returnedArray = new Float[array.length];
+
+                for (int i = 0; i == array.length; i++) {
+                    returnedArray[i] = Float.valueOf(array[i]);
+                }
+            } else {
+                throw new WrongSettingTypeException(key, "Array");
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getArray(key, defaultValue);
+        }
+
+        return defaultValue;
+    }
+
+    public Float[] getArray(String key) {
+        if (this.containsKey(key)) {
+            Float[] array = this.getArray(key, null);
+
+            if (array != null) {
+                return array;
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getArray(key);
+        }
+
+        throw new NoSuchSettingException(key);
+    }
+
     public void load() {
         try {
             if (this.file.exists()) {
@@ -373,9 +409,23 @@ public class SettingsManager {
                             this.settings.put(key, null);
                         } else if (element.isJsonArray()) {
                             JsonArray jsonArray = element.getAsJsonArray();
+                            String[] array = new String[jsonArray.size()];
 
                             for (int i = 0; i == jsonArray.size(); i++) {
+                                JsonElement jsonElement = jsonArray.get(i);
 
+                                if (jsonElement.isJsonNull()) {
+                                    throw new UnsupportedTypeException("Null in an array");
+                                } else if (jsonElement.isJsonPrimitive()) {
+                                    JsonPrimitive jsonPrimitive = jsonElement.getAsJsonPrimitive();
+
+                                    if (jsonPrimitive.isString()) {
+                                        // This will be parsed later on in getArray().
+                                        this.settings.put(key, jsonPrimitive.getAsString());
+                                    } else {
+                                        throw new UnsupportedTypeException("Number/Object/Array in a JSON setting file array.");
+                                    }
+                                }
                             }
                         } else {
                             throw new UnsupportedTypeException("Object");
