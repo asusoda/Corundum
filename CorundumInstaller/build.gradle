@@ -13,5 +13,5 @@ sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 
 version = '1.0'
-group = 'org.mccorundum'
+group = 'org.corundummc'
 archivesBaseName = "CorundumInstaller"

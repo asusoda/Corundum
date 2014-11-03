@@ -1,10 +1,16 @@
 package Corundum.utils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import Corundum.exceptions.CorundumException;
 import Corundum.utils.myList.myList;
+import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     public static final myList<Class<?>> SUPPORTED_DATA_CLASSES = new myList<Class<?>>(Boolean.class, Byte.class, Character.class, Double.class, Float.class, Integer.class,
@@ -12,7 +18,7 @@ public class SettingsManager {
 
     private SettingsManager parent;
     private File file;
-    private HashMap<String, Object> settings = new HashMap<String, Object>();
+    private HashMap<String, Object> settings = new HashMap<>();
 
     /** This constructor creates a new {@link SettingsManager}, which is used to contain and handle settings for servers, players, player groups, and more. Settings can
      * configure anything from the permission to use commands to the server properties.
@@ -59,6 +65,11 @@ public class SettingsManager {
         this.parent = parent;
         this.file = file;
 
+        if (this.parent != null) {
+            // add the parent's settings to this SettingManager.
+            this.settings = new HashMap<>(parent.settings);
+        }
+
         // add the given default settings, which should alternate between String keys and Object values
         if (default_settings.length % 2 == 0)
             for (int i = 0; i < default_settings.length; i += 2)
@@ -68,6 +79,12 @@ public class SettingsManager {
                     throw new InvalidDefaultSettingsException(default_settings, parent, file);
         else
             throw new InvalidDefaultSettingsException(default_settings, parent, file);
+
+        this.load();
+    }
+
+    public SettingsManager(File settingsFile, Object... defaultSettings) {
+        this(null, settingsFile, defaultSettings);
     }
 
     public boolean containsKey(String key) {
@@ -336,6 +353,142 @@ public class SettingsManager {
         else {
             settings.put(key, default_value);
             return default_value;
+        }
+    }
+
+    public Object[] getArray(String key) {
+        if (this.containsKey(key)) {
+            Object value = this.settings.get(key);
+
+            if (value instanceof Object[]) {
+                return (Object[]) value;
+            } else {
+                throw new WrongSettingTypeException(key, "Object[]");
+            }
+        } else {
+            throw new NoSuchSettingException(key);
+        }
+    }
+
+    public Object[] getArray(String key, Object[] defaultValue) {
+        if (this.containsKey(key)) {
+            return this.getArray(key);
+        } else {
+            this.settings.put(key, defaultValue);
+            return defaultValue;
+        }
+    }
+
+    public void load() {
+        try {
+            if (this.file.exists()) {
+                if (this.file.getName().endsWith(".json")) {
+                    // JSON loading
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = parser.parse(new FileReader(this.file)).getAsJsonObject();
+
+                    for (Map.Entry<String, JsonElement> pair : jsonObject.entrySet()) {
+                        String key = pair.getKey();
+                        JsonElement element = pair.getValue();
+
+                        if (element.isJsonPrimitive()) {
+                            JsonPrimitive jsonPrimitive = element.getAsJsonPrimitive();
+
+                            if (jsonPrimitive.isBoolean()) {
+                                this.settings.put(key, element.getAsBoolean());
+                            } else if (jsonPrimitive.isString()) {
+                                this.settings.put(key, element.getAsString());
+                            } else if (jsonPrimitive.isNumber()) {
+                                this.settings.put(key, element.getAsNumber());
+                            }
+                        } else if (element.isJsonNull()) {
+                            this.settings.put(key, null);
+                        } else if (element.isJsonArray()) {
+                            JsonArray array = element.getAsJsonArray();
+                            Object[] objArray = new Object[array.size()];
+
+                            for (int i = 0; i == array.size(); i++) {
+                                objArray[i] = array.get(i);
+                            }
+
+                            this.settings.put(key, objArray);
+                        }
+                    }
+                }
+                // else if -other file types-
+            } else {
+                this.file.createNewFile();
+                this.save();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save() {
+        try {
+            if (this.file.getName().endsWith(".json")) {
+                // JSON saving
+                JsonWriter writer = new JsonWriter(new FileWriter(this.file));
+                // Set to a 4 space json file.
+                writer.setIndent("    ");
+                writer = writer.beginObject();
+
+                for (String key : this.settings.keySet()) {
+                    Object nextObject = this.settings.get(key);
+
+                    if (nextObject instanceof String) {
+                        writer = writer.name(key);
+                        writer = writer.value((String) nextObject);
+                    } else if (nextObject instanceof Integer) {
+                        writer = writer.name(key);
+                        writer = writer.value((Integer) nextObject);
+                    } else if (nextObject instanceof Long) {
+                        writer = writer.name(key);
+                        writer = writer.value((Long) nextObject);
+                    } else if (nextObject instanceof Float) {
+                        writer = writer.name(key);
+                        writer = writer.value((Float) nextObject);
+                    } else if (nextObject instanceof Double) {
+                        writer = writer.name(key);
+                        writer = writer.value((Double) nextObject);
+                    } else if (nextObject instanceof Byte) {
+                        writer = writer.name(key);
+                        writer = writer.value((Byte) nextObject);
+                    } else if (nextObject instanceof Boolean) {
+                        writer = writer.name(key);
+                        writer = writer.value((Boolean) nextObject);
+                    } else if (nextObject instanceof Object[]) {
+                        writer = writer.beginArray();
+                        Object[] objArray = (Object[]) nextObject;
+
+                        for (Object obj : objArray) {
+                            if (obj instanceof String) {
+                                writer = writer.value((String) obj);
+                            } else if (obj instanceof Integer) {
+                                writer = writer.value((Integer) obj);
+                            } else if (obj instanceof Long) {
+                                writer = writer.value((Long) obj);
+                            } else if (obj instanceof Float) {
+                                writer = writer.value((Float) obj);
+                            } else if (obj instanceof Double) {
+                                writer = writer.value((Double) obj);
+                            } else if (obj instanceof Byte) {
+                                writer = writer.value((Byte) obj);
+                            } else if (obj instanceof Boolean) {
+                                writer = writer.value((Boolean) obj);
+                            }
+                        }
+
+                        writer = writer.endArray();
+                    }
+                }
+
+                writer = writer.endObject();
+            }
+            // else if -other file types-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
