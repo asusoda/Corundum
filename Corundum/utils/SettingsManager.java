@@ -347,33 +347,6 @@ public class SettingsManager {
         }
     }
 
-    public Object[] getArray(String key) {
-        if (this.containsKey(key)) {
-            Object value = this.settings.get(key);
-
-            if (value instanceof Object[]) {
-                return (Object[]) value;
-            } else {
-                throw new WrongSettingTypeException(key, "Object[]");
-            }
-        } else if (this.parent != null) {
-            return this.parent.getArray(key);
-        } else {
-            throw new NoSuchSettingException(key);
-        }
-    }
-
-    public Object[] getArray(String key, Object[] defaultValue) {
-        if (this.containsKey(key)) {
-            return this.getArray(key);
-        } else if (this.parent != null) {
-            return this.parent.getArray(key, defaultValue);
-        } else {
-            this.settings.put(key, defaultValue);
-            return defaultValue;
-        }
-    }
-
     public void load() {
         try {
             if (this.file.exists()) {
@@ -398,15 +371,8 @@ public class SettingsManager {
                             }
                         } else if (element.isJsonNull()) {
                             this.settings.put(key, null);
-                        } else if (element.isJsonArray()) {
-                            JsonArray array = element.getAsJsonArray();
-                            Object[] objArray = new Object[array.size()];
-
-                            for (int i = 0; i == array.size(); i++) {
-                                objArray[i] = array.get(i);
-                            }
-
-                            this.settings.put(key, objArray);
+                        } else {
+                            throw new UnsupportedTypeException("Object/Array");
                         }
                     }
                 }
@@ -453,29 +419,6 @@ public class SettingsManager {
                     } else if (nextObject instanceof Boolean) {
                         writer = writer.name(key);
                         writer = writer.value((Boolean) nextObject);
-                    } else if (nextObject instanceof Object[]) {
-                        writer = writer.beginArray();
-                        Object[] objArray = (Object[]) nextObject;
-
-                        for (Object obj : objArray) {
-                            if (obj instanceof String) {
-                                writer = writer.value((String) obj);
-                            } else if (obj instanceof Integer) {
-                                writer = writer.value((Integer) obj);
-                            } else if (obj instanceof Long) {
-                                writer = writer.value((Long) obj);
-                            } else if (obj instanceof Float) {
-                                writer = writer.value((Float) obj);
-                            } else if (obj instanceof Double) {
-                                writer = writer.value((Double) obj);
-                            } else if (obj instanceof Byte) {
-                                writer = writer.value((Byte) obj);
-                            } else if (obj instanceof Boolean) {
-                                writer = writer.value((Boolean) obj);
-                            }
-                        }
-
-                        writer = writer.endArray();
                     }
                 }
 
@@ -596,5 +539,13 @@ public class SettingsManager {
             super("Someone tried to retrieve the setting \"" + key + "\" as " + StringUtilities.aOrAn(wrong_type), "wrong-typed setting retrieval", additional_information);
         }
 
+    }
+
+    public class UnsupportedTypeException extends CorundumException {
+        private static final long serialVersionUID = -1012375715602861108L;
+
+        public UnsupportedTypeException(String triedType, Object... additionalInfo) {
+            super("Someone tried to use a " + triedType + " in this SettingsManager! This is a non-suppported type!", "Unsupported Type", additionalInfo);
+        }
     }
 }
