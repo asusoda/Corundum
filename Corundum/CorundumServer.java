@@ -26,10 +26,8 @@ import Corundum.utils.myList.myList;
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Commander {
-    //Hardcoded value to disable the Corundum GUI if it's not ready.
-    private static final boolean CORUNDUM_GUI_ENABLED = false;
     private CorundumGui corundumGui;
-    private boolean corundumGuiEnabled;
+    private boolean corundum_GUI_enabled = false;
 
     /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but can be changed via --mc-gui. */
     private boolean usingMCGui = false;
@@ -145,24 +143,25 @@ public class CorundumServer extends DedicatedServer implements Commander {
 
     @Override
     public void setGuiEnabled() {
-        if (this.argInfo.hasArg("--mc-gui", "-mc-g") || !CORUNDUM_GUI_ENABLED) {
-            if (!CORUNDUM_GUI_ENABLED) {
-                System.out.println("The Corundum GUI is not enabled! This is a dev thing and hardcoded (ie. Unalterable via args). Corundum is likely in alpha as this is the only time it's likely to be disabled.");
+        if (this.argInfo.hasArg("--mc-gui", "-mc-g") || !corundum_GUI_enabled) {
+            if (!corundum_GUI_enabled) {
+                System.out
+                        .println("The Corundum GUI is not enabled! This is a dev thing and hardcoded (ie. Unalterable via args). Corundum is likely in alpha as this is the only time it's likely to be disabled.");
                 System.out.println("Using vanilla server GUI as Corundum's GUI is not enabled [HARDCODED VALUE].");
             }
 
             super.setGuiEnabled();
             this.usingMCGui = true;
-            this.corundumGuiEnabled = false;
+            this.corundum_GUI_enabled = false;
         } else {
             this.corundumGui = new CorundumGui(this);
-            this.corundumGuiEnabled = true;
+            this.corundum_GUI_enabled = true;
         }
     }
 
     @Override
     public boolean getGuiEnabled() {
-        return this.corundumGuiEnabled ? true : super.getGuiEnabled();
+        return this.corundum_GUI_enabled ? true : super.getGuiEnabled();
     }
 
     public boolean getUsingGui() {
