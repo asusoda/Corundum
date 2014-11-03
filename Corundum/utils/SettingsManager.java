@@ -14,7 +14,7 @@ import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     public static final myList<Class<?>> SUPPORTED_DATA_CLASSES = new myList<Class<?>>(Boolean.class, Byte.class, Character.class, Double.class, Float.class, Integer.class,
-            Long.class, Short.class, String.class, Object[].class);
+            Long.class, Short.class, String.class, Float[].class);
 
     private SettingsManager parent;
     private File file;
@@ -371,8 +371,14 @@ public class SettingsManager {
                             }
                         } else if (element.isJsonNull()) {
                             this.settings.put(key, null);
+                        } else if (element.isJsonArray()) {
+                            JsonArray jsonArray = element.getAsJsonArray();
+
+                            for (int i = 0; i == jsonArray.size(); i++) {
+
+                            }
                         } else {
-                            throw new UnsupportedTypeException("Object/Array");
+                            throw new UnsupportedTypeException("Object");
                         }
                     }
                 }
@@ -419,6 +425,18 @@ public class SettingsManager {
                     } else if (nextObject instanceof Boolean) {
                         writer = writer.name(key);
                         writer = writer.value((Boolean) nextObject);
+                    } else if (nextObject instanceof String[]) {
+                        writer = writer.beginArray();
+                        String[] array = (String[]) nextObject;
+
+                        for (String element : array) {
+                            writer.value(element);
+                        }
+
+                        writer = writer.endArray();
+                    } else if (nextObject == null) {
+                        writer = writer.name(key);
+                        writer = writer.nullValue();
                     }
                 }
 
