@@ -488,12 +488,14 @@ public class SettingsManager {
 
                                     if (jsonPrimitive.isString()) {
                                         // This will be parsed later on in getArray().
-                                        this.settings.put(key, jsonPrimitive.getAsString());
+                                        array[i] = jsonPrimitive.getAsString();
                                     } else {
                                         throw new UnsupportedTypeException("Number/Object/Array in a JSON setting file array.");
                                     }
                                 }
                             }
+
+                            this.settings.put(key, array);
                         } else {
                             throw new UnsupportedTypeException("Object");
                         }
