@@ -14,7 +14,7 @@ import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     public static final myList<Class<?>> SUPPORTED_DATA_CLASSES = new myList<Class<?>>(Boolean.class, Byte.class, Character.class, Double.class, Float.class, Integer.class,
-            Long.class, Short.class, String.class, Float[].class);
+            Long.class, Short.class, String.class, Float[].class, String[].class);
 
     private SettingsManager parent;
     private File file;
@@ -378,6 +378,34 @@ public class SettingsManager {
             }
         } else if (this.parent.containsKey(key)) {
             return this.parent.getArray(key);
+        }
+
+        throw new NoSuchSettingException(key);
+    }
+
+    public String[] getStringArray(String key, String[] defaultValue) {
+        if (this.containsKey(key)) {
+            Object obj = this.get(key);
+
+            if (obj instanceof String[]) {
+                return (String[]) obj;
+            }
+        } else if (this.parent != null) {
+            return this.parent.getStringArray(key, defaultValue);
+        }
+
+        return defaultValue;
+    }
+
+    public String[] getStringArray(String key) {
+        if (this.containsKey(key)) {
+            String[] array = this.getStringArray(key, null);
+
+            if (array != null) {
+                return array;
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getStringArray(key);
         }
 
         throw new NoSuchSettingException(key);
