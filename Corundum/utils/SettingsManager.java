@@ -14,7 +14,7 @@ import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     public static final myList<Class<?>> SUPPORTED_DATA_CLASSES = new myList<Class<?>>(Boolean.class, Byte.class, Character.class, Double.class, Float.class, Integer.class,
-            Long.class, Short.class, String.class, Float[].class, String[].class, Boolean[].class);
+            Long.class, Short.class, String.class, Integer[].class, Float[].class, String[].class, Boolean[].class);
 
     private SettingsManager parent;
     private File file;
@@ -347,8 +347,42 @@ public class SettingsManager {
         }
     }
 
-    //TODO perhaps allow for returning of Strings and Booleans?
-    public Float[] getArray(String key, Float[] defaultValue) {
+    public Integer[] getIntegerArray(String key, Integer[] defaultValue) {
+        if (this.containsKey(key)) {
+            Object obj = this.get(key);
+
+            if (obj instanceof String[]) {
+                String[] array = (String[]) obj;
+                Integer[] returnedArray = new Integer[array.length];
+
+                for (int i = 0; i == array.length; i++) {
+                    returnedArray[i] = Integer.valueOf(array[i]);
+                }
+            } else {
+                throw new WrongSettingTypeException(key, "Array");
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getIntegerArray(key, defaultValue);
+        }
+
+        return defaultValue;
+    }
+
+    public Integer[] getIntegerArray(String key) {
+        if (this.containsKey(key)) {
+            Integer[] array = this.getIntegerArray(key, null);
+
+            if (array != null) {
+                return array;
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getIntegerArray(key);
+        }
+
+        throw new NoSuchSettingException(key);
+    }
+
+    public Float[] getFloatArray(String key, Float[] defaultValue) {
         if (this.containsKey(key)) {
             Object obj = this.get(key);
 
@@ -363,21 +397,21 @@ public class SettingsManager {
                 throw new WrongSettingTypeException(key, "Array");
             }
         } else if (this.parent.containsKey(key)) {
-            return this.parent.getArray(key, defaultValue);
+            return this.parent.getFloatArray(key, defaultValue);
         }
 
         return defaultValue;
     }
 
-    public Float[] getArray(String key) {
+    public Float[] getFloatArray(String key) {
         if (this.containsKey(key)) {
-            Float[] array = this.getArray(key, null);
+            Float[] array = this.getFloatArray(key, null);
 
             if (array != null) {
                 return array;
             }
         } else if (this.parent.containsKey(key)) {
-            return this.parent.getArray(key);
+            return this.parent.getFloatArray(key);
         }
 
         throw new NoSuchSettingException(key);
@@ -482,12 +516,12 @@ public class SettingsManager {
                                 JsonElement jsonElement = jsonArray.get(i);
 
                                 if (jsonElement.isJsonNull()) {
-                                    throw new UnsupportedTypeException("Null in an array");
+                                    array[i] = null;
                                 } else if (jsonElement.isJsonPrimitive()) {
                                     JsonPrimitive jsonPrimitive = jsonElement.getAsJsonPrimitive();
 
                                     if (jsonPrimitive.isString()) {
-                                        // This will be parsed later on in getArray().
+                                        // This will be parsed later on in getFloatArray().
                                         array[i] = jsonPrimitive.getAsString();
                                     } else {
                                         throw new UnsupportedTypeException("Number/Object/Array in a JSON setting file array.");
@@ -646,6 +680,38 @@ public class SettingsManager {
         // if the key does not exist, set the setting for the highest parent
         else
             parent.setString(key, value);
+    }
+
+    public void setIntegerArray(String key, Integer[] value) {
+        if (this.containsKey(key) || this.parent == null) {
+            this.settings.put(key, value);
+        } else {
+            this.parent.setIntegerArray(key, value);
+        }
+    }
+
+    public void setFloatArray(String key, Float[] value) {
+        if (this.containsKey(key) || this.parent == null) {
+            this.settings.put(key, value);
+        } else {
+            this.parent.setFloatArray(key, value);
+        }
+    }
+
+    public void setStringArray(String key, String[] value) {
+        if (this.containsKey(key) || this.parent == null) {
+            this.settings.put(key, value);
+        } else {
+            this.parent.setStringArray(key, value);
+        }
+    }
+
+    public void setBooleanArray(String key, Boolean[] value) {
+        if (this.containsKey(key) || this.parent == null) {
+            this.settings.put(key, value);
+        } else {
+            this.parent.setBooleanArray(key, value);
+        }
     }
 
     public class InvalidDefaultSettingsException extends CorundumException {
