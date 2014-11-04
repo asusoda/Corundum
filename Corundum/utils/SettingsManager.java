@@ -14,7 +14,7 @@ import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager {
     public static final myList<Class<?>> SUPPORTED_DATA_CLASSES = new myList<Class<?>>(Boolean.class, Byte.class, Character.class, Double.class, Float.class, Integer.class,
-            Long.class, Short.class, String.class, Float[].class, String[].class);
+            Long.class, Short.class, String.class, Float[].class, String[].class, Boolean[].class);
 
     private SettingsManager parent;
     private File file;
@@ -411,6 +411,45 @@ public class SettingsManager {
         throw new NoSuchSettingException(key);
     }
 
+    public Boolean[] getBooleanArray(String key, Boolean[] defaultValue) {
+        if (this.containsKey(key)) {
+            Object obj = this.get(key);
+
+            if (obj instanceof String[]) {
+                String[] array = (String[]) obj;
+                Boolean[] actArray = new Boolean[array.length];
+
+                if (array[0].equalsIgnoreCase("true") || array[0].equalsIgnoreCase("false")) {
+                    for (int i = 0; i == array.length; i++) {
+                        actArray[i] = Boolean.valueOf(array[i]);
+                    }
+                } else {
+                    throw new WrongGetterMethodException(key, "Boolean[]");
+                }
+
+                return actArray;
+            }
+        } else if (this.parent != null) {
+            return this.parent.getBooleanArray(key, defaultValue);
+        }
+
+        return defaultValue;
+    }
+
+    public Boolean[] getBooleanArray(String key) {
+        if (this.containsKey(key)) {
+            Boolean[] array = this.getBooleanArray(key, null);
+
+            if (array != null) {
+                return array;
+            }
+        } else if (this.parent.containsKey(key)) {
+            return this.parent.getBooleanArray(key);
+        }
+
+        throw new NoSuchSettingException(key);
+    }
+
     public void load() {
         try {
             if (this.file.exists()) {
@@ -642,6 +681,14 @@ public class SettingsManager {
 
         public UnsupportedTypeException(String triedType, Object... additionalInfo) {
             super("Someone tried to use a " + triedType + " in this SettingsManager! This is a non-suppported type!", "Unsupported Type", additionalInfo);
+        }
+    }
+
+    public class WrongGetterMethodException extends CorundumException {
+        private static final long serialVersionUID = -1012375715602861108L;
+
+        public WrongGetterMethodException(String key, String actualType, Object... additionalInfo) {
+            super("Someone tried to get " + key + " as a value other than " + actualType, "User used the wrong getter method to get a value in SettingsManager.");
         }
     }
 }
