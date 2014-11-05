@@ -745,16 +745,12 @@ public class SettingsManager {
     }
 
     public class UnsupportedTypeException extends CorundumException {
-        private static final long serialVersionUID = -1012375715602861108L;
-
         public UnsupportedTypeException(String triedType, Object... additionalInfo) {
             super("Someone tried to use a " + triedType + " in this SettingsManager! This is a non-suppported type!", "Unsupported Type", additionalInfo);
         }
     }
 
     public class WrongGetterMethodException extends CorundumException {
-        private static final long serialVersionUID = -1012375715602861108L;
-
         public WrongGetterMethodException(String key, String actualType, Object... additionalInfo) {
             super("Someone tried to get " + key + " as a value other than " + actualType, "User used the wrong getter method to get a value in SettingsManager.");
         }

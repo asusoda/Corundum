@@ -29,13 +29,11 @@ public class Block {
     public Biome getBiome() {
         int posXInChunk = this.location.getBlockX() % 16;
         int posZInChunk = this.location.getBlockZ() % 16;
-        // Returns new Biome instance for now. Not sure if correct/intended method.
         return new Biome(getChunk().getBiomeMap()[posXInChunk][posZInChunk]);
     }
 
     public Chunk getChunk() {
         net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().getMCWorld().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
-        // Is this the intended way? Instantiating a new Chunk object?
         return new Chunk(mcChunk);
     }
 
