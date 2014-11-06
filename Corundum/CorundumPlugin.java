@@ -112,8 +112,8 @@ public abstract class CorundumPlugin implements CorundumListener {
                         throw new CIE("I couldn't find the class in the JarEntry!", exception, "entry name=\"" + entry.getName() + "\"");
                     }
 
-        // once all the classes are loaded, run the plugin's main class(es) load() method(s)
-        ArrayList<CorundumPlugin> loaded_plugins = new ArrayList<CorundumPlugin>();
+        // load the classes and put them into a temporary list for later handling
+        ArrayList<CorundumPlugin> loaded_plugins = new ArrayList<>();
         for (Class<CorundumPlugin> main_class : main_classes) {
             // load the main class as a new CorundumPlugin
             CorundumPlugin plugin;
@@ -125,11 +125,17 @@ public abstract class CorundumPlugin implements CorundumListener {
                 throw new CIE("I couldn't access this new plugin's default constructor to instantiate it!", exception, "jar file=\"" + jar.getName() + "\"");
             }
 
+            loaded_plugins.add(plugin);
+        }
+
+        // handle the actual loading.
+        for (CorundumPlugin currPlugin : loaded_plugins) {
+            // TODO implement dependencies checking.
             // add the newly loaded plugin to the plugins list
-            Corundum.SERVER.plugins.add(plugin);
+            Corundum.SERVER.plugins.add(currPlugin);
 
             // generate an event describing the loading
-            final CorundumPlugin pluginF = plugin;
+            final CorundumPlugin pluginF = currPlugin;
             EventResult result = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
                 @Override
                 public EventResult generateEvent(PluginLoadListener listener, EventResult result) {
@@ -142,12 +148,12 @@ public abstract class CorundumPlugin implements CorundumListener {
 
             // if the a cancellation was requested, close the URLClassLoader
             if (result.isCancelled()) {
-                plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" load cancelled");
-                Corundum.SERVER.plugins.remove(plugin);
+                currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" load cancelled");
+                Corundum.SERVER.plugins.remove(currPlugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
-                    throw new CIE(plugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                    throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
                 }
                 return null;
             }
@@ -155,27 +161,25 @@ public abstract class CorundumPlugin implements CorundumListener {
             // call the plugin's onLoad() method
             boolean success;
             try {
-                success = plugin.onLoad();
+                success = currPlugin.onLoad();
             } catch (CorundumException exception) {
                 exception.err();
                 return null;
             } catch (Exception exception) {
-                new CorundumException(plugin.getName() + " had a problem while being loaded!", exception).err();
+                new CorundumException(currPlugin.getName() + " had a problem while being loaded!", exception).err();
                 return null;
             }
 
             if (!success) {
-                plugin.debug("plugin \"" + plugin.getName() + "\" v" + plugin.getVersion() + "\" cancelled its own loading");
-                Corundum.SERVER.plugins.remove(plugin);
+                currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" cancelled its own loading");
+                Corundum.SERVER.plugins.remove(currPlugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
-                    throw new CIE(plugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                    throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
                 }
                 return null;
             }
-
-            loaded_plugins.add(plugin);
         }
 
         try {
