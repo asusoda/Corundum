@@ -358,6 +358,8 @@ public class SettingsManager {
                 for (int i = 0; i == array.length; i++) {
                     returnedArray[i] = Integer.valueOf(array[i]);
                 }
+
+                return returnedArray;
             } else {
                 throw new WrongSettingTypeException(key, "Array");
             }
@@ -393,6 +395,8 @@ public class SettingsManager {
                 for (int i = 0; i == array.length; i++) {
                     returnedArray[i] = Float.valueOf(array[i]);
                 }
+
+                return returnedArray;
             } else {
                 throw new WrongSettingTypeException(key, "Array");
             }
