@@ -5,10 +5,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -128,57 +125,58 @@ public abstract class CorundumPlugin implements CorundumListener {
             loaded_plugins.add(plugin);
         }
 
-        // handle the actual loading.
-        for (CorundumPlugin currPlugin : loaded_plugins) {
-            // TODO implement dependencies checking.
-            // add the newly loaded plugin to the plugins list
-            Corundum.SERVER.plugins.add(currPlugin);
+        if (checkDependencies(loaded_plugins)) {
+            // handle the actual loading.
+            for (CorundumPlugin currPlugin : loaded_plugins) {
+                // add the newly loaded plugin to the plugins list
+                Corundum.SERVER.plugins.add(currPlugin);
 
-            // generate an event describing the loading
-            final CorundumPlugin pluginF = currPlugin;
-            EventResult result = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
-                @Override
-                public EventResult generateEvent(PluginLoadListener listener, EventResult result) {
-                    if (result == null)
-                        result = new EventResult();
+                // generate an event describing the loading
+                final CorundumPlugin pluginF = currPlugin;
+                EventResult result = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
+                    @Override
+                    public EventResult generateEvent(PluginLoadListener listener, EventResult result) {
+                        if (result == null)
+                            result = new EventResult();
 
-                    return listener.onPluginLoad(pluginF, result);
+                        return listener.onPluginLoad(pluginF, result);
+                    }
+                });
+
+                // if the a cancellation was requested, close the URLClassLoader
+                if (result.isCancelled()) {
+                    currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" load cancelled");
+                    Corundum.SERVER.plugins.remove(currPlugin);
+                    try {
+                        loader.close();
+                    } catch (IOException exception) {
+                        throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                    }
+                    return null;
                 }
-            });
 
-            // if the a cancellation was requested, close the URLClassLoader
-            if (result.isCancelled()) {
-                currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" load cancelled");
-                Corundum.SERVER.plugins.remove(currPlugin);
+                // call the plugin's onLoad() method
+                boolean success;
                 try {
-                    loader.close();
-                } catch (IOException exception) {
-                    throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                    success = currPlugin.onLoad();
+                } catch (CorundumException exception) {
+                    exception.err();
+                    return null;
+                } catch (Exception exception) {
+                    new CorundumException(currPlugin.getName() + " had a problem while being loaded!", exception).err();
+                    return null;
                 }
-                return null;
-            }
 
-            // call the plugin's onLoad() method
-            boolean success;
-            try {
-                success = currPlugin.onLoad();
-            } catch (CorundumException exception) {
-                exception.err();
-                return null;
-            } catch (Exception exception) {
-                new CorundumException(currPlugin.getName() + " had a problem while being loaded!", exception).err();
-                return null;
-            }
-
-            if (!success) {
-                currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" cancelled its own loading");
-                Corundum.SERVER.plugins.remove(currPlugin);
-                try {
-                    loader.close();
-                } catch (IOException exception) {
-                    throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                if (!success) {
+                    currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" cancelled its own loading");
+                    Corundum.SERVER.plugins.remove(currPlugin);
+                    try {
+                        loader.close();
+                    } catch (IOException exception) {
+                        throw new CIE(currPlugin.getName() + " had an issue while trying to cancel the loading process!", exception);
+                    }
+                    return null;
                 }
-                return null;
             }
         }
 
@@ -191,10 +189,36 @@ public abstract class CorundumPlugin implements CorundumListener {
         return loaded_plugins.toArray(new CorundumPlugin[loaded_plugins.size()]);
     }
 
+    public static boolean checkDependencies(List<CorundumPlugin> pluginsToCheck) {
+        List<String> dependencies = new ArrayList<>();
+        List<String> pluginNames = new ArrayList<>();
+
+        for (CorundumPlugin plugin : pluginsToCheck) {
+            String[] pluginDependencies = plugin.getDependencies();
+            pluginNames.add(plugin.getName());
+
+            if (!pluginDependencies[0].equals("")) {
+                for (String pluginDependency : pluginDependencies) {
+                    if (!dependencies.contains(pluginDependency)) {
+                        dependencies.add(pluginDependency);
+                    }
+                }
+            }
+        }
+
+        for (String dependency : dependencies) {
+            if (!pluginNames.contains(dependency)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /** This method enables this {@link CorundumPlugin} and calls the plugin's {@link #onEnable() onEnable() method}. Enabling a plugin causes all its {@link CorundumListener}s
      * to become active and its commands to become usable.
      * 
-     * @see {@link #onEnable()}, {@link #load(JarFile)}, {@link #disable()}, and {@link #unload()}. */
+     * @see {@link #onEnable()}, {@link CorundumPlugin#load(JarFile)}, {@link #disable()}, and {@link #unload()}. */
     public final void enable() {
         enabled = true;
         try {
@@ -353,4 +377,9 @@ public abstract class CorundumPlugin implements CorundumListener {
     public abstract String getPrefix();
 
     public abstract String getVersion();
+
+    // currently non abstract method used in dependencies.
+    public String[] getDependencies() {
+        return new String[] {""};
+    }
 }
