@@ -211,6 +211,7 @@ public abstract class CorundumPlugin implements CorundumListener {
         for (String dependency : dependencies.keySet()) {
             if (!pluginNames.keySet().contains(dependency)) {
                 for (CorundumPlugin plugin : dependencies.get(dependency)) {
+                    Corundum.SERVER.message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
                     pluginsToCheck.remove(plugin);
                 }
             }
