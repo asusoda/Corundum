@@ -18,6 +18,7 @@ public class Entity {
     private EntityType type;
     private Location location;
     private float pitch = 0, yaw = 0;
+    private double motionX = 0, motionY = 0, motionZ = 0;
 
     // Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
 
@@ -46,6 +47,30 @@ public class Entity {
 
     public float getYaw() {
         return this.yaw;
+    }
+
+    public double getMotionX() {
+        return this.motionX;
+    }
+
+    public double getMotionY() {
+        return this.motionY;
+    }
+
+    public double getMotionZ() {
+        return this.motionZ;
+    }
+
+    public void setMotionX(double motionX) {
+        this.motionX = motionX;
+    }
+
+    public void setMotionY(double motionY) {
+        this.motionY = motionY;
+    }
+
+    public void setMotionZ(double motionZ) {
+        this.motionZ = motionZ;
     }
 
     public enum EntityType {

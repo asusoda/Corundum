@@ -4,6 +4,7 @@ import Corundum.world.Location;
 
 /**
  * Class that represents an entity that isn't alive like Cows. Examples include arrows, item entities, boats, etc.
+ * Also a base for the specialised non living Entity classes.
  */
 public class NonLiving extends Entity {
     public NonLivingType nonLivingType;
