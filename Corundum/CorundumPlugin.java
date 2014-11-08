@@ -197,9 +197,9 @@ public abstract class CorundumPlugin implements CorundumListener {
             String[] pluginDependencies = plugin.getDependencies();
             pluginNames.put(plugin.getName(), plugin);
 
-            if (!pluginDependencies[0].equals("")) {
+            if (pluginDependencies.length >= 1) {
                 for (String pluginDependency : pluginDependencies) {
-                    if (!dependencies.keySet().contains(pluginDependency)) {
+                    if (!dependencies.keySet().contains(pluginDependency) && !pluginDependency.equals("")) {
                         List<CorundumPlugin> plugins = dependencies.get(pluginDependency);
                         plugins.add(plugin);
                         dependencies.put(pluginDependency, plugins);
