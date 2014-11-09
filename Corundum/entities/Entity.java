@@ -12,25 +12,31 @@
 
 package Corundum.entities;
 
+import Corundum.exceptions.CorundumException;
 import Corundum.world.Location;
+import Corundum.world.Rotation;
 
 public class Entity {
     private EntityType type;
     private Location location;
+    private Rotation rotation;
     private float pitch = 0, yaw = 0;
     private double motionX = 0, motionY = 0, motionZ = 0;
 
     // Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
 
     public Entity(EntityType type, Location location) {
-        this.type = type;
-        this.location = location;
+        if (type != EntityType.INNAPROPRIATE) {
+            this.type = type;
+            this.location = location;
+        } else {
+            throw new BadEntityTypeException();
+        }
     }
 
-    public Entity(EntityType type, Location location, float pitch, float yaw) {
+    public Entity(EntityType type, Location location, Rotation rotation) {
         this(type, location);
-        this.pitch = pitch;
-        this.yaw = yaw;
+        this.rotation = rotation;
     }
 
     public EntityType getType() {
@@ -41,12 +47,8 @@ public class Entity {
         return this.location;
     }
 
-    public float getPitch() {
-        return this.pitch;
-    }
-
-    public float getYaw() {
-        return this.yaw;
+    public Rotation getRotation() {
+        return this.rotation;
     }
 
     public double getMotionX() {
@@ -120,7 +122,8 @@ public class Entity {
         ITEM_FRAME(false, false, false, false),
         GHAST_FIREBALL(false, false, false, false),
         BLAZE_FIREBALL(false, false, false, false),
-        ENDER_CRYSTAL(false, false, false, false); // List does not include entities from 1.8.
+        ENDER_CRYSTAL(false, false, false, false),
+        INNAPROPRIATE; // List does not include entities from 1.8.
 
         // Note, living applies to entities that are able to move by themselves, not mobs that aren't undead.
         // Also note that a despawnable entity is an entity that can exist in the world for an infinite amount of time
@@ -132,6 +135,10 @@ public class Entity {
             this.despawns = despawns;
             this.living = living;
             this.neutral = neutral;
+        }
+
+        private EntityType() {
+            // NOOP - This is for the NULL EntityType.
         }
 
         public boolean getIsMonster() {
@@ -148,6 +155,15 @@ public class Entity {
 
         public boolean getIsNeutral() {
             return this.neutral;
+        }
+    }
+
+    // Used to error if a type passed to a subclass is innapropriate for it's class logic, IE NonLivingType.ENDER_CRYSTAL
+    // passed to a Projectile constructor.
+    public class BadEntityTypeException extends CorundumException {
+        public BadEntityTypeException(Object... additionalInformation) {
+            super("A bad entity type was passed! This is usually EntityType/NonLivingType/etc.INNAPROPRIATE!", "an Entity object's constructor was " +
+                    "passed a bad EntityType!");
         }
     }
 }

@@ -1,6 +1,7 @@
 package Corundum.entities;
 
 import Corundum.world.Location;
+import Corundum.world.Rotation;
 
 /**
  * Class that represents an entity that isn't alive like Cows. Examples include arrows, item entities, boats, etc.
@@ -11,10 +12,11 @@ public class NonLiving extends Entity {
 
     public NonLiving(NonLivingType type, Location location) {
         super(type.getEntityType(), location);
+        this.nonLivingType = type;
     }
 
-    public NonLiving(NonLivingType type, Location location, float pitch, float yaw) {
-        super(type.getEntityType(), location, pitch, yaw);
+    public NonLiving(NonLivingType type, Location location, Rotation rotation) {
+        super(type.getEntityType(), location, rotation);
     }
 
     public enum NonLivingType {
@@ -36,7 +38,8 @@ public class NonLiving extends Entity {
         ITEM_FRAME(EntityType.ITEM_FRAME, false),
         GHAST_FIREBALL(EntityType.GHAST_FIREBALL, true),
         BLAZE_FIREBALL(EntityType.BLAZE_FIREBALL, false),
-        ENDER_CRYSTAL(EntityType.ENDER_CRYSTAL, false);
+        ENDER_CRYSTAL(EntityType.ENDER_CRYSTAL, false),
+        INNAPROPRIATE(EntityType.INNAPROPRIATE, false);
         // Field that represents whether or not the entity can be moved without environmental influence after being
         // spawned with any initial motion. This DOES NOT include items, as they are removed from the world when picked up.
         private boolean moveable;
