@@ -407,8 +407,7 @@ public class Item {
         private final short id;
         /** <b><i>DEV NOTES:</b></i><br>
          * The default data value is 0. -1 indicates that this type is a "general" type, which means that it has no static data value and is used to describe all its siblings
-         * as a single group. For example, */
-        // TODO: finish the note above when there are more enums to link as examples
+         * as a single group. For example, {@link ItemType#CARROT carrots} have no siblings, so their data value is -1. */
         private final short data;
 
         private final net.minecraft.item.Item itemMC;
@@ -612,8 +611,8 @@ public class Item {
          * @param id
          *            is the item I.D. of the {@link ItemType} you wish to locate.
          * @return the {@link ItemType} with the lowest data value that matches the given item I.D. (This item will almost certainly have a data value of 0 or -1.) */
-        public static ItemType getByID(int id) {
-            return getByID(id, -1);
+        public static ItemType getByIDHelper(int id) {
+            return getByIDHelper(id, -1);
         }
 
         /** This method retrieves the {@link ItemType} with the given item I.D. and data values.
@@ -623,15 +622,13 @@ public class Item {
          * @param data
          *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
          *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
-         * @return the {@link ItemType} that matches the given item I.D. and data value or <b>null</b> if no {@link BiomeType} has the given I.D. and data value. */
-        public static ItemType getByID(int id, int data) {
+         * @return the {@link ItemType} that matches the given item I.D. and data value or <b>null</b> if no {@link ItemType} has the given I.D. and data value. */
+        public static ItemType getByIDHelper(int id, int data) {
             // TODO: replace this linear search with a binary search algorithm
-            if (id >= 0) {
-                short id_minus_384 = (short) (id - 384);
+            if (id >= 0)
                 for (ItemType item_type : values())
-                    if (item_type.id == id_minus_384 && (data < 0 || item_type.data == data))
+                    if (item_type.id == id && (data < 0 || item_type.data == data))
                         return item_type;
-            }
             return null;
         }
 

@@ -12,18 +12,16 @@
 
 package Corundum.entities;
 
+import net.minecraft.entity.monster.EntityMob;
+import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
 import Corundum.items.Item;
 import Corundum.world.Location;
 
 public class Mob extends Entity {
-    private Item[] drops;
-    private MobType mobType;
 
-    public Mob(MobType mobType, Location location, Item... drops) {
-        super(mobType.getEntityType(), location);
-        this.drops = drops;
-        this.mobType = mobType;
+    public Mob(EntityMob mobMC) {
+        super(mobMC);
     }
 
     public Item[] getDrops() {
@@ -34,20 +32,26 @@ public class Mob extends Entity {
         return mobType;
     }
 
+    /** This enum is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different
+     * I.D.s, but also many of those differentiated by different data values; for example, {@link #ZOMBIE zombies} and {@link #ZOMBIFIED_VILLAGER zombified villagers} are both
+     * represented as separate types despite the fact that they both have the same I.D. value. */
     public enum MobType {
-        //Basically the same as Entity.EntityType, but without the non-living entities and the entities have more data
-        // stored about them.
         PLAYER(EntityType.PLAYER, false, true),
         PIG(EntityType.PIG, false, false),
         SKELETON(EntityType.SKELETON, true, false),
         ZOMBIE(EntityType.ZOMBIE, true, false),
+        ZOMBIFIED_VILLAGER(EntityType.ZOMBIFIED_VILLAGER, true, false),
         ZOMBIE_PIGMAN(EntityType.ZOMBIE_PIGMAN, false, false),
         COW(EntityType.COW, false, false),
         CHICKEN(EntityType.CHICKEN, false, false),
         HORSE(EntityType.HORSE, false, false),
         SHEEP(EntityType.SHEEP, false, false),
         MOOSHROOM(EntityType.MOOSHROOM, false, false),
-        VILLAGER(EntityType.VILLAGER, false, false),
+        FARMER_VILLAGER(EntityType.FARMER_VILLAGER, false, false),
+        LIBRARIAN_VILLAGER(EntityType.LIBRARIAN_VILLAGER, false, false),
+        PRIEST_VILLAGER(EntityType.PRIEST_VILLAGER, false, false),
+        BLACKSMITH_VILLAGER(EntityType.BLACKSMITH_VILLAGER, false, false),
+        BUTCHER_VILLAGER(EntityType.BUTCHER_VILLAGER, false, false),
         WOLF(EntityType.WOLF, false, false),
         OCELOT(EntityType.OCELOT, false, false),
         SQUID(EntityType.SQUID, false, false),
@@ -61,51 +65,19 @@ public class Mob extends Entity {
         SLIME(EntityType.SLIME, false, false),
         MAGMA_CUBE(EntityType.MAGMA_CUBE, false, false),
         GHAST(EntityType.GHAST, false, true),
-        ENDERDRAGON(EntityType.ENDERDRAGON, false, true),
+        ENDER_DRAGON(EntityType.ENDER_DRAGON, false, true),
         WITHER(EntityType.WITHER, false, true);
 
-        //Used to get basic data about the mob, mainly used because I don't want to redo all of EntityType again.
+        // Used to get basic data about the mob, mainly used because I don't want to redo all of EntityType again.
         private final EntityType entityType;
-        private boolean neutral, monster, despawns, burnsInSunlight, canFly;
 
         private MobType(EntityType entityType, boolean burnsInSunlight, boolean canFly) {
             this.entityType = entityType;
-
-            if (this.entityType.getIsLiving()) {
-                this.neutral = this.entityType.getIsNeutral();
-                this.monster = this.entityType.getIsMonster();
-                this.despawns = this.entityType.getCanDespawn();
-                this.burnsInSunlight = burnsInSunlight;
-                this.canFly = canFly;
-            } else {
-                CorundumException.err("Error creating a MobType!", "Attempted to instantiate a MobType with a non-living EntityType! This is illogical, as mobs are living entities and should not happen!");
-            }
         }
 
         public EntityType getEntityType() {
             return this.entityType;
         }
 
-        public boolean getIsNeutral() {
-            return this.neutral;
-        }
-
-        public boolean getIsMonster() {
-            return this.monster;
-        }
-
-        public boolean getCanDespawn() {
-            return this.despawns;
-        }
-
-        public boolean getBurnsInSunlight() {
-            return this.burnsInSunlight;
-        }
-
-        public boolean getCanFly() {
-            return this.canFly;
-        }
-
-        // TODO: 1. make final variables for all the information that needs to be kept for any mob type
     }
 }

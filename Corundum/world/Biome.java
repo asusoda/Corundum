@@ -15,6 +15,8 @@ package Corundum.world;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.plaf.metal.OceanTheme;
+
 import Corundum.entities.Mob.MobType;
 import Corundum.utils.interfaces.IDedType;
 import Corundum.world.Block.BlockType;
@@ -33,68 +35,21 @@ public class Biome {
         return this.type;
     }
 
-    public static enum BiomeType implements IDedType<BiomeType> {
-        OCEAN,
-        PLAINS,
-        DESERT,
-        EXTREME_HILLS,
-        FOREST,
-        TAIGA,
-        SWAMPLAND,
-        RIVER,
-        NETHER,
-        END,
-        FROZEN_OCEAN,
-        FROZEN_RIVER,
-        ICE_PLAINS,
-        ICE_MOUNTAINS,
-        MUSHROOM_ISLAND,
-        MUSHROOM_ISLAND_SHORE,
-        BEACH,
-        DESERT_HILLS,
-        FOREST_HILLS,
-        TAIGA_HILLS,
-        EXTREME_HILLS_EDGE,
-        JUNGLE,
-        JUNGLE_HILLS,
-        JUNGLE_HILLS_EDGE,
-        DEEP_OCEAN,
-        STONE_BEACH,
-        COLD_BEACH,
-        BIRCH_FOREST,
-        BIRCH_FOREST_HILLS,
-        ROOFED_FOREST,
-        COLD_TAIGA,
-        COLD_TAIGA_HILLS,
-        MEGA_TAIGA,
-        MEGA_TAIGA_HILLS,
-        EXTREME_HILLS_PLUS,
-        SAVANNA,
-        SAVANNA_PLATEAU,
-        MESA,
-        MESA_PLATEAU,
-        MESA_PLATEAU_F,
-        SUNFLOWER_PLAINS(129),
-        DESERT_M,
-        EXTREME_HILLS_M,
-        FLOWER_FOREST,
-        TAIGA_M,
-        SWAMPLAND_M,
-        ICE_PLAINS_SPIKES(140),
-        JUNGLE_M(149),
-        JUNGLE_EDGE_M(151),
-        BIRCH_FOREST_M(155),
-        BIRCH_FOREST_HILLS_M,
-        ROOFED_FOREST_M,
-        COLD_TAIGA_M,
-        MEGA_SPRUCE_TAIGA(160),
-        MEGA_SPRUCE_TAIGA_HILLS,
-        EXTREME_HILLS_PLUS_M,
-        SAVANNAH_M,
-        SAVANNAH_PLATEAU_M,
-        MESA_BRYCE,
-        MESA_PLATEAU_F_M,
-        MESA_PLATEAU_M;
+    public class BiomeType extends IDedType<BiomeType> {
+        public static final BiomeType OCEAN = new BiomeType(), PLAINS = new BiomeType(), DESERT = new BiomeType(), EXTREME_HILLS = new BiomeType(), FOREST = new BiomeType(),
+                TAIGA = new BiomeType(), SWAMPLAND = new BiomeType(), RIVER = new BiomeType(), NETHER = new BiomeType(), END = new BiomeType(),
+                FROZEN_OCEAN = new BiomeType(), FROZEN_RIVER = new BiomeType(), ICE_PLAINS = new BiomeType(), ICE_MOUNTAINS = new BiomeType(),
+                MUSHROOM_ISLAND = new BiomeType(), MUSHROOM_ISLAND_SHORE = new BiomeType(), BEACH = new BiomeType(), DESERT_HILLS = new BiomeType(),
+                FOREST_HILLS = new BiomeType(), TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_EDGE = new BiomeType(), JUNGLE = new BiomeType(), JUNGLE_HILLS = new BiomeType(),
+                JUNGLE_HILLS_EDGE = new BiomeType(), DEEP_OCEAN = new BiomeType(), STONE_BEACH = new BiomeType(), COLD_BEACH = new BiomeType(),
+                BIRCH_FOREST = new BiomeType(), BIRCH_FOREST_HILLS = new BiomeType(), ROOFED_FOREST = new BiomeType(), COLD_TAIGA = new BiomeType(),
+                COLD_TAIGA_HILLS = new BiomeType(), MEGA_TAIGA = new BiomeType(), MEGA_TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_PLUS = new BiomeType(),
+                SAVANNA = new BiomeType(), SAVANNA_PLATEAU = new BiomeType(), MESA = new BiomeType(), MESA_PLATEAU = new BiomeType(), MESA_PLATEAU_F = new BiomeType(),
+                SUNFLOWER_PLAINS = new BiomeType(129), DESERT_M = new BiomeType(), EXTREME_HILLS_M = new BiomeType(), FLOWER_FOREST = new BiomeType(),
+                TAIGA_M = new BiomeType(), SWAMPLAND_M = new BiomeType(), ICE_PLAINS_SPIKES = new BiomeType(140), JUNGLE_M = new BiomeType(149),
+                JUNGLE_EDGE_M = new BiomeType(151), BIRCH_FOREST_M = new BiomeType(155), BIRCH_FOREST_HILLS_M = new BiomeType(), ROOFED_FOREST_M = new BiomeType(),
+                COLD_TAIGA_M = new BiomeType(), MEGA_SPRUCE_TAIGA = new BiomeType(160), MEGA_SPRUCE_TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_PLUS_M = new BiomeType(),
+                SAVANNAH_M = new BiomeType(), SAVANNAH_PLATEAU_M = new BiomeType(), MESA_BRYCE = new BiomeType(), MESA_PLATEAU_F_M = new BiomeType(), MESA_PLATEAU_M;
 
         private BiomeGenBase biomeMC;
 
@@ -102,13 +57,17 @@ public class Biome {
                 MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP, MobType.SQUID, MobType.WITCH };
 
         private BiomeType() {
+            super();
+
             // if no I.D. is given, assume the I.D. is the next I.D. after the previous (0 for the first ordinal)
-            this.biomeMC = BiomeGenBase.func_150568_d(ordinal() == 0 ? 0 : BiomeType.values()[ordinal() - 1].getID() + 1);
+            this.biomeMC = BiomeGenBase.func_150568_d(id);
         }
 
         /* DEV NOTES: This constructor should only be useful for variant biomes since their I.D.s skip values. Also, note that variant biome I.D.s are equal to their parent
          * biomes' I.D.s + 128 */
         private BiomeType(int id) {
+            super(id);
+
             this.biomeMC = BiomeGenBase.func_150568_d(id);
         }
 
@@ -117,7 +76,7 @@ public class Biome {
         }
 
         public BlockType getFillerBlockType() {
-            return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
+            return BlockType.getByIDHelper(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
         }
 
         public/* TODO: change return type to AnimalType when we have AnimalTypes */MobType[] getAnimals() {
@@ -130,7 +89,7 @@ public class Biome {
         }
 
         public BlockType getSurfaceBlockType() {
-            return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
+            return BlockType.getByIDHelper(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
         }
 
         public float getTemperature() {
@@ -142,11 +101,11 @@ public class Biome {
         }
 
         public BiomeType getVariant() {
-            return getByID(biomeMC.biomeID + 128);
+            return getByIDHelper(biomeMC.biomeID + 128);
         }
 
         public BiomeType getVariantParent() {
-            return getByID(biomeMC.biomeID - 128);
+            return getByIDHelper(biomeMC.biomeID - 128);
         }
 
         public boolean hasRain() {
@@ -170,18 +129,17 @@ public class Biome {
          * @param id
          *            is the item I.D. of the {@link BiomeType} you wish to locate.
          * @return the {@link BiomeType} that matches the given item I.D. or <b>null</b> if no {@link BiomeType} has the given I.D. */
-        public static BiomeType getByID(int id) {
-            // TODO: replace this linear search with a binary search algorithm
-            if (id >= 0)
-                for (BiomeType item_type : values())
-                    if (item_type.getID() == id)
-                        return item_type;
-            return null;
+        public static BiomeType getByIDHelper(int id) {
+            return OCEAN.getByIDHelper(id);
         }
 
         @Override
         public short getID() {
             return (short) biomeMC.biomeID;
+        }
+
+        public short getData() {
+            return -1;
         }
     }
 }

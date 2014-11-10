@@ -48,7 +48,7 @@ public class Player extends Mob implements Commander, Matchable<Player> {
          * @param id
          *            is the I.D. of the {@link GameMode} to search for.
          * @return the {@link GameMode} with the give I.D. of <b>null</b> if no {@link GameMode} has the given I.D. */
-        public static GameMode getByID(int id) {
+        public static GameMode getByIDHelper(int id) {
             if (id < 0 || id >= values().length)
                 return null;
             else

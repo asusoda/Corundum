@@ -73,7 +73,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
          * @param id
          *            is the I.D. of the {@link Difficulty} to search for.
          * @return the {@link Difficulty} with the give I.D. of <b>null</b> if no {@link Difficulty} has the given I.D. */
-        public static Difficulty getByID(int id) {
+        public static Difficulty getByIDHelper(int id) {
             return values()[id];
         }
     }
@@ -170,11 +170,11 @@ public class CorundumServer extends DedicatedServer implements Commander {
     }
 
     public GameMode getDefaultGameMode() {
-        return GameMode.getByID(getGameType().getID());
+        return GameMode.getByIDHelper(getGameType().getID());
     }
 
     public Difficulty getDifficulty() {
-        return Difficulty.getByID(func_147135_j().func_151525_a());
+        return Difficulty.getByIDHelper(func_147135_j().func_151525_a());
     }
 
     public int getSpawnRadius() {

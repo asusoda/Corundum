@@ -1,6 +1,7 @@
 package Corundum.listeners.plugins;
 
 import Corundum.CorundumPlugin;
+import Corundum.listeners.results.EventResult;
 
 public interface PluginUnloadListener {
     /** This listener method is called whenever a {@link CorundumPlugin} is unloaded. When a plugin is unloaded, it is first {@link #onPluginDisable(CorundumPlugin) disabled}
@@ -9,6 +10,6 @@ public interface PluginUnloadListener {
      * 
      * @param plugin
      *            is the plugin that is currently being unloaded.
-     * @return <b>true</b> if the event that this call represents should be cancelled; <b>false</b> otherwise. */
-    public boolean onPluginUnload(CorundumPlugin plugin);
+     * @return @return the {@link EventResult} describing any changes to this event's properties. */
+    public EventResult onPluginUnload(CorundumPlugin plugin);
 }
