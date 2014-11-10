@@ -123,6 +123,7 @@ public class Entity {
         GHAST_FIREBALL(false, false, false, false),
         BLAZE_FIREBALL(false, false, false, false),
         ENDER_CRYSTAL(false, false, false, false),
+        // Used in subclasses to error if a passed type is innapropriate.
         INNAPROPRIATE; // List does not include entities from 1.8.
 
         // Note, living applies to entities that are able to move by themselves, not mobs that aren't undead.
