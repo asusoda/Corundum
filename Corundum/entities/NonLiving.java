@@ -39,7 +39,7 @@ public class NonLiving extends Entity {
         GHAST_FIREBALL(EntityType.GHAST_FIREBALL, true),
         BLAZE_FIREBALL(EntityType.BLAZE_FIREBALL, false),
         ENDER_CRYSTAL(EntityType.ENDER_CRYSTAL, false),
-        INNAPROPRIATE(EntityType.INNAPROPRIATE, false);
+        INNAPROPRIATE(EntityType.INAPPROPRIATE, false);
         // Field that represents whether or not the entity can be moved without environmental influence after being
         // spawned with any initial motion. This DOES NOT include items, as they are removed from the world when picked up.
         private boolean moveable;

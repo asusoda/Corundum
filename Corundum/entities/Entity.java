@@ -26,7 +26,7 @@ public class Entity {
     // Unfortunately, Minecraft has no way to get entities by coordinates, so storing an entity isn't quite doable.
 
     public Entity(EntityType type, Location location) {
-        if (type != EntityType.INNAPROPRIATE) {
+        if (type != EntityType.INAPPROPRIATE) {
             this.type = type;
             this.location = location;
         } else {
@@ -124,7 +124,7 @@ public class Entity {
         BLAZE_FIREBALL(false, false, false, false),
         ENDER_CRYSTAL(false, false, false, false),
         // Used in subclasses to error if a passed type is innapropriate.
-        INNAPROPRIATE; // List does not include entities from 1.8.
+        INAPPROPRIATE; // List does not include entities from 1.8.
 
         // Note, living applies to entities that are able to move by themselves, not mobs that aren't undead.
         // Also note that a despawnable entity is an entity that can exist in the world for an infinite amount of time
@@ -163,7 +163,7 @@ public class Entity {
     // passed to a Projectile constructor.
     public class BadEntityTypeException extends CorundumException {
         public BadEntityTypeException(Object... additionalInformation) {
-            super("A bad entity type was passed! This is usually EntityType/NonLivingType/etc.INNAPROPRIATE!", "an Entity object's constructor was " +
+            super("A bad entity type was passed! This is usually EntityType/NonLivingType/etc.INAPPROPRIATE!", "an Entity object's constructor was " +
                     "passed a bad EntityType!");
         }
     }
