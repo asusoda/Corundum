@@ -9,11 +9,11 @@ import Corundum.world.Rotation;
  * without editing it's rideable NBT tag (ie ingame).
  */
 public class RideableNonLiving extends NonLiving {
-    public RideableNonLiving(NonLivingType nonLivingType, Location location) {
-        super(nonLivingType == NonLivingType.BOAT || nonLivingType == NonLivingType.MINECART ? nonLivingType : NonLivingType.INNAPROPRIATE, location);
+    public RideableNonLiving(EntityType nonLivingType, Location location) {
+        super(nonLivingType == EntityType.BOAT || nonLivingType == EntityType.MINECART ? nonLivingType : EntityType.INAPPROPRIATE, location);
     }
 
-    public RideableNonLiving(NonLivingType nonLivingType, Location location, Rotation rotation) {
+    public RideableNonLiving(EntityType nonLivingType, Location location, Rotation rotation) {
         super(nonLivingType, location, rotation);
     }
 }

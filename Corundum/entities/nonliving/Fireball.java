@@ -7,11 +7,11 @@ import Corundum.world.Location;
  * Base for Fireballs.
  */
 public class Fireball extends Projectile {
-    public Fireball(NonLivingType fireballType, Location location) {
-        super(fireballType == NonLivingType.BLAZE_FIREBALL || fireballType == NonLivingType.GHAST_FIREBALL ? fireballType : NonLivingType.INNAPROPRIATE, location);
+    public Fireball(EntityType fireballType, Location location) {
+        super(fireballType == EntityType.BLAZE_FIREBALL || fireballType == EntityType.GHAST_FIREBALL ? fireballType : EntityType.INAPPROPRIATE, location);
     }
 
     public boolean getExplodes() {
-        return this.nonLivingType == NonLivingType.GHAST_FIREBALL;
+        return this.getType() == EntityType.GHAST_FIREBALL;
     }
 }

@@ -8,18 +8,24 @@ import Corundum.world.Rotation;
  * Also a base for the specialised non living Entity classes.
  */
 public class NonLiving extends Entity {
-    public NonLivingType nonLivingType;
-
-    public NonLiving(NonLivingType type, Location location) {
-        super(type.getEntityType(), location);
-        this.nonLivingType = type;
+    public NonLiving(EntityType type, Location location) {
+        super(isNonLivingType(type) ? type : EntityType.INAPPROPRIATE, location);
     }
 
-    public NonLiving(NonLivingType type, Location location, Rotation rotation) {
-        super(type.getEntityType(), location, rotation);
+    public NonLiving(EntityType type, Location location, Rotation rotation) {
+        super(isNonLivingType(type) ? type : EntityType.INAPPROPRIATE, location, rotation);
     }
 
-    public enum NonLivingType {
+    public static boolean isNonLivingType(EntityType type) {
+        // TODO TEMP replace with a better system.
+        return type == EntityType.BOAT || type == EntityType.ITEM_ENTITY || type == EntityType.MINECART || type == EntityType.XPORB || type == EntityType.ARROW_PROJECTILE
+                || type == EntityType.SNOWBALL_PROJECTILE || type == EntityType.CHICKEN_EGG_PROJECTILE || type == EntityType.ENDER_PEARL_PROJECTILE || type == EntityType.EYE_OF_ENDER_HOVERING
+                || type == EntityType.FIREWORK_ROCKET_LAUNCHED || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_SAND || type == EntityType.FISHING_ROD_BOBBER
+                || type == EntityType.LIGHTNING_BOLT || type == EntityType.PAINTING || type == EntityType.ITEM_FRAME || type == EntityType.GHAST_FIREBALL || type == EntityType.BLAZE_FIREBALL
+                || type == EntityType.ENDER_CRYSTAL;
+    }
+
+    /*public enum NonLivingType {
         BOAT(EntityType.BOAT, true),
         ITEM_ENTITY(EntityType.ITEM_ENTITY, false),
         MINECART(EntityType.MINECART, true),
@@ -53,5 +59,5 @@ public class NonLiving extends Entity {
         public EntityType getEntityType() {
             return this.entityType;
         }
-    }
+    }*/
 }
