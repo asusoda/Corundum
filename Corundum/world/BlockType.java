@@ -1,13 +1,17 @@
 package Corundum.world;
 
 import java.awt.Color;
+
 import Corundum.utils.interfaces.HoldableType;
+import Corundum.utils.interfaces.IDedType;
+import Corundum.utils.interfaces.IDedTypeWithData;
 
 /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
  * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that they
  * all have the same I.D. */
 public class BlockType extends HoldableType<BlockType> {
     private static BlockType[] values = new BlockType[0];
+
     public static final BlockType AIR = new BlockType(0, -1),
             // stone types
             STONE = new BlockType(0),
@@ -603,6 +607,28 @@ public class BlockType extends HoldableType<BlockType> {
      * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
     public boolean requiresTool() {
         return !blockMC.getMaterial().isToolNotRequired();
+    }
+
+    // pseudo-enum utilities
+    public static BlockType getByID(int id) {
+        return STONE.getByIDHelper(values, id);
+    }
+
+    public static BlockType getByID(int id, int data) {
+        return STONE.getByIDHelper(values, id);
+    }
+
+    @Override
+    protected BlockType[] valuesHelper() {
+        return values;
+    }
+
+    protected void setValues(BlockType[] new_values) {
+        values = new_values;
+    }
+
+    public static BlockType[] values() {
+        return values;
     }
 
     // overridden properties

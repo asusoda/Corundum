@@ -10,7 +10,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
         super(initID1());
 
         // infer the data value using the previous type
-        IDedTypeWithData<T> previous_value = (IDedTypeWithData<T>) values[values.length - 1];
+        IDedTypeWithData<T> previous_value = (IDedTypeWithData<T>) valuesHelper()[valuesHelper().length - 1];
 
         /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
         if (previous_value.data == -1)
@@ -33,7 +33,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
     // constructor methods (only used for super() calls in constructors)
     private static int initID1() {
         // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values[values.length - 1];
+        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values(T.class)[valuesHelper().length - 1];
 
         /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
         if (previous_value.data == -1)
@@ -45,7 +45,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
 
     private static int initID2(int given_data) {
         // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values[values.length - 1];
+        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) valuesHelper()[valuesHelper().length - 1];
 
         // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
         if (given_data <= previous_value.data)
@@ -107,7 +107,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
     public IDedTypeWithData<T> getByIDHelper(int id, int data) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
-            for (IDedTypeWithData<T> type : (IDedTypeWithData<T>[]) values)
+            for (IDedTypeWithData<T> type : (IDedTypeWithData<T>[]) valuesHelper())
                 if (type.id == id && (data < 0 || data == type.data))
                     return type;
         return null;

@@ -1,5 +1,9 @@
 package Corundum.utils.interfaces;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import Corundum.items.Item;
 import Corundum.world.Block;
 import Corundum.world.BlockType;
@@ -12,23 +16,67 @@ import Corundum.world.BlockType;
  *            is a self-parameterization; <b><tt>T</b></tt> should be the same type as the type implementing this interface. This parameterization allows certain methods in
  *            this interface to return the appropriate subtype of {@link IDedType}. */
 public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedType<T>> {
-    protected static IDedType<?>[] values = new IDedType<?>[0];
+    protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<Class<IDedType<?>>, IDedType<?>[]>();
 
     protected final short id;
 
     // constructors
     protected IDedType() {
-        if (values.length == 0)
+        if (valuesHelper().length == 0)
             id = 0;
         else
-            id = (short) (values[values.length - 1].id + 1);
+            id = (short) (valuesHelper()[valuesHelper().length - 1].id + 1);
+
+        addValue((T) this);
     }
 
     protected IDedType(int id) {
         this.id = (short) id;
+
+        addValue((T) this);
     }
 
-    // utilities
+    // static utilities
+    protected static <R extends IDedType<R>> void addValue(R new_value) {
+        R[] type_values = (R[]) values.get(new_value.getClass());
+
+        ArrayList<R> new_type_values = new ArrayList<R>(Arrays.asList(new_value));
+        new_type_values.add(new_value);
+
+        values.put((Class<IDedType<?>>) new_value.getClass(), (R[]) new_type_values.toArray());
+    }
+
+    public static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
+        // TODO: replace this linear search with a binary search algorithm
+        if (id >= 0)
+            for (R type : values(clazz))
+                if (type.id == id)
+                    return type;
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <R extends IDedType<R>> R[] values(Class<R> clazz) {
+        return (R[]) values.get(clazz);
+    }
+
+    // static subclass helpers
+    /** This method retrieves the type with the given entity I.D. value.
+     * 
+     * @param id
+     *            is the entity I.D. of the type you wish to locate.
+     * @return the type with the lowest data value that matches the given entity I.D. (This item will almost certainly have a data value of 0 or -1.) */
+    @SuppressWarnings("unchecked")
+    protected T getByIDHelper(int id) {
+        return (T) getByID(getClass(), id);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T[] valuesHelper() {
+        return (T[]) values(getClass());
+    }
+
+    // instance utilities
     /** This method returns the I.D. that represents this {@link IDedType}. In Minecraft, certain things such as {@link Item items} and {@link Block blocks} can be categorized
      * into "types" that are represented by different I.D.s. You can see which I.D.s represent which blocks or items on <a href=http://minecraft-ids.grahamedgecombe.com/>this
      * site</a>.
@@ -43,20 +91,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         return id;
     }
 
-    /** This method retrieves the type with the given entity I.D. value.
-     * 
-     * @param id
-     *            is the entity I.D. of the type you wish to locate.
-     * @return the type with the lowest data value that matches the given entity I.D. (This item will almost certainly have a data value of 0 or -1.) */
-    protected IDedType<T> getByIDHelper(int id) {
-        // TODO: replace this linear search with a binary search algorithm
-        if (id >= 0)
-            for (IDedType<T> type : (IDedType<T>[]) values)
-                if (type.id == id)
-                    return type;
-        return null;
-    }
-
+    // data management overrides
     @Override
     public Object[] getSortPriorities() {
         return new Object[] { getID() };
