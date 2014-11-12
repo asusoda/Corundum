@@ -1,6 +1,7 @@
 package Corundum.entities.nonliving;
 
 import Corundum.entities.NonLiving;
+import Corundum.entities.Velocity;
 import Corundum.world.Location;
 
 /**
@@ -11,10 +12,8 @@ public class Projectile extends NonLiving {
         super(type, location);
     }
 
-    public Projectile(EntityType type, Location location, double motionX, double motionY, double motionZ) {
+    public Projectile(EntityType type, Location location, Velocity velocity) {
         this(type, location);
-        this.setMotionX(motionX);
-        this.setMotionY(motionY);
-        this.setMotionZ(motionZ);
+        this.setVelocity(velocity);
     }
 }

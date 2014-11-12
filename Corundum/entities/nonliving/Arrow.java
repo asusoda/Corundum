@@ -1,5 +1,6 @@
 package Corundum.entities.nonliving;
 
+import Corundum.entities.Velocity;
 import Corundum.world.Location;
 
 /**
@@ -13,8 +14,8 @@ public class Arrow extends Projectile {
         super(EntityType.ARROW_PROJECTILE, location);
     }
 
-    public Arrow(Location location, double motionX, double motionY, double motionZ) {
-        super(EntityType.ARROW_PROJECTILE, location, motionX, motionY, motionZ);
+    public Arrow(Location location, Velocity velocity) {
+        super(EntityType.ARROW_PROJECTILE, location, velocity);
     }
 
     public void setInGround(boolean inGround) {
