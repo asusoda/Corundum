@@ -1,6 +1,6 @@
 package Corundum.items.recipes;
 
-import Corundum.utils.interfaces.IDedType;
+import Corundum.types.IDedType;
 
 public class FurnaceRecipe extends Recipe {
     private final IDedType cooking_material;

@@ -1,8 +1,8 @@
-package Corundum.utils.interfaces;
+package Corundum.types;
 
 import Corundum.world.Location;
 
-public interface IDTypedObject {
+public interface TypedObject {
     public String getCustomName();
 
     public Location getLocation();

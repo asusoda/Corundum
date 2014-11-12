@@ -1,6 +1,6 @@
 package Corundum.items.recipes;
 
-import Corundum.utils.interfaces.IDedType;
+import Corundum.types.IDedType;
 
 public class BrewingRecipe extends Recipe {
     public BrewingRecipe(IDedType[] ingredients, IDedType resulting_material) {

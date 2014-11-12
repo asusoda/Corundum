@@ -1,10 +1,10 @@
-package Corundum.utils.interfaces;
+package Corundum.types;
 
 public abstract class HoldableType<T extends HoldableType<T>> extends IDedTypeWithData<T> {
     protected HoldableType() {
         super();
     }
-    
+
     protected HoldableType(int data) {
         super(data);
     }
@@ -18,7 +18,7 @@ public abstract class HoldableType<T extends HoldableType<T>> extends IDedTypeWi
      * @return the maximum stack size of this {@link IDedType}. */
     public abstract byte getMaxStackSize();
 
-    // TODO: getLocation(): if held, get the location of the holder; otherwise, get its current location
-
-    // TODO: isHeld(): true if an Entity has it in an inventory; false otherwise
+    public boolean isStackable() {
+        return getMaxStackSize() != 1;
+    }
 }

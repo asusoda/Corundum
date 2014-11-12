@@ -3,8 +3,8 @@ package Corundum.items.recipes;
 import java.util.ArrayList;
 
 import Corundum.exceptions.CorundumException;
+import Corundum.types.IDedType;
 import Corundum.utils.ListUtilities;
-import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
 

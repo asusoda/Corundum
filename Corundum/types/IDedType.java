@@ -1,12 +1,13 @@
-package Corundum.utils.interfaces;
+package Corundum.types;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
 import Corundum.items.Item;
+import Corundum.utils.interfaces.Matchable;
 import Corundum.world.Block;
-import Corundum.world.BlockType;
+import Corundum.world.Block.BlockType;
 
 /** This class represents anything that can be categorized into types with unique integer I.D. and data values.
  * 
@@ -18,7 +19,12 @@ import Corundum.world.BlockType;
 public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedType<T>> {
     protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<Class<IDedType<?>>, IDedType<?>[]>();
 
-    protected short id;
+    /** <b><i>DEV NOTES:</b></i><br>
+     * This isn't final because I couldn't find a way to initialize it statically in the constructors for {@link IDedTypeWithData} because of the type parameterization and the
+     * way values are stored and accessed. */
+    private short id;
+    // TODO: put name in the constrcutors
+    private String name;
 
     // constructors
     protected IDedType() {
@@ -54,7 +60,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
-                if (type.id == id)
+                if (type.getID() == id)
                     return type;
         return null;
     }
@@ -77,6 +83,15 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
      * @return the I.D. associated with this {@link IDedType}. */
     public short getID() {
         return id;
+    }
+
+    /** <b><i>DEV NOTES:</b</i><br>
+     * This is necessary to allow {@link IDedTypeWithData} to modify {@link IDedType#id} without giving direct access to {@link IDedType#id} to extended types.
+     * 
+     * @param id
+     *            is the new I.D. to set this to. (I know you already knew that; I made this param tag so Eclipse wouldn't give me errors.) */
+    void setID(short id) {
+        this.id = id;
     }
 
     // data management overrides

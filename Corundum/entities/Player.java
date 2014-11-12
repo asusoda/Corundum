@@ -15,9 +15,9 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 import Corundum.items.Item;
+import Corundum.types.IDedType;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
-import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
 import Corundum.world.Location;
@@ -40,6 +40,11 @@ public class Player /* TODO extends LivingEntity */implements Commander, Matchab
      * @author REALDrummer */
     public static class GameMode extends IDedType<GameMode> {
         public static final GameMode SURVIVAL = new GameMode(), CREATIVE = new GameMode(), ADVENTURE = new GameMode();
+
+        // pseudo-enum utilities
+        public static GameMode getByID(int id) {
+            return getByID(GameMode.class, id);
+        }
 
         public static GameMode[] values() {
             return values(GameMode.class);

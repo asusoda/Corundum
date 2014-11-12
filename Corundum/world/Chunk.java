@@ -32,7 +32,7 @@ public class Chunk {
      * 
      * @return the biome map of this chunk. */
     public BiomeType[][] getBiomeMap() {
-        BiomeType[][] results = new BiomeType[16][16];  // all chunks are 16x16; the biome map reflects that
+        BiomeType[][] results = new BiomeType[16][16];  // all chunks are 16x16 (along x and z axes); the biome map reflects that
 
         for (int i = 0; i < 16; i++)
             for (int j = 0; j < 16; j++)

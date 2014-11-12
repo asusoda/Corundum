@@ -112,14 +112,16 @@ public class ListUtilities {
      * @param arrays
      *            is the list of <tt>Object[]</tt>s to be concatenated into one large array.
      * @return one large <tt>Object[]</tt> containing all the elements of the given <b><tt>arrays</b></tt> in the order given. */
-    public static Object[] concatenate(Object[]... arrays) {
+    public static <T> T[] concatenate(@SuppressWarnings("unchecked") T[]... arrays) {
         // find the sum of the lengths of all the arrays
         int new_length = 0;
-        for (Object[] array : arrays)
+        for (T[] array : arrays)
             new_length += array.length;
 
         // create the new array
-        Object[] result = new Object[new_length];
+        /* NOTE: I had to make an ArrayList and convert it to an array because you can't make arrays of a generic type */
+        @SuppressWarnings("unchecked")
+        T[] result = (T[]) new ArrayList<T>(new_length).toArray();
 
         // copy all the Objects from the arrays into the new array
         int counter = 0;  // counter is necessary because each array is not necessarily the same size
@@ -132,6 +134,7 @@ public class ListUtilities {
         return result;
     }
 
+    // TODO: figure out if this method is necessary with the newly parameterized contains(T[], T)
     /** This method determines whether or not a given array contains a given int.
      * 
      * @param ints
@@ -167,8 +170,8 @@ public class ListUtilities {
      * @param target
      *            is the Object that <b><tt>objects</b></tt> may contain.
      * @return <b>true</b> if <b><tt>object</b></tt> contains <b><tt>target</b></tt>; <b>false</b> otherwise. */
-    public static boolean contains(Object[] objects, Object target) {
-        for (Object object : objects)
+    public static <T> boolean contains(T target, @SuppressWarnings("unchecked") T... objects) {
+        for (T object : objects)
             if (object.equals(target))
                 return true;
         return false;

@@ -18,8 +18,8 @@ import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
+import Corundum.types.IDedType;
 import Corundum.utils.interfaces.Commander;
-import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.myList.myList;
 
 /** This class represents the entirety of a Corundum server.
@@ -60,21 +60,16 @@ public class CorundumServer extends DedicatedServer implements Commander {
         super(new File(file_path));
     }
 
-    public enum Difficulty implements IDedType<Difficulty> {
-        PEACEFUL, EASY, NORMAL, HARD;
-
-        @Override
-        public short getID() {
-            return (short) ordinal();
-        }
+    public static class Difficulty extends IDedType<Difficulty> {
+        public static final Difficulty PEACEFUL = new Difficulty(), EASY = new Difficulty(), NORMAL = new Difficulty(), HARD = new Difficulty();
 
         /** This method returns the {@link Difficulty} associated with the given I.D.
          * 
          * @param id
          *            is the I.D. of the {@link Difficulty} to search for.
          * @return the {@link Difficulty} with the give I.D. of <b>null</b> if no {@link Difficulty} has the given I.D. */
-        public static Difficulty getByIDHelper(int id) {
-            return values()[id];
+        public static Difficulty getByID(int id) {
+            return getByID(Difficulty.class, id);
         }
     }
 
@@ -174,7 +169,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
     }
 
     public Difficulty getDifficulty() {
-        return Difficulty.getByIDHelper(func_147135_j().func_151525_a());
+        return Difficulty.getByID(/* get server default difficulty */func_147135_j()./* get difficulty enum I.D. */func_151525_a());
     }
 
     public int getSpawnRadius() {
