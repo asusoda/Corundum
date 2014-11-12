@@ -5,10 +5,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -128,9 +125,10 @@ public abstract class CorundumPlugin implements CorundumListener {
             loaded_plugins.add(plugin);
         }
 
+        handleDependencyChecking(loaded_plugins);
+
         // handle the actual loading.
         for (CorundumPlugin currPlugin : loaded_plugins) {
-            // TODO implement dependencies checking.
             // add the newly loaded plugin to the plugins list
             Corundum.SERVER.plugins.add(currPlugin);
 
@@ -191,10 +189,39 @@ public abstract class CorundumPlugin implements CorundumListener {
         return loaded_plugins.toArray(new CorundumPlugin[loaded_plugins.size()]);
     }
 
+    public static void handleDependencyChecking(List<CorundumPlugin> pluginsToCheck) {
+        Map<String, List<CorundumPlugin>> dependencies = new HashMap<>();
+        Map<String, CorundumPlugin> pluginNames = new HashMap<>();
+
+        for (CorundumPlugin plugin : pluginsToCheck) {
+            String[] pluginDependencies = plugin.getDependencies();
+            pluginNames.put(plugin.getName(), plugin);
+
+            if (pluginDependencies.length >= 1) {
+                for (String pluginDependency : pluginDependencies) {
+                    if (!dependencies.keySet().contains(pluginDependency) && !pluginDependency.equals("")) {
+                        List<CorundumPlugin> plugins = dependencies.get(pluginDependency);
+                        plugins.add(plugin);
+                        dependencies.put(pluginDependency, plugins);
+                    }
+                }
+            }
+        }
+
+        for (String dependency : dependencies.keySet()) {
+            if (!pluginNames.keySet().contains(dependency)) {
+                for (CorundumPlugin plugin : dependencies.get(dependency)) {
+                    Corundum.SERVER.message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
+                    pluginsToCheck.remove(plugin);
+                }
+            }
+        }
+    }
+
     /** This method enables this {@link CorundumPlugin} and calls the plugin's {@link #onEnable() onEnable() method}. Enabling a plugin causes all its {@link CorundumListener}s
      * to become active and its commands to become usable.
      * 
-     * @see {@link #onEnable()}, {@link #load(JarFile)}, {@link #disable()}, and {@link #unload()}. */
+     * @see {@link #onEnable()}, {@link CorundumPlugin#load(JarFile)}, {@link #disable()}, and {@link #unload()}. */
     public final void enable() {
         enabled = true;
         try {
@@ -353,4 +380,9 @@ public abstract class CorundumPlugin implements CorundumListener {
     public abstract String getPrefix();
 
     public abstract String getVersion();
+
+    // currently non abstract method used in dependencies.
+    public String[] getDependencies() {
+        return new String[] {""};
+    }
 }

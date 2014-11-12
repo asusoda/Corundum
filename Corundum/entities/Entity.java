@@ -13,6 +13,7 @@
 package Corundum.entities;
 
 import net.minecraft.entity.EntityList;
+import Corundum.exceptions.CorundumException;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.world.MinecraftException;
@@ -24,7 +25,7 @@ import Corundum.types.IDedTypeWithData;
 import Corundum.world.Location;
 import Corundum.world.World;
 
-public abstract class Entity implements TypedObject {
+public abstract class Entity extends TypedObject {
     protected final net.minecraft.entity.Entity entityMC;
 
     public Entity(net.minecraft.entity.Entity entityMC) {
@@ -33,6 +34,7 @@ public abstract class Entity implements TypedObject {
 
     public static class EntityType extends IDedTypeWithData<EntityType> {
         // TODO: see if a Player entity has the I.D. 0
+
         public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
                 PAINTING = new EntityType(), ARROW = new EntityType(), SNOWBALL = new EntityType(), GHAST_FIREBALL = new EntityType(), BLAZE_FIREBALL = new EntityType(),
                 ENDER_PEARL = new EntityType(), EYE_OF_ENDER = new EntityType(), SPLASH_POTION = new EntityType(), BOTTLE_O_ENCHANTING = new EntityType(),
@@ -145,6 +147,11 @@ public abstract class Entity implements TypedObject {
     }
 
     @Override
+    public Location getLocation() {
+        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+    }
+
+    @Override
     public EntityType getType() {
         /* because Minecraft decided to not use regular data values for different types of sibling entities, like skeletons and Wither skeletons, the data values will have to
          * be found based on different methods for different types of entities here */
@@ -159,8 +166,15 @@ public abstract class Entity implements TypedObject {
             return EntityType.getByID(EntityList.getEntityID(entityMC), -1);
     }
 
-    @Override
-    public Location getLocation() {
-        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+    public Velocity getVelocity() {
+        // TODO TEST
+        return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ, this);
+    }
+
+    public void setVelocity(Velocity velocity) {
+        // TODO TEST
+        entityMC.motionX = velocity.getX();
+        entityMC.motionY = velocity.getY();
+        entityMC.motionZ = velocity.getZ();
     }
 }

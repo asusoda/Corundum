@@ -2,10 +2,10 @@ package Corundum.types;
 
 import Corundum.world.Location;
 
-public interface TypedObject {
-    public String getCustomName();
+public abstract class TypedObject {
+    public abstract String getCustomName();
 
-    public Location getLocation();
+    public abstract Location getLocation();
 
-    public IDedType getType();
+    public abstract IDedType getType();
 }
