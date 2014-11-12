@@ -611,11 +611,11 @@ public class BlockType extends HoldableType<BlockType> {
 
     // pseudo-enum utilities
     public static BlockType getByID(int id) {
-        return STONE.getByIDHelper(values, id);
+        return STONE.getByID(values, id);
     }
 
     public static BlockType getByID(int id, int data) {
-        return STONE.getByIDHelper(values, id);
+        return STONE.getByID(values, id);
     }
 
     @Override

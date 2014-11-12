@@ -170,7 +170,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
     }
 
     public GameMode getDefaultGameMode() {
-        return GameMode.getByIDHelper(getGameType().getID());
+        return GameMode.getByID(getGameType().getID());
     }
 
     public Difficulty getDifficulty() {

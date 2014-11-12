@@ -1,7 +1,7 @@
 package Corundum.items;
 
-import Corundum.utils.interfaces.IDedType;
+import Corundum.utils.interfaces.IDedTypeWithData;
 
-public interface MaterialType<T> extends IDedType<T> {
+public class MaterialType<T extends IDedTypeWithData<T>> extends IDedTypeWithData<T> {
     // nothing needs to be in here
 }

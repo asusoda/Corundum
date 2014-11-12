@@ -1,5 +1,6 @@
 package Corundum.entities;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import Corundum.Corundum;
@@ -18,45 +19,39 @@ import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.interfaces.IDedType;
 import Corundum.utils.interfaces.Matchable;
+import Corundum.utils.myList.myList;
 import Corundum.world.Location;
 import Corundum.world.World;
 
-public class Player extends Mob implements Commander, Matchable<Player> {
+public class Player /* TODO extends LivingEntity */implements Commander, Matchable<Player> {
+    private static myList<Player> players = new myList<Player>();
+    private static HashMap<String, Player> players_by_name = new HashMap<String, Player>();
+
     private final EntityPlayerMP playerMC;
 
     public Player(EntityPlayerMP playerMC) {
-        super(MobType.PLAYER, new Location(playerMC.lastTickPosX, playerMC.lastTickPosY, playerMC.lastTickPosZ, World.fromMCWorld((WorldServer) playerMC.worldObj)), Item
-                .fromMCItems((ItemStack[]) ListUtilities.concatenate(playerMC.inventory.mainInventory, playerMC.inventory.armorInventory)));
-
         this.playerMC = playerMC;
     }
 
+    // inner classes
     /** This enum class represents the different "game modes" a {@link Player} can be in: {@link GameMode#SURVIVAL Survival Mode}, {@link GameMode#CREATIVE Creative Mode}, and
      * {@link GameMode#ADVENTURE Adventure Mode}.
      * 
      * @author REALDrummer */
-    public enum GameMode implements IDedType<GameMode> {
-        SURVIVAL, CREATIVE, ADVENTURE;
+    public static class GameMode extends IDedType<GameMode> {
+        public static final GameMode SURVIVAL = new GameMode(), CREATIVE = new GameMode(), ADVENTURE = new GameMode();
 
-        @Override
-        public short getID() {
-            return (short) ordinal();
-        }
-
-        /** This method returns the {@link GameMode} associated with the given I.D.
-         * 
-         * @param id
-         *            is the I.D. of the {@link GameMode} to search for.
-         * @return the {@link GameMode} with the give I.D. of <b>null</b> if no {@link GameMode} has the given I.D. */
-        public static GameMode getByIDHelper(int id) {
-            if (id < 0 || id >= values().length)
-                return null;
-            else
-                return values()[id];
+        public static GameMode[] values() {
+            return values(GameMode.class);
         }
     }
 
-    @Override
+    // static utilities
+    public static Player getByUUID(UUID uuid) {
+        return players.findMatch(uuid);
+    }
+
+    // instance utilities
     public Location getLocation() {
         return new Location(playerMC.getCommandSenderPosition().posX, playerMC.getCommandSenderPosition().posY, playerMC.getCommandSenderPosition().posZ, World
                 .fromMCWorld((WorldServer) playerMC.worldObj));

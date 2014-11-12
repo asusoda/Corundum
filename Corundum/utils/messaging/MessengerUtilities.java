@@ -6,7 +6,6 @@ import java.util.UUID;
 import Corundum.Corundum;
 import Corundum.CorundumPlugin;
 import Corundum.entities.Player;
-import Corundum.exceptions.UnfinishedException;
 import Corundum.utils.myList.myList;
 import net.minecraft.util.ChatComponentText;
 
@@ -36,10 +35,8 @@ public class MessengerUtilities {
      * 
      * @param message
      *            is the debug message to send to the verbosely debugging parties.
-     * @throws UnfinishedException
-     *             TODO
      * @see {@link Messenger#bloviate(String)}, {@link #setVerboseLogging(boolean)}, and {@link #debug(CorundumPlugin, String)} */
-    public static void bloviate(String message) throws UnfinishedException {
+    public static void bloviate(String message) {
         bloviate(null, message);
     }
 
@@ -81,22 +78,20 @@ public class MessengerUtilities {
      *            is the plugin that is responsible for sending the message or <b>null</b> if it comes from Corundum itself.
      * @param message
      *            is the debug message to send to the verbosely debugging parties.
-     * @throws UnfinishedException
-     *             TODO
      * @see {@link Messenger#bloviate(String)}, {@link #setVerboseLogging(boolean)}, and {@link #debug(CorundumPlugin, String)} */
-    public static void bloviate(CorundumPlugin plugin, String message) throws UnfinishedException {
+    public static void bloviate(CorundumPlugin plugin, String message) {
         Corundum.secure();
 
         if (verbose_debuggers.size() == 0)
             return;
 
-        if (verbose_debuggers.contains((UUID) null)) {
-            tellConsole(plugin, MessageColor.translateMCChatCodesToANSICodes((plugin != null ? plugin.getPrefix() : "") + message));
-            if (verbose_debuggers.size() == 1)
-                return;
+        // send the message to all verbose debuggers
+        for (UUID uuid : verbose_debuggers) {
+            if (uuid == null)
+                tellConsole(plugin, message);
+            else
+                tellPlayer(plugin, Player.getByUUID(uuid), message);
         }
-
-        throw new UnfinishedException("MessengerUtilities.bloviate");
     }
 
     /** This method broadcasts the given message to the server, displaying it in the console, in all players' chats, and in the logs.

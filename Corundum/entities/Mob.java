@@ -25,11 +25,13 @@ public class Mob extends Entity {
     }
 
     public Item[] getDrops() {
-        return this.drops;
+        // TODO
+        return null;
     }
 
     public MobType getMobType() {
-        return mobType;
+        // TODO
+        return null;
     }
 
     /** This enum is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different

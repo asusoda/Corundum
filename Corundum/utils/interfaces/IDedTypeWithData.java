@@ -4,55 +4,55 @@ import Corundum.world.Block;
 import Corundum.world.BlockType;
 
 public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends IDedType<T> {
-    protected final short data;
+    protected short data;
 
     protected IDedTypeWithData() {
-        super(initID1());
+        super();
 
-        // infer the data value using the previous type
-        IDedTypeWithData<T> previous_value = (IDedTypeWithData<T>) valuesHelper()[valuesHelper().length - 1];
+        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
 
-        /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
-        if (previous_value.data == -1)
-            data = -1;
-        /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
-        else
-            data = (short) (previous_value.data + 1);
+        // if there is no previous value, default to I.D. = data = 0
+        if (values.length == 0) {
+            id = 0;
+            data = 0;
+        } // if there was a previous value, infer the I.D. and data values form that type
+        else {
+            IDedTypeWithData<T> previous_value = (IDedTypeWithData<T>) values[values.length - 1];
+
+            /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
+            if (previous_value.data == -1) {
+                id = (short) (previous_value.id + 1);
+                data = -1;
+            } /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
+            else {
+                id = previous_value.id;
+                data = (short) (previous_value.data + 1);
+            }
+        }
     }
 
     protected IDedTypeWithData(int data) {
-        this(initID2(data), data);
+        super();
+
+        this.data = (short) data;
+
+        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
+
+        // infer the I.D. using the previous type
+        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values[values.length - 1];
+
+        // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
+        if (data <= previous_value.data)
+            id = (short) (previous_value.id + 1);
+        // otherwise, this is the continuation of an I.D. block, so use the same I.D.
+        else
+            id = previous_value.id;
     }
 
     protected IDedTypeWithData(int id, int data) {
         super(id);
 
         this.data = (short) data;
-    }
-
-    // constructor methods (only used for super() calls in constructors)
-    private static int initID1() {
-        // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values(T.class)[valuesHelper().length - 1];
-
-        /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
-        if (previous_value.data == -1)
-            return previous_value.id + 1;
-        /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
-        else
-            return previous_value.id;
-    }
-
-    private static int initID2(int given_data) {
-        // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) valuesHelper()[valuesHelper().length - 1];
-
-        // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
-        if (given_data <= previous_value.data)
-            return previous_value.id + 1;
-        // otherwise, this is the continuation of an I.D. block, so use the same I.D.
-        else
-            return previous_value.id;
     }
 
     // utilities
@@ -98,16 +98,18 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
 
     /** This method retrieves the {@link IDedTypeWithData} with the given item I.D. and data values.
      * 
+     * @param clazz
+     *            is the subclass for which the values should be retrieved.
      * @param id
      *            is the item I.D. of the {@link IDedTypeWithData} you wish to locate.
      * @param data
      *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
      *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
      * @return the {@link IDedTypeWithData} that matches the given item I.D. and data value or <b>null</b> if no {@link IDedTypeWithData} has the given I.D. and data value. */
-    public IDedTypeWithData<T> getByIDHelper(int id, int data) {
+    protected static <R extends IDedTypeWithData<R>> R getByID(Class<R> clazz, int id, int data) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
-            for (IDedTypeWithData<T> type : (IDedTypeWithData<T>[]) valuesHelper())
+            for (R type : (R[]) values(clazz))
                 if (type.id == id && (data < 0 || data == type.data))
                     return type;
         return null;

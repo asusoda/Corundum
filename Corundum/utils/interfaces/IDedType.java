@@ -18,14 +18,18 @@ import Corundum.world.BlockType;
 public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedType<T>> {
     protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<Class<IDedType<?>>, IDedType<?>[]>();
 
-    protected final short id;
+    protected short id;
 
     // constructors
     protected IDedType() {
-        if (valuesHelper().length == 0)
+        IDedType<T>[] values = values(getClass());
+
+        // if there are no previous values, default to 0
+        if (values.length == 0)
             id = 0;
+        // if there is a previous value, infer the I.D. from the previous value
         else
-            id = (short) (valuesHelper()[valuesHelper().length - 1].id + 1);
+            id = (short) (values[values.length - 1].id + 1);
 
         addValue((T) this);
     }
@@ -46,7 +50,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         values.put((Class<IDedType<?>>) new_value.getClass(), (R[]) new_type_values.toArray());
     }
 
-    public static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
+    protected static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
@@ -56,24 +60,8 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     }
 
     @SuppressWarnings("unchecked")
-    public static <R extends IDedType<R>> R[] values(Class<R> clazz) {
+    protected static <R extends IDedType<R>> R[] values(Class<R> clazz) {
         return (R[]) values.get(clazz);
-    }
-
-    // static subclass helpers
-    /** This method retrieves the type with the given entity I.D. value.
-     * 
-     * @param id
-     *            is the entity I.D. of the type you wish to locate.
-     * @return the type with the lowest data value that matches the given entity I.D. (This item will almost certainly have a data value of 0 or -1.) */
-    @SuppressWarnings("unchecked")
-    protected T getByIDHelper(int id) {
-        return (T) getByID(getClass(), id);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected T[] valuesHelper() {
-        return (T[]) values(getClass());
     }
 
     // instance utilities

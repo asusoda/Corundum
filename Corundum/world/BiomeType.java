@@ -63,7 +63,7 @@ public class BiomeType extends IDedType<BiomeType> {
     }
 
     public BlockType getSurfaceBlockType() {
-        return BlockType.getByIDHelper(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
+        return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
     }
 
     public float getTemperature() {
