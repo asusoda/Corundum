@@ -25,7 +25,6 @@ public class Block {
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that
      * they all have the same I.D. */
     public static class BlockType extends HoldableType<BlockType> {
-
         public static final BlockType AIR = new BlockType(0, -1),
                 // stone types
                 STONE = new BlockType(0),
