@@ -21,7 +21,7 @@ public class NonLiving extends Entity {
         return type == EntityType.BOAT || type == EntityType.ITEM_ENTITY || type == EntityType.MINECART || type == EntityType.XPORB || type == EntityType.ARROW_PROJECTILE
                 || type == EntityType.SNOWBALL_PROJECTILE || type == EntityType.CHICKEN_EGG_PROJECTILE || type == EntityType.ENDER_PEARL_PROJECTILE || type == EntityType.EYE_OF_ENDER_HOVERING
                 || type == EntityType.FIREWORK_ROCKET_LAUNCHED || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_SAND || type == EntityType.FISHING_ROD_BOBBER
-                || type == EntityType.LIGHTNING_BOLT || type == EntityType.PAINTING || type == EntityType.ITEM_FRAME || type == EntityType.GHAST_FIREBALL || type == EntityType.BLAZE_FIREBALL
+                || type == EntityType.LIGHTNING || type == EntityType.PAINTING || type == EntityType.ITEM_FRAME || type == EntityType.GHAST_FIREBALL || type == EntityType.BLAZE_FIREBALL
                 || type == EntityType.ENDER_CRYSTAL;
     }
 

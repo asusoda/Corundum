@@ -11,11 +11,11 @@ public class Arrow extends Projectile {
     private boolean isInGround;
 
     public Arrow(Location location) {
-        super(EntityType.ARROW_PROJECTILE, location);
+        super(EntityType.ARROW, location);
     }
 
     public Arrow(Location location, Velocity velocity) {
-        super(EntityType.ARROW_PROJECTILE, location, velocity);
+        super(EntityType.ARROW, location, velocity);
     }
 
     public void setInGround(boolean inGround) {
