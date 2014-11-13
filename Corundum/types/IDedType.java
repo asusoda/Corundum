@@ -24,7 +24,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
      * way values are stored and accessed. */
     private short id;
     // TODO: put name in the constrcutors
-    private String name;
+    private String name = null;
 
     // constructors
     protected IDedType() {
@@ -44,6 +44,10 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         this.id = (short) id;
 
         addValue((T) this);
+    }
+
+    protected IDedType(IDedType<?> parent) {
+        this(parent.id);
     }
 
     // static utilities

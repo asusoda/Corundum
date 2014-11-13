@@ -13,26 +13,39 @@
 package Corundum.entities;
 
 import net.minecraft.entity.EntityList;
-import Corundum.exceptions.CorundumException;
 import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
-import Corundum.items.Item.ItemType;
 import Corundum.types.TypedObject;
-import Corundum.types.IDedType;
 import Corundum.types.IDedTypeWithData;
 import Corundum.world.Location;
+import Corundum.world.Rotation;
 import Corundum.world.World;
 
 public abstract class Entity extends TypedObject {
     protected final net.minecraft.entity.Entity entityMC;
 
-    public Entity(net.minecraft.entity.Entity entityMC) {
+    protected Entity(net.minecraft.entity.Entity entityMC) {
         this.entityMC = entityMC;
     }
 
-    public static class EntityType extends IDedTypeWithData<EntityType> {
+    /* TODO: implement the constructors below once we find a good way to make Entities without spawning them in the Minecraft code; I think this should be done one of two
+     * ways:
+     * 
+     * - preferably, we can store the type and location into a Minecraft Entity object, but we need to make sure this can be done without spawning the entity
+     * 
+     * - if the above is not possible, we can make entityMC null and store the request type and location in a map to be retrieved later; the map allows us to save space by
+     * avoiding having EntityType and Location instance variables with every entity when they're only used temporarily and only in optional cases */
+    public Entity(EntityType type, Location location) {
+        // TODO
+        entityMC = null;
+    }
+
+    public Entity(EntityType type, Location location, Rotation rotation) {
+        // TODO
+        entityMC = null;
+    }
+
+    public static class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
         // TODO: see if a Player entity has the I.D. 0
 
         public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
@@ -100,7 +113,7 @@ public abstract class Entity extends TypedObject {
          * I.D. and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by
          * the use of the {@link #EntityType(int)} and {@link #EntityType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end
          * a block and declaring one with a data value >= 0 will start a new block. */
-        private EntityType() {
+        protected EntityType() {
             super();
         }
 
@@ -112,7 +125,7 @@ public abstract class Entity extends TypedObject {
          * 
          * @param data
          *            is the data value for this {@link EntityType}. */
-        private EntityType(int data) {
+        protected EntityType(int data) {
             super(data);
         }
 
@@ -123,10 +136,21 @@ public abstract class Entity extends TypedObject {
          * @param data
          *            is the data value associated with this {@link EntityType}.
          * @see {@link #EntityType(int)} */
-        private EntityType(int id, int data) {
+        protected EntityType(int id, int data) {
             super(id, data);
         }
 
+        protected EntityType(EntityType<?> parent) {
+            super(parent);
+        }
+
+        // instance utils
+        public boolean isLiving() {
+            // TODO: return LivingType.getByID(getID()) != null; (once LivingType is implemented)
+            return false;
+        }
+
+        // pseudo-enum utils
         public static EntityType getByID(int id) {
             return getByID(EntityType.class, id);
         }
@@ -176,5 +200,13 @@ public abstract class Entity extends TypedObject {
         entityMC.motionX = velocity.getX();
         entityMC.motionY = velocity.getY();
         entityMC.motionZ = velocity.getZ();
+    }
+
+    public void spawn() {
+        // TODO: if a location was declared earlier, use that location in spawn(Location); otherwise, throw a custom CorundumException
+    }
+
+    public void spawn(Location location) {
+        // TODO
     }
 }

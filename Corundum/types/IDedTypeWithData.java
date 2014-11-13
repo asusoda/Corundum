@@ -60,6 +60,12 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
         this.data = (short) data;
     }
 
+    protected IDedTypeWithData(IDedTypeWithData<?> parent) {
+        super(parent);
+
+        this.data = parent.data;
+    }
+
     // static utilities
     /** This method retrieves the {@link IDedTypeWithData} with the given item I.D. and data values.
      * 
