@@ -1,9 +1,9 @@
 package Corundum.listeners;
 
 import Corundum.Corundum;
-import Corundum.CorundumPlugin;
 import Corundum.entities.Entity;
 import Corundum.entities.Mob;
+import Corundum.plugins.CorundumPlugin;
 
 /** This interface is the parent of each one of Corundum's "Listener" interfaces. Each one of Corundum's "Listener" interfaces includes one or more methods that are called each
  * time a specific type of event occurs; for example, whenever a mob is killed by another entity, the method {@link MobKilledByEntityListener#onMobKilledByEntity(Mob, Entity)}

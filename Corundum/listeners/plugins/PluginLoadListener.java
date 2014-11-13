@@ -1,9 +1,9 @@
 package Corundum.listeners.plugins;
 
-import Corundum.CorundumPlugin;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.results.EventResult;
+import Corundum.plugins.CorundumPlugin;
 
 public interface PluginLoadListener extends CorundumListener {
     /** This listener method is called whenever a {@link CorundumPlugin} is loaded from a jar onto the server. Note that "loading" a plugin simply loads it into the RAM, making

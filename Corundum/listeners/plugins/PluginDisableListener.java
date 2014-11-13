@@ -1,7 +1,7 @@
 package Corundum.listeners.plugins;
 
-import Corundum.CorundumPlugin;
 import Corundum.listeners.results.EventResult;
+import Corundum.plugins.CorundumPlugin;
 
 public interface PluginDisableListener {
     /** This listener method is called whenever a {@link CorundumPlugin} is disabled. When a plugin is disabled, its data is kept in the RAM and its code is still usable by

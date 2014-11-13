@@ -18,6 +18,7 @@ import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
+import Corundum.plugins.CorundumPlugin;
 import Corundum.types.IDedType;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.myList.myList;

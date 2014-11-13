@@ -1,7 +1,7 @@
 package Corundum.listeners.plugins;
 
-import Corundum.CorundumPlugin;
 import Corundum.listeners.results.EventResult;
+import Corundum.plugins.CorundumPlugin;
 
 public interface PluginEnableListener {
     /** This listener method is called whenever a {@link CorundumPlugin} is enabled. When a plugin is enabled, its commands become usable and its listeners become active.

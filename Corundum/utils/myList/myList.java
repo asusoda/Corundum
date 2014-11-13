@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Corundum.Corundum;
-import Corundum.CorundumPlugin;
+import Corundum.plugins.CorundumPlugin;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.messaging.MessengerUtilities;

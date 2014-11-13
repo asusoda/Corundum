@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import Corundum.Corundum;
-import Corundum.CorundumPlugin;
 import Corundum.entities.Player;
+import Corundum.plugins.CorundumPlugin;
 import Corundum.utils.myList.myList;
 import net.minecraft.util.ChatComponentText;
 

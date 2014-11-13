@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import Corundum.CorundumPlugin;
+import Corundum.plugins.CorundumPlugin;
 import Corundum.utils.messaging.MessageColor;
 
 /** This {@link Throwable} class represents a "<u>C</u>orundum <u>I</u>nternal <u>E</u>xception", which is an exception that occurs due to an error inside Corundum itself, as

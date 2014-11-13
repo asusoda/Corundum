@@ -1,4 +1,4 @@
-package Corundum;
+package Corundum.plugins;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import Corundum.Corundum;
 import Corundum.entities.Player;
 import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
