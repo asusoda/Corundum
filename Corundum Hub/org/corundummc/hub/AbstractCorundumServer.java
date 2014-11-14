@@ -1,4 +1,4 @@
-package org.corundummc.launcher;
+package org.corundummc.hub;
 
 public interface AbstractCorundumServer {
     /* This interface exists so that I can store a CorundumSevrer inside a CorundumServerThread without knowing what a CorundumServer by making CorundumServer implement this

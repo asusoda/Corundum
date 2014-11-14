@@ -1,6 +1,6 @@
 package org.corundummc.plugins;
 
-import org.corundummc.launcher.CorundumServerThread;
+import org.corundummc.hub.CorundumServerThread;
 
 /** Used for plugin threads, and also for securing Corundum. */
 public class PluginThread extends CorundumServerThread {

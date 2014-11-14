@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 
 import org.corundummc.CorundumServer;
 import org.corundummc.exceptions.CorundumSecurityException;
-import org.corundummc.launcher.CorundumJarLoader;
+import org.corundummc.hub.CorundumJarLoader;
 
 public class PluginLoader extends CorundumJarLoader {
     private CorundumPlugin plugin;

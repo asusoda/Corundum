@@ -1,4 +1,4 @@
-package org.corundummc.launcher;
+package org.corundummc.hub;
 
 import java.io.File;
 import java.io.IOException;
