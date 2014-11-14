@@ -64,10 +64,6 @@ public class Version {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
     public class BadVersionException extends CorundumException {
         public BadVersionException(String badVersion, Object... additionalData) {
             super("A version contains unknown characters/characters dissalowed for parsing versions! Version is " + badVersion, "error checking " + badVersion, additionalData);
