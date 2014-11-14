@@ -1,0 +1,57 @@
+0000000000000000000000000000000000000000 6aac425829d6361c5ff2bf7d3c9eaf09ca5448c2 REALDrummer <conman.davey@gmail.com> 1413613354 -0700
+6aac425829d6361c5ff2bf7d3c9eaf09ca5448c2 b593fa39c5bc1345e9b4cabbed1ba91c370d3c7c REALDrummer <conman.davey@gmail.com> 1413670374 -0700	commit: I added proper installation instructions to the README.
+b593fa39c5bc1345e9b4cabbed1ba91c370d3c7c 6beb40c9bb3099d9cbafb4703d0986737e8c6b7b REALDrummer <conman.davey@gmail.com> 1413670759 -0700	commit (amend): I added proper installation instructions to the README.
+6beb40c9bb3099d9cbafb4703d0986737e8c6b7b ca006549d370b0a7ab6354a1185154b6ba7406d7 REALDrummer <conman.davey@gmail.com> 1413683298 -0700	commit: I added to the Recipes.
+ca006549d370b0a7ab6354a1185154b6ba7406d7 2837d2ead72f41c5e504bd41dd164fa978bc14c5 REALDrummer <conman.davey@gmail.com> 1413696051 -0700	commit: I created and implemented the Material and MaterialType interfaces.
+2837d2ead72f41c5e504bd41dd164fa978bc14c5 e216ba5407777e170a13361b974c332397c70585 REALDrummer <conman.davey@gmail.com> 1413824156 -0700	pull origin master: Fast-forward
+e216ba5407777e170a13361b974c332397c70585 1d781958a36039b8c3237c59c6e266e108e7f09e REALDrummer <conman.davey@gmail.com> 1413825054 -0700	commit: I added and implemented the IDedType and TypedObject interfaces.
+1d781958a36039b8c3237c59c6e266e108e7f09e 8539f2c5a9a986b232c9d4ab5391e2da3984c607 REALDrummer <conman.davey@gmail.com> 1413842706 -0700	pull origin master: Fast-forward
+8539f2c5a9a986b232c9d4ab5391e2da3984c607 54058537cdce488ba3335fbf7af1761ed93dc144 REALDrummer <conman.davey@gmail.com> 1413843378 -0700	commit: I fixed the Zone constructor's issues and got rid of getBlockCountInZone().
+54058537cdce488ba3335fbf7af1761ed93dc144 8c6ea2a9d2d46f4fdb9bcdc6b33da1d7a3c00c38 REALDrummer <conman.davey@gmail.com> 1413855032 -0700	commit: I got rid of some errors and modified BiomeType.
+8c6ea2a9d2d46f4fdb9bcdc6b33da1d7a3c00c38 d85a01f34f774870a3f488d1d745c2b0bf6c36e1 REALDrummer <conman.davey@gmail.com> 1413919774 -0700	pull origin master: Fast-forward
+d85a01f34f774870a3f488d1d745c2b0bf6c36e1 56363df6fa324b3ac9e58d4405b1c40e405d4518 REALDrummer <conman.davey@gmail.com> 1413925249 -0700	commit: I added more stuff to BiomeType and got rid of I.D.s in the constructors.
+56363df6fa324b3ac9e58d4405b1c40e405d4518 90c8710fd2052b1d3d33674c14cb9fe014d7f54e REALDrummer <conman.davey@gmail.com> 1414015703 -0700	commit: I finished eliminating declared materials from BiomeType.
+90c8710fd2052b1d3d33674c14cb9fe014d7f54e 937c7a5f8a26f6aeaa9d40a27ef4357b75f219c1 REALDrummer <conman.davey@gmail.com> 1414015877 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+937c7a5f8a26f6aeaa9d40a27ef4357b75f219c1 9e3ebc8fe5b209b72ac49e03ffcd39c5f9432a10 REALDrummer <conman.davey@gmail.com> 1414016266 -0700	commit: I got rid of the BiomeGenBase I.D. checks in the BiomeType constructor.
+9e3ebc8fe5b209b72ac49e03ffcd39c5f9432a10 c84ba6cf27e195921a563efb069e382bc470f672 REALDrummer <conman.davey@gmail.com> 1414269097 -0700	pull origin master: Fast-forward
+c84ba6cf27e195921a563efb069e382bc470f672 0a76928b191213b9d782adc8bb684756df434a4c REALDrummer <conman.davey@gmail.com> 1414283833 -0700	commit: I reworked the listener system for EventResults.
+0a76928b191213b9d782adc8bb684756df434a4c 6f26231fde53e5eb9010defaafe5015416205f7f REALDrummer <conman.davey@gmail.com> 1414283868 -0700	pull origin master: Merge made by the 'recursive' strategy.
+6f26231fde53e5eb9010defaafe5015416205f7f d8cfd5f61e23a16b8c50c8c1aa131223a7188638 REALDrummer <conman.davey@gmail.com> 1414285423 -0700	commit: I added Holdable and finished enumerating BiomeTypes.
+d8cfd5f61e23a16b8c50c8c1aa131223a7188638 73cf7a1bf56dbb842a872977ccf172d5dfb47ead REALDrummer <conman.davey@gmail.com> 1414290086 -0700	commit: I reworked ItemType to work more like BlockType.
+73cf7a1bf56dbb842a872977ccf172d5dfb47ead aa66e3c02aae94e974a9e2724aa9771a94c347a5 REALDrummer <conman.davey@gmail.com> 1414305841 -0700	commit: I added ALL the ItemType enumerations.
+aa66e3c02aae94e974a9e2724aa9771a94c347a5 2b669568a0a5aea3c2238cb8f74861eb3b7897a4 REALDrummer <conman.davey@gmail.com> 1414431770 -0700	commit: I added some MCVERSION to Corundum and added more utils to ItemType.
+2b669568a0a5aea3c2238cb8f74861eb3b7897a4 90081a47dd9e8d3dd57fd01faf5c6c86454e4d59 REALDrummer <conman.davey@gmail.com> 1414431775 -0700	pull origin master: Merge made by the 'recursive' strategy.
+90081a47dd9e8d3dd57fd01faf5c6c86454e4d59 5dc019da5897888f09115a68a683c6b5494750c1 REALDrummer <conman.davey@gmail.com> 1414544212 -0700	commit: I took out a couple unused imports.
+5dc019da5897888f09115a68a683c6b5494750c1 29ce9e42bb6b0bcf66c62639b9a0ef68e855ba80 REALDrummer <conman.davey@gmail.com> 1414544225 -0700	merge origin/master: Merge made by the 'recursive' strategy.
+29ce9e42bb6b0bcf66c62639b9a0ef68e855ba80 d51b4ed73b676fd57c9214fcfa1ddd53ebebf2e3 REALDrummer <conman.davey@gmail.com> 1414604032 -0700	commit: I just made a couple minor improvements here and there.
+d51b4ed73b676fd57c9214fcfa1ddd53ebebf2e3 6d438e6e6b20341646f2c4f6bec1754e9e61754b REALDrummer <conman.davey@gmail.com> 1414604387 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+6d438e6e6b20341646f2c4f6bec1754e9e61754b 1a29f2f9d06af2a50606efcbb079c2f0eb6ae6a4 REALDrummer <conman.davey@gmail.com> 1414619353 -0700	commit: I added some utils to CorundumServer and made a couple new enums.
+1a29f2f9d06af2a50606efcbb079c2f0eb6ae6a4 6d5c0487e858d9d13f5fc8b4ea99e8d8407450a0 REALDrummer <conman.davey@gmail.com> 1414619377 -0700	merge origin/master: Merge made by the 'recursive' strategy.
+6d5c0487e858d9d13f5fc8b4ea99e8d8407450a0 480a8b3ff9b7656dfdd7a4618a6b1992b51b153b REALDrummer <conman.davey@gmail.com> 1414622885 -0700	commit: I changed the LICENSE back to ASU SoDA.
+480a8b3ff9b7656dfdd7a4618a6b1992b51b153b a577fc726512896111cb6311bc1a1d5eac0e980a REALDrummer <conman.davey@gmail.com> 1414687680 -0700	commit: I added a few more CorundumServer utils here and there.
+a577fc726512896111cb6311bc1a1d5eac0e980a e0507577bd89b147f2011fa1ea67ebdccffc0989 REALDrummer <conman.davey@gmail.com> 1414687696 -0700	merge origin/master: Merge made by the 'recursive' strategy.
+e0507577bd89b147f2011fa1ea67ebdccffc0989 9260d4554caaf4124ed0f80e770a961fbc205406 REALDrummer <conman.davey@gmail.com> 1414732723 -0700	commit: I started the SettingsManager class and made Configurable.
+9260d4554caaf4124ed0f80e770a961fbc205406 8978ae4062f32d224527e8c8428ee5eb45009cc2 REALDrummer <conman.davey@gmail.com> 1414771304 -0700	commit: I added some more things to SettingsManager.
+8978ae4062f32d224527e8c8428ee5eb45009cc2 145b17b13f6b9ebf7655d38185293a8b980303f0 REALDrummer <conman.davey@gmail.com> 1414771772 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+145b17b13f6b9ebf7655d38185293a8b980303f0 fc4e84462186a81e71ba29cb6ed0ec96844d8075 REALDrummer <conman.davey@gmail.com> 1414870840 -0700	commit: I added a constructor and more utils to SettingsManager.
+fc4e84462186a81e71ba29cb6ed0ec96844d8075 6a73ddc16babe276eeef7166d0c9f436fec88934 REALDrummer <conman.davey@gmail.com> 1414870976 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+6a73ddc16babe276eeef7166d0c9f436fec88934 d4f921a80e585f3f379768463afeda74f4f5c757 REALDrummer <conman.davey@gmail.com> 1414871074 -0700	commit: I fixed a bunch of errors caused by a missing "*/" on a Javadoc comment.
+d4f921a80e585f3f379768463afeda74f4f5c757 c9e376e56cc2a0dc109c2d84b76ec49c644dcea6 REALDrummer <conman.davey@gmail.com> 1415031674 -0700	commit: I added some stuff to SettingsManager and fixed init problems.
+c9e376e56cc2a0dc109c2d84b76ec49c644dcea6 314a7fd0e674f3f02ec977927ce01ee1c0573887 REALDrummer <conman.davey@gmail.com> 1415031773 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+314a7fd0e674f3f02ec977927ce01ee1c0573887 8ea5afdb79ba99889db69ef4fe7c25d143fac3bb REALDrummer <conman.davey@gmail.com> 1415032563 -0700	commit: I fixed some merge issues and removed the parent settings retrieval.
+8ea5afdb79ba99889db69ef4fe7c25d143fac3bb 125c00564678291cd5ff2b45100c14a3c8b045ba REALDrummer <conman.davey@gmail.com> 1415036799 -0700	merge origin/master: Fast-forward
+125c00564678291cd5ff2b45100c14a3c8b045ba 773cef2cb89d16154d3cead7d70a112cd84878c7 REALDrummer <conman.davey@gmail.com> 1415037810 -0700	commit: I re-added the code to download the Minecraft server jar in the launcher.
+773cef2cb89d16154d3cead7d70a112cd84878c7 4f7464ac9659b126351c8c9197642b6e0c45de48 REALDrummer <conman.davey@gmail.com> 1415152304 -0700	pull origin master: Fast-forward
+4f7464ac9659b126351c8c9197642b6e0c45de48 cf34642a132b2e4e0b5aadf772d8ce8d4d9da361 REALDrummer <conman.davey@gmail.com> 1415321494 -0700	pull origin master: Fast-forward
+cf34642a132b2e4e0b5aadf772d8ce8d4d9da361 1f338cb6019c563f8b32982e187af090ff578248 REALDrummer <conman.davey@gmail.com> 1415820321 -0700	merge type_abstract_classes: Fast-forward
+1f338cb6019c563f8b32982e187af090ff578248 050ed60ab8df182de6d976875872c4a027621e8f REALDrummer <conman.davey@gmail.com> 1415824284 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+050ed60ab8df182de6d976875872c4a027621e8f 56e4d8be384fc9cd8f22cbddab2cd2e352a837f9 REALDrummer <conman.davey@gmail.com> 1415824947 -0700	commit (amend-merge): I resolved merge conflicts in Entity and fixed some issues in Entity.
+56e4d8be384fc9cd8f22cbddab2cd2e352a837f9 6c1164c163ffee605ab527a15b6f535302f5033c REALDrummer <conman.davey@gmail.com> 1415844178 -0700	commit: I fixed issues with EntityType subclasses, including compilation errors.
+6c1164c163ffee605ab527a15b6f535302f5033c af6721167490507081b0d72370fc5b6e33bf803f REALDrummer <conman.davey@gmail.com> 1415844444 -0700	commit (merge): Merge branch 'master' of https://github.com/asusoda/Corundum
+af6721167490507081b0d72370fc5b6e33bf803f 0c929104cfd3fc9af38b53e1f8612fdece5de320 REALDrummer <conman.davey@gmail.com> 1415844512 -0700	commit: I removed NonLiving, which was renamed to NonLivingEntity and modified.
+0c929104cfd3fc9af38b53e1f8612fdece5de320 fa353bdf2119762d5d2729a1434048c8be69e693 REALDrummer <conman.davey@gmail.com> 1415897359 -0700	pull origin master: Fast-forward
+fa353bdf2119762d5d2729a1434048c8be69e693 79095c95d5d9ca12ad438ab4662173173148da4a REALDrummer <conman.davey@gmail.com> 1415898444 -0700	commit: I added constructors for PluginThread and moved it to Corundum.plugins.
+79095c95d5d9ca12ad438ab4662173173148da4a 615e4133e2001376e4b0fb6cf99f652e7f0b33b8 REALDrummer <conman.davey@gmail.com> 1415914574 -0700	commit: I made the base of the PluginLoader and made the PluginThread plugin final.
+615e4133e2001376e4b0fb6cf99f652e7f0b33b8 e63587aa0beac650e6602d44d85e92373dabaaa3 REALDrummer <conman.davey@gmail.com> 1415914702 -0700	merge origin/master: Merge made by the 'recursive' strategy.
+e63587aa0beac650e6602d44d85e92373dabaaa3 34be7a5709df9d6edba3983fcdc26cfb58ca9edf REALDrummer <conman.davey@gmail.com> 1415946598 -0700	commit: [WIP] I'm adding Thread-based securities.
+34be7a5709df9d6edba3983fcdc26cfb58ca9edf b04e516b04fc50ef7996967cc94a657f42aabc7a REALDrummer <conman.davey@gmail.com> 1415985807 -0700	commit: I rearranged the repo to split up the three parts and rename packages.
