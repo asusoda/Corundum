@@ -23,6 +23,9 @@ import org.corundummc.types.HoldableType;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Block.BlockType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Item {
     private final ItemType type;
     private myList<Enchantment> enchantments;
@@ -514,7 +517,18 @@ public class Item {
     }
 
     public static Item[] fromMCItems(ItemStack... item_stacks) {
-        // TODO
-        return null;
+        List<net.minecraft.item.Item> items = new ArrayList<>();
+
+        for (ItemStack itemStack : item_stacks) {
+            items.add(itemStack.getItem());
+        }
+
+        List<Item> corundumItems = new ArrayList<>();
+
+        for (net.minecraft.item.Item mcItem : items) {
+            corundumItems.add(new Item(ItemType.getByID(net.minecraft.item.Item.getIdFromItem(mcItem))));
+        }
+
+        return corundumItems.toArray(new Item[corundumItems.size()]);
     }
 }
