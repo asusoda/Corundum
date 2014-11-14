@@ -9,5 +9,7 @@ been drastic changes to fix things or to comply to MCP structure changes.
 Building the installer:
     Simply run gradlew build and look in build/libs. If gradlew doesn't work for you, download Gradle, install it,
     and run gradle build. If you don't want to use Gradle, just use the non-gradle buildscripts (non-recommended,
-    Gradle SHOULD work).
+    Gradle SHOULD work). For the non-gradle buildscripts, extract the contents of this folder to a separate
+    folder WITHOUT a space in the name.
+
 The MANIFEST.mf is merely for the non-gradle build script.
