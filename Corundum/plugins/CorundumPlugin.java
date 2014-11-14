@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import Corundum.Corundum;
+import Corundum.CorundumServer;
 import Corundum.entities.Player;
 import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
@@ -50,6 +50,10 @@ public abstract class CorundumPlugin implements CorundumListener {
             throw new CIE("There was a problem getting the jar file path while loading a new CorundumPlugin!", exception, "path=\""
                     + jar_URL.toString().substring(9, jar_URL.toString().length() - 2) + "\"");
         }
+    }
+
+    public CorundumServer getServer() {
+        return (CorundumServer) PluginThread.getCurrentServer();
     }
 
     // internal Corundum plugin handling
@@ -131,11 +135,11 @@ public abstract class CorundumPlugin implements CorundumListener {
         // handle the actual loading.
         for (CorundumPlugin currPlugin : loaded_plugins) {
             // add the newly loaded plugin to the plugins list
-            Corundum.SERVER.plugins.add(currPlugin);
+            CorundumServer.getInstance().plugins.add(currPlugin);
 
             // generate an event describing the loading
             final CorundumPlugin pluginF = currPlugin;
-            EventResult result = Corundum.SERVER.generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
+            EventResult result = CorundumServer.getInstance().generateEvent(new ListenerCaller<PluginLoadListener, EventResult>() {
                 @Override
                 public EventResult generateEvent(PluginLoadListener listener, EventResult result) {
                     if (result == null)
@@ -148,7 +152,7 @@ public abstract class CorundumPlugin implements CorundumListener {
             // if the a cancellation was requested, close the URLClassLoader
             if (result.isCancelled()) {
                 currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" load cancelled");
-                Corundum.SERVER.plugins.remove(currPlugin);
+                CorundumServer.getInstance().plugins.remove(currPlugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
@@ -171,7 +175,7 @@ public abstract class CorundumPlugin implements CorundumListener {
 
             if (!success) {
                 currPlugin.debug("plugin \"" + currPlugin.getName() + "\" v" + currPlugin.getVersion() + "\" cancelled its own loading");
-                Corundum.SERVER.plugins.remove(currPlugin);
+                CorundumServer.getInstance().plugins.remove(currPlugin);
                 try {
                     loader.close();
                 } catch (IOException exception) {
@@ -212,7 +216,8 @@ public abstract class CorundumPlugin implements CorundumListener {
         for (String dependency : dependencies.keySet()) {
             if (!pluginNames.keySet().contains(dependency)) {
                 for (CorundumPlugin plugin : dependencies.get(dependency)) {
-                    Corundum.SERVER.message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
+                    CorundumServer.getInstance()
+                            .message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
                     pluginsToCheck.remove(plugin);
                 }
             }
@@ -273,7 +278,7 @@ public abstract class CorundumPlugin implements CorundumListener {
         }
 
         // remove this plugin from the plugins list
-        Corundum.SERVER.plugins.remove(this);
+        CorundumServer.getInstance().plugins.remove(this);
 
         // shut down the ClassLoader for this plugin
         try {
@@ -298,7 +303,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      *            is the debug message to send to the verbosely debugging parties.
      * @see {@link #debug(String)} */
     public void bloviate(String message) {
-        MessengerUtilities.bloviate(this, message);
+        CorundumServer.getInstance().bloviate(message);
     }
 
     /** This method broadcasts the given message to the server, displaying it in the console, in all players' chats, and in the logs.
@@ -308,7 +313,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      * @see {@link Messenger#broadcast(String)} */
     public void broadcast(String message) {
         tellConsole(message);
-        Corundum.SERVER.broadcast(message);
+        CorundumServer.getInstance().broadcast(message);
     }
 
     /** This method sends the given message to all the players (or console) that are currently in "debugging mode". These messages should contain basic important information
@@ -320,11 +325,11 @@ public abstract class CorundumPlugin implements CorundumListener {
      * 
      * @see {@link #bloviate(String)} */
     public void debug(String message) {
-        MessengerUtilities.debug(this, message);
+        CorundumServer.getInstance().debug(message);
     }
 
     public void tellConsole(String message) {
-        Corundum.SERVER.message(getPrefix() + message);
+        CorundumServer.getInstance().message(getPrefix() + message);
     }
 
     public void tellPlayer(Player player, String message) {
@@ -382,8 +387,13 @@ public abstract class CorundumPlugin implements CorundumListener {
 
     public abstract String getVersion();
 
+    @Override
+    public final String toString() {
+        return getName() + " v" + getVersion();
+    }
+
     // currently non abstract method used in dependencies.
     public String[] getDependencies() {
-        return new String[] {""};
+        return new String[] { "" };
     }
 }

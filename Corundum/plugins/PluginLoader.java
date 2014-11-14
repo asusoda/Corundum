@@ -1,25 +1,38 @@
 package Corundum.plugins;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
-import Corundum.Corundum;
+import Corundum.CorundumServer;
+import Corundum.exceptions.CorundumSecurityException;
 import Corundum.launcher.CorundumJarLoader;
 
 public class PluginLoader extends CorundumJarLoader {
+    private CorundumPlugin plugin;
 
-    public PluginLoader(String jar_name) throws MalformedURLException {
-        super(new File(Corundum.PLUGINS_FOLDER, jar_name + ".jar"), PluginLoader.class.getClassLoader());
+    public PluginLoader(CorundumServer server, String jar_name) throws MalformedURLException {
+        super(new File(server.getPluginsFolder(), jar_name + ".jar"), PluginLoader.class.getClassLoader());
     }
 
     @Override
     public Class<?> loadClass(String class_name) throws ClassNotFoundException {
         // redirect requests for new Threads to new PluginThreads
         // TODO TEST
-        if (class_name.equals("java.lang.Thread"))
-            return PluginThread.class;
-        else
-            return super.loadClass(class_name);
+        if (class_name.equals("java.lang.Thread") || class_name.equals("Corundum.launcher.CorundumServerThread"))
+            CorundumServer.secure("access " + class_name);
+
+        return super.loadClass(class_name);
     }
 
+    @Override
+    public void loadJar() throws IOException, NoClassDefFoundError, ClassNotFoundException, URISyntaxException {
+        super.loadJar(new ClassLoadAction() {
+            @Override
+            public void onClassLoad(Class<?> clazz) {
+                // TODO: if clazz is a CorundumPlugin, set plugin to this
+            }
+        });
+    }
 }

@@ -3,20 +3,17 @@ package Corundum.entities;
 import java.util.HashMap;
 import java.util.UUID;
 
-import Corundum.Corundum;
+import Corundum.CorundumServer;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
-import Corundum.items.Item;
 import Corundum.types.IDedType;
-import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.myList.myList;
@@ -76,7 +73,7 @@ public class Player /* TODO extends LivingEntity */implements Commander, Matchab
     public void command(final String command) {
         final Player thePlayer = this;
 
-        EventResult eventResult = Corundum.SERVER.generateEvent(new ListenerCaller<CommandListener, EventResult>() {
+        EventResult eventResult = CorundumServer.getInstance().generateEvent(new ListenerCaller<CommandListener, EventResult>() {
             @Override
             public EventResult generateEvent(CommandListener listener, EventResult result) {
                 return listener.onCommand(thePlayer, command, result);
@@ -84,7 +81,7 @@ public class Player /* TODO extends LivingEntity */implements Commander, Matchab
         });
 
         if (!eventResult.isCancelled()
-                && this.canCommandSenderUseCommand(((CommandBase) Corundum.SERVER.getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
+                && this.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
                         .getRequiredPermissionLevel(), command)) {
             CommandBase
                     .func_147176_a(this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I

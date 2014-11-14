@@ -1,5 +1,7 @@
 package Corundum;
 
+import static Corundum.utils.StringUtilities.capitalize;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,15 +12,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
+import Corundum.entities.Entity.EntityType;
 import Corundum.entities.Player;
 import Corundum.entities.Player.GameMode;
 import Corundum.exceptions.CIE;
 import Corundum.exceptions.CorundumException;
+import Corundum.exceptions.CorundumSecurityException;
+import Corundum.launcher.AbstractCorundumServer;
+import Corundum.launcher.CorundumLauncher;
+import Corundum.launcher.CorundumServerThread;
 import Corundum.listeners.CommandListener;
 import Corundum.listeners.CorundumListener;
 import Corundum.listeners.ListenerCaller;
 import Corundum.listeners.results.EventResult;
 import Corundum.plugins.CorundumPlugin;
+import Corundum.plugins.PluginThread;
 import Corundum.types.IDedType;
 import Corundum.utils.interfaces.Commander;
 import Corundum.utils.myList.myList;
@@ -26,10 +34,19 @@ import Corundum.utils.myList.myList;
 /** This class represents the entirety of a Corundum server.
  * 
  * @author REALDrummer */
-public class CorundumServer extends DedicatedServer implements Commander {
+public class CorundumServer extends DedicatedServer implements AbstractCorundumServer, Commander {
+    public static final String VERSION = "pre-α", MCVERSION = "1.7.10";
+
+    /** This {@link OperatingSystem} represents the operating system is currently running on. */
+    public static final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
+    private final File PLUGINS_FOLDER = new File("plugins");
+
+    /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
+     * respectively, but enabling or disabling them will <i>not</i> affect this list. */
+    public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
+
     private CorundumGui corundumGui;
     private boolean corundum_GUI_enabled = false;
-
     /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but can be changed via --mc-gui. */
     private boolean usingMCGui = false;
 
@@ -40,15 +57,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
      * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
      * starting the server. */
     private boolean debugMode;
-
     /** This <b>boolean</b> determines whether or not the server is running in "verbose" mode, which will cause the server to log a large amount of debugging messages to the
      * console. Verbose mode is off (<b>false</b>) by default. Verbose mode can be enabled by passing the argument <tt>--verbose</tt> (a.k.a. <tt>-v</tt>) to the console as a
      * command line argument when starting the server. Note that if verbose mode is enabled, so is {@link #debugMode debug mode}. */
     private boolean verboseMode;
-
-    /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
-     * respectively, but enabling or disabling them will <i>not</i> affect this list. */
-    public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -59,6 +71,37 @@ public class CorundumServer extends DedicatedServer implements Commander {
     public CorundumServer(String file_path) {
         // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
         super(new File(file_path));
+    }
+
+    /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
+     * "other"}. The public static final <tt>OperatingSystem</tt> {@link Corundum#OS OS} represents the operating system that this server is currently running on.
+     * 
+     * @author REALDrummer */
+    public static enum OperatingSystem {
+        WINDOWS, MAC, LINUX, UNIX, OTHER;
+
+        public static OperatingSystem getFromName(String name) {
+            if (name.startsWith("Windows"))
+                return WINDOWS;
+            else if (name.startsWith("Mac OS"))
+                return MAC;
+            else if (name.startsWith("Linux"))
+                return LINUX;
+            else if (name.contains("Unix"))
+                return UNIX;
+            else
+                return OTHER;
+        }
+
+        @Override
+        public String toString() {
+            if (this == MAC)
+                return "Mac OS";
+            else if (this == OTHER)
+                return "other";
+            else
+                return capitalize(super.toString());
+        }
     }
 
     public static class Difficulty extends IDedType<Difficulty> {
@@ -72,13 +115,22 @@ public class CorundumServer extends DedicatedServer implements Commander {
         public static Difficulty getByID(int id) {
             return getByID(Difficulty.class, id);
         }
+
+        public static Difficulty[] values() {
+            return values(Difficulty.class);
+        }
     }
 
+    // start up and shut down
     /** This method starts this {@link CorundumServer}.
      * 
      * @param arguments
      *            are the command-line arguments used to configure the properties of this server on startup. */
-    public void start(String[] arguments) {
+    public final void start(String[] arguments) throws CorundumSecurityException {
+        secure("call CorundumServer.start()");
+
+        System.out.println("Starting Corundum server...");
+
         // To make arg reading easier.
         this.argInfo = new ArgInfo(arguments);
         // --no-debug takes priority.
@@ -115,6 +167,73 @@ public class CorundumServer extends DedicatedServer implements Commander {
         // }
     }
 
+    /** This method shuts down Corundum completely.
+     * 
+     * @throws CorundumSecurityException
+     *             if a {@link CorundumPlugin} attempts to call this method. */
+    public final void quit() throws CorundumSecurityException {
+        secure("call CorundumServer.quit()");
+
+        getInstance().stopServer();
+
+        // close Corundum
+        System.exit(0);
+    }
+
+    // security
+    public static CorundumServer getInstance() {
+        if (Thread.currentThread() instanceof CorundumServerThread)
+            return (CorundumServer) CorundumServerThread.currentThread().getServer();
+        else if (Thread.currentThread().equals(CorundumLauncher.mainThread()))
+            throw new CIE("Someone tried to retrieve the current server from the Corundum main thread!"
+                    + " The main Corundum thread has no server instance because it controls more than one server!",
+                    "attempt to get the current server instance from the main Corundum thread");
+        else
+            throw new CorundumSecurityException("unknown thread", "retrieve the current server instance");
+    }
+
+    /** This method can check at any given spot whether or not a call is "secure". The point is to ensure that certain methods are only called form inside Corundum, not by
+     * Corundum plugins. If the spot is not secure, it will throw a {@link CorundumSecurityException}.
+     * 
+     * @param offense
+     *            is a very brief description of the illegal action the plugin attempted to perform, e.g. <tt>"call {@link CorundumServer#quit()}"</tt>.
+     * 
+     * @throws CorundumSecurityException
+     *             if the method was called by something other than Corundum internal code.
+     * @see {@link #secure(String)} */
+    public static void secure(String offense) throws CorundumSecurityException {
+        secure(null, offense);
+    }
+
+    /** This method can check at any given spot whether or not a call is "secure". The point is to ensure that certain methods are only called form inside Corundum, not by
+     * Corundum plugins. If the spot is not secure, it will throw a {@link CorundumSecurityException}.
+     * 
+     * @param offense
+     *            is a very brief description of the illegal action the plugin attempted to perform, e.g. <tt>"call {@link CorundumServer#quit()}"</tt>.
+     * 
+     * @param message
+     *            is the message that will go with the {@link CorundumSecurityException} if one is thrown. It should be used in cases where this method is not just used to
+     *            secure a whole method, but to secure it in a certain case, so as not to mislead users trying to debug their plugin.
+     * 
+     * @throws CorundumSecurityException
+     *             if the method was called by something other than Corundum internal code.
+     * @see {@link #secure()} */
+    public static void secure(String message, String offense) throws CorundumSecurityException {
+        // if this thread is a PluginThread, refuse it access to this secure area
+        if (Thread.currentThread() instanceof PluginThread)
+            throw new CorundumSecurityException(message, ((PluginThread) Thread.currentThread()).getPlugin().toString(), offense);
+        // if this thread is an unidentified thread, refuse it access to this secure area
+        else if (!(Thread.currentThread() instanceof CorundumServerThread) && !Thread.currentThread().equals(CorundumLauncher.mainThread()))
+            throw new CorundumSecurityException(message, "unknown thread", offense);
+        // otherwise, let it pass
+    }
+
+    // overrides
+    @Override
+    public String toString() {
+        return "\\Corundum";
+    }
+
     /** This method broadcasts a given message to every player on the server and to the console.
      * 
      * @param message
@@ -127,10 +246,16 @@ public class CorundumServer extends DedicatedServer implements Commander {
             new Player(player).message(message);
     }
 
-    // obfuscated DedicatedServer method renaming
+    // Minecraft utils
     public boolean canGenerateStructures() {
         // This method is necessary because super.canStructuresSpawn() will be obfuscated!
         return super.canStructuresSpawn();
+    }
+
+    public void debug(String message) {
+        logDebug(message);
+
+        // TODO: print the message to all current debuggers and verbose debuggers
     }
 
     public void enableGUI() {
@@ -181,7 +306,8 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return super.getAllowNether();
     }
 
-    public boolean getIsHardcore() {
+    @Override
+    public boolean isHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
@@ -198,7 +324,7 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return isCommandBlockEnabled();
     }
 
-    // property overrides
+    // Corundum utils
     @Override
     public void command(final String command) {
         final Commander _this = this;
@@ -223,6 +349,10 @@ public class CorundumServer extends DedicatedServer implements Commander {
     @Override
     public String getName() {
         return getHostname();
+    }
+
+    public File getPluginsFolder() {
+        return PLUGINS_FOLDER;
     }
 
     @Override
@@ -260,11 +390,11 @@ public class CorundumServer extends DedicatedServer implements Commander {
         return result;
     }
 
-    public boolean getIsDebugMode() {
+    public boolean isDebugging() {
         return this.debugMode;
     }
 
-    public boolean getIsVerboseMode() {
+    public boolean isVerboselyDebugging() {
         return this.verboseMode;
     }
 

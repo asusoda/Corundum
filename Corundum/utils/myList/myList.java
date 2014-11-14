@@ -15,8 +15,8 @@ package Corundum.utils.myList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import Corundum.Corundum;
-import Corundum.plugins.CorundumPlugin;
+import Corundum.CorundumServer;
+import Corundum.launcher.CorundumServerThread;
 import Corundum.utils.ListUtilities;
 import Corundum.utils.interfaces.Matchable;
 import Corundum.utils.messaging.MessengerUtilities;
@@ -581,8 +581,8 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
 
     /** This method prints debugging information concerning the {@link myList} using {@link #debug(String) myCoreLibrary's debug() method}. */
     public void debug() {
-        MessengerUtilities.debug(null, String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "")
-                + (hasRoot() ? "; has root!" : "") + "\n" + toString());
+        ((CorundumServer) CorundumServerThread.currentThread().getServer()).debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "")
+                + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "") + "\n" + toString());
     }
 
     public void debugFull() {

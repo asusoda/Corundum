@@ -1,7 +1,9 @@
 package Corundum.plugins;
 
+import Corundum.launcher.CorundumServerThread;
+
 /** Used for plugin threads, and also for securing Corundum. */
-public class PluginThread extends Thread {
+public class PluginThread extends CorundumServerThread {
     private final CorundumPlugin plugin;
 
     // constructors
