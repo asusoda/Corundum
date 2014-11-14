@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Represents a version. By default, this only handles majorversion.minorversion[s], but subclasses are used to handle
- * Minecraft's, how shall we say, <i>exotic</i> system of versioning, particularly with snapshots and prereleases.
- */
+/** Represents a version. By default, this only handles majorversion.minorversion[s], but subclasses are used to handle Minecraft's, how shall we say, <i>exotic</i> system of
+ * versioning, particularly with snapshots and prereleases. */
 public class Version {
     private byte majorVersion;
     private byte[] minorVersions;
@@ -65,23 +63,16 @@ public class Version {
     }
 
     public class BadVersionException extends CorundumException {
+        private static final long serialVersionUID = 1412061902750607994L;
+
         public BadVersionException(String badVersion, Object... additionalData) {
             super("A version contains unknown characters/characters dissalowed for parsing versions! Version is " + badVersion, "error checking " + badVersion, additionalData);
         }
     }
 
     public enum SpecialVersionSymbols {
-        ALPHA_VERSION("α"),
-        BETA_VERSION("ß"),
-        PRE("Pre-"),
-        DEV("Dev-"),
-        SNAPSHOT_WEEK("w"),
-        A_SNAPSHOT("a"),
-        B_SNAPSHOT("b"),
-        C_SNAPSHOT("c"),
-        D_SNAPSHOT("d"),
-        E_SNAPSHOT("e"),
-        F_SNAPSHOT("f");
+        ALPHA_VERSION("α"), BETA_VERSION("ß"), PRE("Pre-"), DEV("Dev-"), SNAPSHOT_WEEK("w"), A_SNAPSHOT("a"), B_SNAPSHOT("b"), C_SNAPSHOT("c"), D_SNAPSHOT("d"), E_SNAPSHOT(
+                "e"), F_SNAPSHOT("f");
 
         private String symbol;
 

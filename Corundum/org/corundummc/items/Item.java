@@ -17,7 +17,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
-import org.corundummc.Corundum;
+import org.corundummc.CorundumServer;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.types.HoldableType;
 import org.corundummc.utils.myList.myList;
@@ -387,7 +387,7 @@ public class Item {
                     return ItemType.LEATHER;
                 default:
                     throw new CIE("This piece of armor is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
-                            + Corundum.MCVERSION, "unidentified tool material", "material=" + material.toString());
+                            + CorundumServer.MCVERSION + "?", "unidentified tool material", "material=" + material.toString());
             }
         }
 
@@ -405,7 +405,7 @@ public class Item {
                     return BlockType.OAK_WOOD_PLANKS;
                 default:
                     throw new CIE("This tool is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
-                            + Corundum.MCVERSION, "unidentified tool material", "material=" + material.toString());
+                            + CorundumServer.MCVERSION + "?", "unidentified tool material", "material=" + material.toString());
             }
         }
 

@@ -7,11 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.Player;
 import org.corundummc.entities.Player.GameMode;
@@ -234,28 +238,10 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return "\\Corundum";
     }
 
-    /** This method broadcasts a given message to every player on the server and to the console.
-     * 
-     * @param message
-     *            is the message to be broadcasted. */
-    @SuppressWarnings("unchecked")
-    public void broadcast(String message) {
-        message(message);
-
-        for (EntityPlayerMP player : (List<EntityPlayerMP>) super.getEntityWorld().playerEntities)
-            new Player(player).message(message);
-    }
-
     // Minecraft utils
     public boolean canGenerateStructures() {
         // This method is necessary because super.canStructuresSpawn() will be obfuscated!
         return super.canStructuresSpawn();
-    }
-
-    public void debug(String message) {
-        logDebug(message);
-
-        // TODO: print the message to all current debuggers and verbose debuggers
     }
 
     public void enableGUI() {
@@ -325,6 +311,22 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     }
 
     // Corundum utils
+    public void bloviate(String message) {
+        // TODO: send message to all verbose debuggers, possibly including the console
+    }
+
+    /** This method broadcasts a given message to every player on the server and to the console.
+     * 
+     * @param message
+     *            is the message to be broadcasted. */
+    @SuppressWarnings("unchecked")
+    public void broadcast(String message) {
+        message(message);
+
+        for (EntityPlayerMP player : (List<EntityPlayerMP>) super.getEntityWorld().playerEntities)
+            new Player(player).message(message);
+    }
+
     @Override
     public void command(final String command) {
         final Commander _this = this;
@@ -344,6 +346,12 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
             broadcast(result.getServerMessage());
 
         addPendingCommand(command, this);
+    }
+
+    public void debug(String message) {
+        logDebug(message);
+
+        // TODO: print the message to all current debuggers and verbose debuggers
     }
 
     @Override
@@ -401,4 +409,5 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     public ArgInfo getArgInfo() {
         return this.argInfo;
     }
+
 }

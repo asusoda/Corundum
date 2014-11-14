@@ -1,6 +1,5 @@
 package org.corundummc.listeners;
 
-import org.corundummc.Corundum;
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.Mob;
 import org.corundummc.plugins.CorundumPlugin;

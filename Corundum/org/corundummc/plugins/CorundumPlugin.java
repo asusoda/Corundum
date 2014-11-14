@@ -53,7 +53,7 @@ public abstract class CorundumPlugin implements CorundumListener {
     }
 
     public CorundumServer getServer() {
-        return (CorundumServer) PluginThread.getCurrentServer();
+        return (CorundumServer) PluginThread.currentThread().getServer();
     }
 
     // internal Corundum plugin handling
