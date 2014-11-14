@@ -2,6 +2,7 @@ package Corundum.utils.versioning;
 
 import Corundum.exceptions.CorundumException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class Version {
     private byte majorVersion;
     private byte[] minorVersions;
+    private List<String> tags = new ArrayList<>();
     private static final List<Character> legalChars = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
     public Version(String version) {
@@ -34,7 +36,10 @@ public class Version {
     protected String prepVerSegForCasting(String versionSegment) {
         // remove special symbols
         for (SpecialVersionSymbols versionSymbol : SpecialVersionSymbols.values()) {
-            versionSegment.replace(versionSegment, versionSymbol.getSymbol());
+            if (versionSegment.contains(versionSymbol.getSymbol())) {
+                versionSegment.replace(versionSegment, versionSymbol.getSymbol());
+                this.tags.add(versionSymbol.getSymbol());
+            }
         }
 
         // ensure the remainder is only numbers.
@@ -53,6 +58,14 @@ public class Version {
 
     public byte[] getMinorVersions() {
         return this.minorVersions;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public class BadVersionException extends CorundumException {
