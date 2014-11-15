@@ -68,7 +68,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
-     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link Corundum#SERVER}.
+     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
      *
      * @param file_path
      *            is the path of the file from which this server should be loaded. */
@@ -78,7 +78,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     }
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
-     * "other"}. The public static final <tt>OperatingSystem</tt> {@link Corundum#OS OS} represents the operating system that this server is currently running on.
+     * "other"}. The public static final <tt>OperatingSystem</tt> {@link CorundumServer#OS OS} represents the operating system that this server is currently running on.
      * 
      * @author REALDrummer */
     public static enum OperatingSystem {
@@ -223,7 +223,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @throws CorundumSecurityException
      *             if the method was called by something other than Corundum internal code.
-     * @see {@link #secure()} */
+     * @see {@link #secure(String)} */
     public static void secure(String message, String offense) throws CorundumSecurityException {
         // if this thread is a PluginThread, refuse it access to this secure area
         if (Thread.currentThread() instanceof PluginThread)
@@ -378,8 +378,8 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      *            perfectly with anonymous classes, kind of like this:<br>
      * 
      *            <pre>
-     * {@link Corundum}.{@link Corundum#generateEvent(ListenerCaller) generateEvent}(<b>new</b> {@link ListenerCaller}() {
-     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener, Corundum.listeners.results.EventResult) generateEvent}({@link ListenerCaller} caller) {
+     * {@link CorundumServer}.{@link CorundumServer#generateEvent(ListenerCaller) generateEvent}(<b>new</b> {@link ListenerCaller}() {
+     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener, org.corundummc.listeners.results.EventResult) generateEvent}({@link ListenerCaller} caller) {
      *                    <i>// do stuff in here</i>
      *                }
      *            })

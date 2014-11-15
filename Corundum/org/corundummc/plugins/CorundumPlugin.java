@@ -58,7 +58,7 @@ public abstract class CorundumPlugin implements CorundumListener {
 
     // internal Corundum plugin handling
     /** This method takes a given {@link JarFile} and attempts to load it as a {@link CorundumPlugin}. If successful, it will create a new {@link CorundumPlugin} based on the
-     * given {@link JarFile}, add it to the {@link Corundum#plugins global plugins list}, and call the {@link CorundumPlugin}'s {@link #onLoad() onLoad() method}. Loading a
+     * given {@link JarFile}, add it to the {@link CorundumServer#plugins global plugins list}, and call the {@link CorundumPlugin}'s {@link #onLoad() onLoad() method}. Loading a
      * plugin will load the plugin and its data into the RAM and make its classes accessible, but will not start the plugin or use any of its {@link CorundumListener}s.
      * 
      * @param file_path
@@ -227,7 +227,7 @@ public abstract class CorundumPlugin implements CorundumListener {
     /** This method enables this {@link CorundumPlugin} and calls the plugin's {@link #onEnable() onEnable() method}. Enabling a plugin causes all its {@link CorundumListener}s
      * to become active and its commands to become usable.
      * 
-     * @see {@link #onEnable()}, {@link CorundumPlugin#load(JarFile)}, {@link #disable()}, and {@link #unload()}. */
+     * @see {@link #onEnable()}, {@link CorundumPlugin#load(String)}, {@link #disable()}, and {@link #unload()}. */
     public final void enable() {
         enabled = true;
         try {
@@ -243,7 +243,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      * {@link CorundumListener}s to become inactive and its commands to become useless, but does not remove the plugin and its data from the RAM and does not allow the
      * operating system to "unlock" the plugin's jar file. To clear plugins from RAM and release Corundum's hold on the jar file, use the {@link #unload() unload() method}.
      * 
-     * @see {@link #onDisable()}, {@link #load(JarFile)}, {@link #enable()}, and {@link #unload()}. */
+     * @see {@link #onDisable()}, {@link #load(String)}, {@link #enable()}, and {@link #unload()}. */
     public final void disable() {
         enabled = false;
 
@@ -264,7 +264,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      * @throws CIE
      *             if closing the {@link URLClassLoader class loader} causes issues.
      * 
-     * @see {@link #onUnload()}, {@link #load(JarFile)}, {@link #enable()}, and {@link #disable()}. */
+     * @see {@link #onUnload()}, {@link #load(String)}, {@link #enable()}, and {@link #disable()}. */
     public final void unload() throws CIE {
         if (enabled)
             disable();
@@ -310,7 +310,7 @@ public abstract class CorundumPlugin implements CorundumListener {
      * 
      * @param message
      *            is the message to be broadcasted to the server.
-     * @see {@link Messenger#broadcast(String)} */
+     * @see {@link CorundumServer#broadcast(String)} */
     public void broadcast(String message) {
         tellConsole(message);
         CorundumServer.getInstance().broadcast(message);

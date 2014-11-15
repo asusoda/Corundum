@@ -563,7 +563,7 @@ public class Block {
 
         /** This method determines whether or not a block of this {@link BlockType} is able to be burned until broken. Note that most blocks can be lit on fire, but that does
          * not necessarily make them "burnable"; burnable blocks are the blocks that will burn until they break and often spread fire to other nearby blocks. For example,
-         * {@link BlockType#LEAVES leaves}, {@link BlockType#OAK_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but {@link BlockType#WATER water},
+         * {@link BlockType#OAK_LEAVES leaves}, {@link BlockType#OAK_WOOD_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but {@link BlockType#FLOWING_WATER water},
          * {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
          * 
          * @return <b>true</b> if this {@link BlockType} is burnable; <b>false</b> otherwise. */
@@ -588,8 +588,8 @@ public class Block {
             return blockMC.getMaterial().getMaterialMobility() == 2;
         }
 
-        /** This method determines whether or not a block of this {@link BlockType} is liquid. So far (as of 1.8), {@link BlockType#WATER water},
-         * {@link BlockType#STATIONARY_WATER stationary water}, {@link BlockType#LAVA lava}, and {@link BlockType#STATIONARY_LAVA stationary lava} are the only liquid blocks in
+        /** This method determines whether or not a block of this {@link BlockType} is liquid. So far (as of 1.8), {@link BlockType#FLOWING_WATER water},
+         * {@link BlockType#STILL_WATER stationary water}, {@link BlockType#FLOWING_LAVA lava}, and {@link BlockType#STILL_LAVA stationary lava} are the only liquid blocks in
          * Minecraft.
          * 
          * @return <b>true</b> if this {@link BlockType} is a liquid like water or lava; <b>false</b> otherwise. */
@@ -608,7 +608,7 @@ public class Block {
         }
 
         /** This method determines whether or not a block of this {@link BlockType} is "replaceable", meaning a new block can be placed where this block is without breaking
-         * this block first. This would return <b>true</b> for things like {@link BlockType#TALL_GRASS tall grass} and {@link BlockType#WATER water}, but not for things like
+         * this block first. This would return <b>true</b> for things like {@link BlockType#TALL_GRASS tall grass} and {@link BlockType#FLOWING_WATER water}, but not for things like
          * {@link BlockType#STONE stone} and {@link BlockType#GRASS grass blocks}.
          * 
          * @return <b>true</b> if this {@link BlockType} can be replaced without being broken first; <b>false</b> otherwise. */
@@ -618,7 +618,7 @@ public class Block {
 
         /** This method determines whether or not a block of this {@link BlockType} is solid. Solid blocks are blocks that you can't walk through; {@link BlockType#GRASS grass
          * blocks}, {@link BlockType#STONE stone}, and {@link BlockType#ANVIL anvils} are solid, but {@link BlockType#TALL_GRASS tall grass}, {@link BlockType#SIGN_POST signs},
-         * and {@link BlockType#WATER water} are not.
+         * and {@link BlockType#FLOWING_WATER water} are not.
          * 
          * @return <b>true</b> if this {@link BlockType} is solid; <b>false</b> otherwise. */
         public boolean isSolid() {

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.world.Block.BlockType;
+import org.corundummc.world.Block;
 
 public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends IDedType<T> {
     private final short data;
@@ -101,7 +102,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      * You can learn more about which kinds of blocks have which I.D. and data values at <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
      * 
      * @return the data value associated with this {@link IDedTypeWithData} or -1 if this {@link IDedTypeWithData} is not associated with a particular data value like
-     *         {@link IDedType#GRASS grass blocks}. */
+     *         {@link BlockType#GRASS grass blocks}. */
     public short getData() {
         return data;
     }
