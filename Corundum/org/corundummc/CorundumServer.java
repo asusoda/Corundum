@@ -366,7 +366,13 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     public void debug(String message) {
         logDebug(message);
 
-        // TODO: print the message to all current debuggers and verbose debuggers
+        for (UUID playerUUID : this.debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
+
+        for (UUID playerUUID : this.verbose_debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
     }
 
     @Override
