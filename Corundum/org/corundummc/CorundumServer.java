@@ -327,7 +327,11 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     // Corundum utils
     public void bloviate(String message) {
-        // TODO: send message to all verbose debuggers, possibly including the console
+        message(message);
+
+        for (UUID playerUUID : this.verbose_debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
     }
 
     /** This method broadcasts a given message to every player on the server and to the console.
