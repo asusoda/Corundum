@@ -4,9 +4,7 @@ import static org.corundummc.utils.StringUtilities.capitalize;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -65,6 +63,16 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * console. Verbose mode is off (<b>false</b>) by default. Verbose mode can be enabled by passing the argument <tt>--verbose</tt> (a.k.a. <tt>-v</tt>) to the console as a
      * command line argument when starting the server. Note that if verbose mode is enabled, so is {@link #debugMode debug mode}. */
     private boolean verboseMode;
+
+    /** This {@link myList} keeps track of the players who are currently in debugging mode; <b>null</b> repesents {@link Corundum#CONSOLE the console} while non-<b>null</b>
+     * {@link java.util.UUID}s represent players. Note that {@link #verbose_debuggers verbose debuggers} also appear in this list in addition to appearing in {@link #verbose_debuggers
+     * the verbose debuggers list}. */
+    private myList<UUID> debuggers = new myList<>();
+
+    /** This {@link myList} keeps track of the players who are currently in verbose debugging mode; <b>null</b> represents {@link Corundum#CONSOLE the console} while
+     * non-<b>null</b> {@link UUID}s represent players. Note that all players (+ {@link Corundum#CONSOLE console}) who are in verbose debugging mode are also in regular
+     * debugging mode and are also in the {@link #debuggers debuggers list}. */
+    private myList<UUID> verbose_debuggers = new myList<>();
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -405,6 +413,17 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return result;
     }
 
+    public static String timeStamp() {
+        return timeStamp("-", ":");
+    }
+
+    public static String timeStamp(String date_separator, String time_separator) {
+        return String.valueOf(Calendar.getInstance().get(Calendar.MONTH)) + date_separator + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + date_separator
+                + (Calendar.getInstance().get(Calendar.YEAR) - 2000) + " " + (Calendar.getInstance().get(Calendar.HOUR) == 0 ? 12 : Calendar.getInstance().get(Calendar.HOUR))
+                + time_separator + Calendar.getInstance().get(Calendar.MINUTE) + time_separator + Calendar.getInstance().get(Calendar.SECOND)
+                + (Calendar.getInstance().get(Calendar.AM_PM) == Calendar.AM ? "a" : "p") + ".m.";
+    }
+
     public boolean isDebugging() {
         return this.debugMode;
     }
@@ -415,5 +434,14 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     public ArgInfo getArgInfo() {
         return this.argInfo;
+    }
+
+    // messenger configuration getters and setters
+    public myList<UUID> getDebuggers() {
+        return this.debuggers;
+    }
+
+    public myList<UUID> getVerboseDebuggers() {
+        return this.verbose_debuggers;
     }
 }
