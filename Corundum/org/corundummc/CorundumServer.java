@@ -101,6 +101,12 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         public String toString() {
             if (this == MAC)
                 return "Mac OS";
+            else if (this == WINDOWS)
+                return "Windows";
+            else if (this == LINUX)
+                return "Linux";
+            else if (this == UNIX)
+                return "Unix";
             else if (this == OTHER)
                 return "other";
             else
