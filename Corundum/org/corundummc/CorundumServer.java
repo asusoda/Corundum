@@ -130,6 +130,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @param arguments
      *            are the command-line arguments used to configure the properties of this server on startup. */
+    @Override
     public final void start(String[] arguments) throws CorundumSecurityException {
         secure("call CorundumServer.start()");
 
@@ -175,6 +176,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @throws CorundumSecurityException
      *             if a {@link CorundumPlugin} attempts to call this method. */
+    @Override
     public final void quit() throws CorundumSecurityException {
         secure("call CorundumServer.quit()");
 
@@ -292,8 +294,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return super.getAllowNether();
     }
 
-    @Override
-    public boolean isHardcore() {
+    public boolean getIsHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
@@ -409,5 +410,4 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     public ArgInfo getArgInfo() {
         return this.argInfo;
     }
-
 }
