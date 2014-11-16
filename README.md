@@ -23,7 +23,7 @@ The Corundum launcher will help you from there!
 
 Building from Source
 ==========
-You can either use the installer under the CorundumInstaller directory here, OR follow these steps.
+You can either use the installer under the Corundum installer directory here, OR follow these steps.
 
  1. Download [MCP v9.08](http://www.mediafire.com/download/2czafa60rh4ajhj/mcp908.zip).
  2. Download the source code from this repository.
