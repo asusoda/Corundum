@@ -18,6 +18,7 @@ public class TaskPatchConf implements ITask {
     @Override
     public void execute() {
         try {
+            Main.logSpecial("Patching MCP conf!");
             List<String> mcpConfData = new ArrayList<>();
             Scanner mcpConfScanner = new Scanner(new BufferedInputStream(new FileInputStream(this.mcpConf)));
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(this.mcpConf)));

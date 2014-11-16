@@ -12,6 +12,7 @@ public class TaskPackageCorundum implements ITask {
 
     @Override
     public void execute() {
+        Main.logSpecial("Packaging Corundum!");
         this.generateMetaInf();
         this.packageSources();
     }

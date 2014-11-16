@@ -14,6 +14,7 @@ public class TaskDownloadMCServer implements ITask {
     @Override
     public void execute() {
         try {
+            Main.logSpecial("Downloading the MC server for MCP!");
             FileUtils.downloadFile(new URL("https://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar"), new File("jars/"), "minecraft_server.1.7.10.jar");
             File mcServerJar = new File("minecraft_server.jar");
 

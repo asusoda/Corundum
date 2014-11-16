@@ -26,6 +26,7 @@ public class TaskGenerateUserGuide implements ITask {
     @Override
     public void execute() {
         try {
+            Main.logSpecial("Generating the user guide!");
             File userGuide = new File("CORUNDUM-USER-GUIDE.txt");
             userGuide.createNewFile();
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(userGuide)));

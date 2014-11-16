@@ -14,8 +14,11 @@ import java.net.URL;
 public class TaskDownloadAndExtractCorundumSource implements ITask {
     @Override
     public void execute() {
-        this.extractCorundumSource(this.downloadCorundumSource());
-        new File("/corundum_src.zip").delete();
+        Main.logSpecial("Downloading and extracting Corundum source!");
+        new File("src/").mkdir();
+        File corundumSrcZip = this.downloadCorundumSource();
+        this.extractCorundumSource(corundumSrcZip);
+        corundumSrcZip.delete();
     }
 
     public File downloadCorundumSource() {
