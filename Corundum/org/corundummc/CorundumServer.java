@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.management.PlayerProfileCache;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
 
 import org.apache.logging.log4j.Level;
@@ -325,6 +328,14 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return isCommandBlockEnabled();
     }
 
+    public ServerConfigurationManager getServerConfigurationManager() {
+        return super.getConfigurationManager();
+    }
+
+    public boolean isPlayerOp(GameProfile playerProfile) {
+        return this.getServerConfigurationManager().func_152596_g(playerProfile);
+    }
+
     // Corundum utils
     public void bloviate(String message) {
         message(message);
@@ -382,6 +393,11 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     @Override
     public String getName() {
         return getHostname();
+    }
+
+    /** Helper method as the actual method is SRG named in MCP 1.7.10 */
+    public PlayerProfileCache getPlayerProfileCache() {
+        return super.func_152358_ax();
     }
 
     public File getPluginsFolder() {
