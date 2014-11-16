@@ -17,7 +17,6 @@ import org.corundummc.listeners.CorundumListener;
 import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.plugins.PluginLoadListener;
 import org.corundummc.listeners.results.EventResult;
-import org.corundummc.utils.messaging.MessengerUtilities;
 import org.corundummc.utils.myList.myList;
 
 public abstract class CorundumPlugin implements CorundumListener {

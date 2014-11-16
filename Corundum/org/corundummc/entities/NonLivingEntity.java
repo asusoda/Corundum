@@ -34,7 +34,8 @@ public class NonLivingEntity extends Entity {
                                                                                                               * NonLivingEntityType(EntityType.LIGHTNING_BOLT), */
                 PAINTING = new NonLivingEntityType(EntityType.PAINTING), ITEM_FRAME = new NonLivingEntityType(EntityType.ITEM_FRAME),
                 GHAST_FIREBALL = new NonLivingEntityType(EntityType.GHAST_FIREBALL), BLAZE_FIREBALL = new NonLivingEntityType(EntityType.BLAZE_FIREBALL),
-                ENDER_CRYSTAL = new NonLivingEntityType(EntityType.ENDER_CRYSTAL);
+                ENDER_CRYSTAL = new NonLivingEntityType(EntityType.ENDER_CRYSTAL),
+                EGG = new NonLivingEntityType(EntityType.EGG);
 
         protected NonLivingEntityType(EntityType<T> parent) {
             super(parent);
