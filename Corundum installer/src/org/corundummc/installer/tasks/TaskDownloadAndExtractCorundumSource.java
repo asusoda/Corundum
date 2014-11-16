@@ -15,7 +15,7 @@ public class TaskDownloadAndExtractCorundumSource implements ITask {
     @Override
     public void execute() {
         this.extractCorundumSource(this.downloadCorundumSource());
-        new File(Main.runningDir.getAbsolutePath() + "/corundum_src.zip").delete();
+        new File("/corundum_src.zip").delete();
     }
 
     public File downloadCorundumSource() {
@@ -29,14 +29,14 @@ public class TaskDownloadAndExtractCorundumSource implements ITask {
     }
 
     public void extractCorundumSource(File zip) {
-        FileUtils.extractFilesFromZip(zip, new File(Main.runningDir.getAbsolutePath() + "src/"));
+        FileUtils.extractFilesFromZip(zip, new File("src/"));
         this.removeCorundumInstallerSources();
     }
 
     public void moveOutOfCorundumMasterFolder() {
         if (Main.downloadSrcFromGithub) {
-            File corundumSrcLoc = new File(Main.runningDir.getAbsolutePath() + "src/Corundum-master/Corundum");
-            File corundumShouldBeSrcLoc = new File(Main.runningDir.getAbsolutePath() + "src/Corundum");
+            File corundumSrcLoc = new File("src/Corundum-master/Corundum");
+            File corundumShouldBeSrcLoc = new File("src/Corundum");
             corundumShouldBeSrcLoc.mkdir();
             FileUtils.copyFile(corundumSrcLoc, corundumShouldBeSrcLoc);
         }
@@ -47,7 +47,7 @@ public class TaskDownloadAndExtractCorundumSource implements ITask {
      */
     public void removeCorundumInstallerSources() {
         if (Main.downloadSrcFromGithub) {
-            File corundumInstallerBase = new File(Main.runningDir.getAbsolutePath() + "src/Corundum-master/CorundumInstaller");
+            File corundumInstallerBase = new File("src/Corundum-master/Corundum installer");
             corundumInstallerBase.delete();
         }
     }
