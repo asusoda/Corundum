@@ -1,14 +1,16 @@
 package org.corundummc.utils.versioning;
 
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.utils.interfaces.Matchable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /** Represents a version. By default, this only handles majorversion.minorversion[s], but subclasses are used to handle Minecraft's, how shall we say, <i>exotic</i> system of
- * versioning, particularly with snapshots and prereleases. */
-public class Version {
+ * versioning, particularly with snapshots and prereleases.
+ * @author Niadel*/
+public class Version implements Matchable<Version> {
     private byte majorVersion;
     private byte[] minorVersions;
     private List<String> tags = new ArrayList<>();
@@ -93,5 +95,10 @@ public class Version {
         public String getSymbol() {
             return this.symbol;
         }
+    }
+
+    @Override
+    public Object[] getSortPriorities() {
+        return new Object[] { this.majorVersion, this.minorVersions, this.tags };
     }
 }
