@@ -17,6 +17,6 @@ public interface CommandListener extends CorundumListener {
      *            is the <tt>String</tt> describing the command issued.
      * @param result
      *            is the {@link EventResult} from calling this method in other {@link CommandListener}s.
-     * @return <b>true</b> if the command should be allowed to proceed, i.e. procedded and executed normally; <b>false</b> if the command should be cancelled and not executed. */
+     * @return <b>true</b> if the command should be allowed to proceed, i.e. proceeded and executed normally; <b>false</b> if the command should be cancelled and not executed. */
     public EventResult onCommand(Commander commander, String command, EventResult result);
 }

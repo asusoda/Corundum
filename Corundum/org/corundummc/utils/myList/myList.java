@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.corundummc.CorundumServer;
-import org.corundummc.hub.CorundumServerThread;
+import org.corundummc.hub.CorundumThread;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.utils.interfaces.Matchable;
-import org.corundummc.utils.messaging.MessengerUtilities;
+
 
 import static org.corundummc.utils.ListUtilities.*;
 import static org.corundummc.utils.interfaces.MatchUtilities.match;
@@ -582,7 +582,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
 
     /** This method prints debugging information concerning the {@link myList} using {@link #debug(String) myCoreLibrary's debug() method}. */
     public void debug() {
-        ((CorundumServer) CorundumServerThread.currentThread().getServer()).debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "")
+        ((CorundumServer) CorundumThread.currentThread().getServer()).debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "")
                 + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "") + "\n" + toString());
     }
 

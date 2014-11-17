@@ -14,7 +14,7 @@ import java.util.zip.ZipInputStream;
 public class CorundumJarLoader extends URLClassLoader {
     private final boolean is_Minecraft_server_jar;
 
-    private ClassLoader child = null;
+    private CorundumJarLoader child = null;
 
     public CorundumJarLoader(File file, ClassLoader parent) throws MalformedURLException {
         this(file, parent, false);
@@ -30,14 +30,38 @@ public class CorundumJarLoader extends URLClassLoader {
     }
 
     public Class<?> loadClass(String class_name) throws ClassNotFoundException {
-        if (getParent() != null)
+        return loadClassHelper(class_name, false);
+    }
+
+    @SuppressWarnings("resource")
+    private Class<?> loadClassHelper(String class_name, boolean recurse_up) throws ClassNotFoundException {
+        if (child != null && !recurse_up)
+            return child.loadClassHelper(class_name, false);
+        else if (recurse_up)
+            if (getParent() != null)
+                if (getParent() instanceof CorundumJarLoader) {
+                    CorundumJarLoader parent = (CorundumJarLoader) getParent();
+                    return parent.loadClassHelper(class_name, true);
+                } else
+                    return getParent().loadClass(class_name);
+            else
+                return super.loadClass(class_name);
+        else {
             try {
-                return getParent().loadClass(class_name);
+                return super.loadClass(class_name);
             } catch (ClassNotFoundException exception) {
                 //
             }
 
-        return super.loadClass(class_name);
+            if (getParent() != null)
+                if (getParent() instanceof CorundumJarLoader) {
+                    CorundumJarLoader parent = (CorundumJarLoader) getParent();
+                    return parent.loadClassHelper(class_name, true);
+                } else
+                    return getParent().loadClass(class_name);
+            else
+                throw new ClassNotFoundException();
+        }
     }
 
     public void loadJar() throws IOException, NoClassDefFoundError, ClassNotFoundException, URISyntaxException {

@@ -13,7 +13,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.corundummc.exceptions.CorundumSecurityException;
 
-public class CorundumLauncher {
+public class CorundumHub {
     public static final String VERSION = "pre-α", MC_VERSION = "1.7.10";
 
     private static final Thread MAIN_THREAD = Thread.currentThread();
@@ -34,37 +34,31 @@ public class CorundumLauncher {
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
-        downloadMCServer(new File("."));
+        downloadMCServer(new File("minecraft_server.jar"));
 
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
-        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumLauncher.class.getClassLoader(), true);
+        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumHub.class.getClassLoader(), true);
         if (Minecraft_loader == null)
             return;
 
         // start Corundum
-        CorundumServerThread server_thread = new CorundumServerThread("Corundum.jar", Minecraft_loader);
+        CorundumThread server_thread = new CorundumThread("Corundum.jar", Minecraft_loader);
         server_thread.start();
     }
 
-    public static Thread mainThread() {
-        if (!Thread.currentThread().equals(MAIN_THREAD) && !(Thread.currentThread() instanceof CorundumServerThread))
-            throw new CorundumSecurityException("an unknown Thread", "access the Corundum main thread");
-
-        return MAIN_THREAD;
+    public static boolean isMainThread() {
+        return isMainThread(Thread.currentThread());
     }
 
-    public static void downloadMCServer(File outDir) {
+    public static boolean isMainThread(Thread thread) {
+        return MAIN_THREAD.equals(thread);
+    }
+
+    public static void downloadMCServer(File outJar) {
         try {
-            File outJar = new File(outDir, "minecraft_server.jar");
-
-            // Clear the file if it already exists. Allows for easily updating the server jar over MC Versions.
-            if (outJar.exists()) {
-                outJar.delete();
-            }
-
-            if (!outJar.exists() && outDir.isDirectory()) {
+            if (!outJar.exists()) {
                 outJar.createNewFile();
                 URL mcServerDownload =
                         new URL("https://s3.amazonaws.com/Minecraft.Download/versions/${mcVer}/minecraft_server.${mcVer}.jar".replace("${mcVer}", MC_VERSION) /* Makes updating
@@ -86,7 +80,7 @@ public class CorundumLauncher {
      * 
      * @param file
      *            is the jar file to be loaded. A {@link File} is given as an argument instead of a simple <tt>String</tt> file path to ensure that the file path is relative
-     *            to its caller class rather than the location of the {@link CorundumLauncher} jar.
+     *            to its caller class rather than the location of the {@link CorundumHub} jar.
      * @param parent
      *            is the {@link ClassLoader} that will be used as a parent to the {@link ClassLoader} that will be used to load the jar and be returned at the end of this
      *            method. It is important that you choose your parent {@link ClassLoader}s wisely; a child {@link ClassLoader} can use all the classes loaded by its parent

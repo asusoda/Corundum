@@ -113,6 +113,10 @@ public class Player /* TODO extends LivingEntity */implements Commander, Matchab
         return playerMC.canCommandSenderUseCommand(permission_level, command);
     }
 
+    public boolean isOp() {
+        return CorundumServer.getInstance().isPlayerOp(this.playerMC.getGameProfile());
+    }
+
     @Override
     public String getCommandSenderName() {
         return playerMC.getCommandSenderName();

@@ -19,15 +19,15 @@ public class Version {
     }
 
     protected void parseVersion(String version) {
-        String[] versionSeperated = version.split(".");
+        String[] versionSeparated = version.split(".");
 
-        String majorVersion = prepVerSegForCasting(versionSeperated[0]);
+        String majorVersion = prepVerSegForCasting(versionSeparated[0]);
         this.majorVersion = Byte.valueOf(majorVersion);
 
-        this.minorVersions = new byte[versionSeperated.length - 1];
+        this.minorVersions = new byte[versionSeparated.length - 1];
 
         for (int i = 1; i == this.minorVersions.length; i++) {
-            this.minorVersions[i] = Byte.valueOf(this.prepVerSegForCasting(versionSeperated[i]));
+            this.minorVersions[i] = Byte.valueOf(this.prepVerSegForCasting(versionSeparated[i]));
         }
     }
 
@@ -66,7 +66,7 @@ public class Version {
         private static final long serialVersionUID = 1412061902750607994L;
 
         public BadVersionException(String badVersion, Object... additionalData) {
-            super("A version contains unknown characters/characters dissalowed for parsing versions! Version is " + badVersion, "error checking " + badVersion, additionalData);
+            super("A version contains unknown characters/characters disallowed for parsing versions! Version is " + badVersion, "error checking " + badVersion, additionalData);
         }
     }
 

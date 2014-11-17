@@ -4,14 +4,15 @@ import static org.corundummc.utils.StringUtilities.capitalize;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.management.PlayerProfileCache;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
 
 import org.apache.logging.log4j.Level;
@@ -23,8 +24,8 @@ import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.exceptions.CorundumSecurityException;
 import org.corundummc.hub.AbstractCorundumServer;
-import org.corundummc.hub.CorundumLauncher;
-import org.corundummc.hub.CorundumServerThread;
+import org.corundummc.hub.CorundumHub;
+import org.corundummc.hub.CorundumThread;
 import org.corundummc.listeners.CommandListener;
 import org.corundummc.listeners.CorundumListener;
 import org.corundummc.listeners.ListenerCaller;
@@ -66,19 +67,29 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * command line argument when starting the server. Note that if verbose mode is enabled, so is {@link #debugMode debug mode}. */
     private boolean verboseMode;
 
+    /** This {@link myList} keeps track of the players who are currently in debugging mode; <b>null</b> repesents {@link Corundum#CONSOLE the console} while non-<b>null</b>
+     * {@link java.util.UUID}s represent players. Note that {@link #verbose_debuggers verbose debuggers} also appear in this list in addition to appearing in
+     * {@link #verbose_debuggers the verbose debuggers list}. */
+    private myList<UUID> debuggers = new myList<>();
+
+    /** This {@link myList} keeps track of the players who are currently in verbose debugging mode; <b>null</b> represents {@link Corundum#CONSOLE the console} while
+     * non-<b>null</b> {@link UUID}s represent players. Note that all players (+ {@link Corundum#CONSOLE console}) who are in verbose debugging mode are also in regular
+     * debugging mode and are also in the {@link #debuggers debuggers list}. */
+    private myList<UUID> verbose_debuggers = new myList<>();
+
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
-     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link Corundum#SERVER}.
+     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
      *
      * @param file_path
      *            is the path of the file from which this server should be loaded. */
-    public CorundumServer(String file_path) {
+    public CorundumServer() {
         // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
-        super(new File(file_path));
+        super(new File("."));
     }
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
-     * "other"}. The public static final <tt>OperatingSystem</tt> {@link Corundum#OS OS} represents the operating system that this server is currently running on.
+     * "other"}. The public static final <tt>OperatingSystem</tt> {@link CorundumServer#OS OS} represents the operating system that this server is currently running on.
      * 
      * @author REALDrummer */
     public static enum OperatingSystem {
@@ -101,6 +112,12 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         public String toString() {
             if (this == MAC)
                 return "Mac OS";
+            else if (this == WINDOWS)
+                return "Windows";
+            else if (this == LINUX)
+                return "Linux";
+            else if (this == UNIX)
+                return "Unix";
             else if (this == OTHER)
                 return "other";
             else
@@ -130,6 +147,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @param arguments
      *            are the command-line arguments used to configure the properties of this server on startup. */
+    @Override
     public final void start(String[] arguments) throws CorundumSecurityException {
         secure("call CorundumServer.start()");
 
@@ -175,6 +193,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @throws CorundumSecurityException
      *             if a {@link CorundumPlugin} attempts to call this method. */
+    @Override
     public final void quit() throws CorundumSecurityException {
         secure("call CorundumServer.quit()");
 
@@ -186,9 +205,9 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     // security
     public static CorundumServer getInstance() {
-        if (Thread.currentThread() instanceof CorundumServerThread)
-            return (CorundumServer) CorundumServerThread.currentThread().getServer();
-        else if (Thread.currentThread().equals(CorundumLauncher.mainThread()))
+        if (Thread.currentThread() instanceof CorundumThread)
+            return (CorundumServer) CorundumThread.currentThread().getServer();
+        else if (CorundumHub.isMainThread())
             throw new CIE("Someone tried to retrieve the current server from the Corundum main thread!"
                     + " The main Corundum thread has no server instance because it controls more than one server!",
                     "attempt to get the current server instance from the main Corundum thread");
@@ -221,13 +240,13 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * 
      * @throws CorundumSecurityException
      *             if the method was called by something other than Corundum internal code.
-     * @see {@link #secure()} */
+     * @see {@link #secure(String)} */
     public static void secure(String message, String offense) throws CorundumSecurityException {
         // if this thread is a PluginThread, refuse it access to this secure area
         if (Thread.currentThread() instanceof PluginThread)
             throw new CorundumSecurityException(message, ((PluginThread) Thread.currentThread()).getPlugin().toString(), offense);
         // if this thread is an unidentified thread, refuse it access to this secure area
-        else if (!(Thread.currentThread() instanceof CorundumServerThread) && !Thread.currentThread().equals(CorundumLauncher.mainThread()))
+        else if (!(Thread.currentThread() instanceof CorundumThread) && !CorundumHub.isMainThread())
             throw new CorundumSecurityException(message, "unknown thread", offense);
         // otherwise, let it pass
     }
@@ -292,8 +311,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return super.getAllowNether();
     }
 
-    @Override
-    public boolean isHardcore() {
+    public boolean getIsHardcore() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
@@ -310,9 +328,21 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return isCommandBlockEnabled();
     }
 
+    public ServerConfigurationManager getServerConfigurationManager() {
+        return super.getConfigurationManager();
+    }
+
+    public boolean isPlayerOp(GameProfile playerProfile) {
+        return this.getServerConfigurationManager().func_152596_g(playerProfile);
+    }
+
     // Corundum utils
     public void bloviate(String message) {
-        // TODO: send message to all verbose debuggers, possibly including the console
+        message(message);
+
+        for (UUID playerUUID : this.verbose_debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
     }
 
     /** This method broadcasts a given message to every player on the server and to the console.
@@ -351,12 +381,25 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     public void debug(String message) {
         logDebug(message);
 
-        // TODO: print the message to all current debuggers and verbose debuggers
+        for (UUID playerUUID : this.debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
+
+        for (UUID playerUUID : this.verbose_debuggers) {
+            Player.getByUUID(playerUUID).message(message);
+        }
     }
 
     @Override
     public String getName() {
         return getHostname();
+    }
+
+    /** Helper method as the actual method is SRG named in MCP 1.7.10
+     * 
+     * @return TODO */
+    public PlayerProfileCache getPlayerProfileCache() {
+        return super.func_152358_ax();
     }
 
     public File getPluginsFolder() {
@@ -377,8 +420,8 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      *            perfectly with anonymous classes, kind of like this:<br>
      * 
      *            <pre>
-     * {@link Corundum}.{@link Corundum#generateEvent(ListenerCaller) generateEvent}(<b>new</b> {@link ListenerCaller}() {
-     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener, Corundum.listeners.results.EventResult) generateEvent}({@link ListenerCaller} caller) {
+     * {@link CorundumServer}.{@link CorundumServer#generateEvent(ListenerCaller) generateEvent}(<b>new</b> {@link ListenerCaller}() {
+     *                <b>public boolean</b> {@link ListenerCaller#generateEvent(CorundumListener, org.corundummc.listeners.results.EventResult) generateEvent}({@link ListenerCaller} caller) {
      *                    <i>// do stuff in here</i>
      *                }
      *            })
@@ -398,6 +441,17 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return result;
     }
 
+    public static String timeStamp() {
+        return timeStamp("-", ":");
+    }
+
+    public static String timeStamp(String date_separator, String time_separator) {
+        return String.valueOf(Calendar.getInstance().get(Calendar.MONTH)) + date_separator + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + date_separator
+                + (Calendar.getInstance().get(Calendar.YEAR) - 2000) + " " + (Calendar.getInstance().get(Calendar.HOUR) == 0 ? 12 : Calendar.getInstance().get(Calendar.HOUR))
+                + time_separator + Calendar.getInstance().get(Calendar.MINUTE) + time_separator + Calendar.getInstance().get(Calendar.SECOND)
+                + (Calendar.getInstance().get(Calendar.AM_PM) == Calendar.AM ? "a" : "p") + ".m.";
+    }
+
     public boolean isDebugging() {
         return this.debugMode;
     }
@@ -410,4 +464,12 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return this.argInfo;
     }
 
+    // messenger configuration getters and setters
+    public myList<UUID> getDebuggers() {
+        return this.debuggers;
+    }
+
+    public myList<UUID> getVerboseDebuggers() {
+        return this.verbose_debuggers;
+    }
 }
