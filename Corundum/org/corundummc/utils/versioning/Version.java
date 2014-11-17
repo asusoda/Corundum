@@ -18,6 +18,16 @@ public class Version {
         this.parseVersion(version);
     }
 
+    public Version(byte majorVersion, byte[] minorVersions, String[] tags) {
+        this(majorVersion, minorVersions);
+        this.tags = Arrays.asList(tags);
+    }
+
+    public Version(byte majorVersion, byte[] minorVersions) {
+        this.majorVersion = majorVersion;
+        this.minorVersions = minorVersions;
+    }
+
     protected void parseVersion(String version) {
         String[] versionSeparated = version.split(".");
 
