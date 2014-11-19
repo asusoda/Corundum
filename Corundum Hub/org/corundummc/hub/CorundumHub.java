@@ -39,7 +39,7 @@ public class CorundumHub {
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
-        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumHub.class.getClassLoader(), true);
+        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), ClassLoader.getSystemClassLoader(), true);
         if (Minecraft_loader == null)
             return;
 

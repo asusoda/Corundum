@@ -1,4 +1,4 @@
-package org.corundummc.utils.versioning;
+package org.corundummc.utils;
 
 import org.corundummc.exceptions.CorundumException;
 
