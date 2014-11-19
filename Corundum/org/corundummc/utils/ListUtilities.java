@@ -170,8 +170,8 @@ public class ListUtilities {
      * @param target
      *            is the Object that <b><tt>objects</b></tt> may contain.
      * @return <b>true</b> if <b><tt>object</b></tt> contains <b><tt>target</b></tt>; <b>false</b> otherwise. */
-     @SafeVarargs
-     public static <T> boolean contains(T target, @SuppressWarnings("unchecked") T... objects) {
+    @SafeVarargs
+    public static <T> boolean contains(T target, @SuppressWarnings("unchecked") T... objects) {
         for (T object : objects)
             if (object.equals(target))
                 return true;
