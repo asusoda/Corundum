@@ -62,6 +62,29 @@ public class Version implements Matchable<Version> {
         return versionSegment;
     }
 
+    public boolean isVersionGreaterThan(Version otherVersion) {
+        boolean thisVersionGreater = true;
+
+        if (this.majorVersion < otherVersion.majorVersion || (this.tags.contains("Pre-") && !otherVersion.tags.contains("Pre-"))) {
+            thisVersionGreater = false;
+        } else {
+            boolean thisHasLessMinorVersions = this.minorVersions.length < otherVersion.minorVersions.length;
+
+            for (int i = 0; thisHasLessMinorVersions ? i == this.minorVersions.length : i == otherVersion.minorVersions.length; i++) {
+                if (this.minorVersions[i] < otherVersion.minorVersions[i]) {
+                    thisVersionGreater = false;
+                    break;
+                }
+            }
+        }
+
+        return thisVersionGreater;
+    }
+
+    public boolean isVersionLesserThan(Version otherVersion) {
+        return !this.isVersionGreaterThan(otherVersion);
+    }
+
     public byte getMajorVersion() {
         return this.majorVersion;
     }
@@ -84,7 +107,7 @@ public class Version implements Matchable<Version> {
 
     public enum SpecialVersionSymbols {
         ALPHA_VERSION("α"), BETA_VERSION("ß"), PRE("Pre-"), DEV("Dev-"), SNAPSHOT_WEEK("w"), A_SNAPSHOT("a"), B_SNAPSHOT("b"), C_SNAPSHOT("c"), D_SNAPSHOT("d"), E_SNAPSHOT(
-                "e"), F_SNAPSHOT("f");
+                "e"), F_SNAPSHOT("f"), ALPHA_VERSION_WORD("alpha"), BETA_VERSION_WORD("beta");
 
         private String symbol;
 
