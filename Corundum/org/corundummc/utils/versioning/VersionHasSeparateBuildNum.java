@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * Used for versioning systems like those seen in Forge's versioning where a section of the version is independent of the regular
- * format number that decides how late in development.
+ * format number that decides how late in development the project is.
  * @author Niadel
  */
 public class VersionHasSeparateBuildNum extends Version {
