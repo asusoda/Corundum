@@ -34,11 +34,11 @@ You can either use the installer under the Corundum installer directory here, OR
  5. Extract the Corundum folder from the source code into MCP's "src/minecraft_server" folder.
  6. Run MCP's recompile and reobfuscate scripts.
  7. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum.jar".
- 8. Move the "Corundum Hub/org/corundummc/hub" folder from the Corundum.jar.
- 9. Add a META_INF folder with a MANIFEST.MF file to the Corundum.jar and designate "org.corundummc.CorundumServer" as the main class.
- 10. Package the "org/corundummc/hub" folder in MCP's "reobf" folder into a new jar called "Corundum Hub.jar". Make sure that inside the jar, the top-level directory is NOT "launcher"; it should be "Corundum" with the "launcher" directory inside that.
- 11. Add a META_INF folder with a MANIFEST.MF file to the Corundum launcher.jar and designate "org.corundummc.hub.CorundumLauncher" as the main class.
- 12. Download the appropriate version of the minecraft_server.jar.
+ 8. Add a META_INF folder with a MANIFEST.MF file to the Corundum.jar and designate "org.corundummc.CorundumServer" as the main class.
+ 9. Download the appropriate version of the minecraft_server.jar.
+ 10. Compile the Hub inside of the Corundum Hub folder.
+ 11. Package the compiled Corundum Hub code into a new jar called "Corundum Hub.jar". Make sure that inside the jar, the top-level directory is NOT "hub"; it should be "org".
+ 12. Add a META_INF folder with a MANIFEST.MF file to the Corundum launcher.jar and designate "org.corundummc.hub.CorundumLauncher" as the main class.
  13. Place the Corundum.jar, Corundum launcher.jar, and minecraft_server.jar in the same directory.
  14. Run the Corundum launcher.jar.
 
