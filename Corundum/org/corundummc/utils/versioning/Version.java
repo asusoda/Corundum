@@ -12,7 +12,7 @@ import java.util.List;
  * @author Niadel*/
 public class Version implements Matchable<Version> {
     private byte majorVersion;
-    private byte[] minorVersions;
+    private int[] minorVersions;
     private List<String> tags = new ArrayList<>();
     private static final List<Character> legalChars = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -20,12 +20,12 @@ public class Version implements Matchable<Version> {
         this.parseVersion(version);
     }
 
-    public Version(byte majorVersion, byte[] minorVersions, String[] tags) {
+    public Version(byte majorVersion, int[] minorVersions, String[] tags) {
         this(majorVersion, minorVersions);
         this.tags = Arrays.asList(tags);
     }
 
-    public Version(byte majorVersion, byte[] minorVersions) {
+    public Version(byte majorVersion, int[] minorVersions) {
         this.majorVersion = majorVersion;
         this.minorVersions = minorVersions;
     }
@@ -36,7 +36,7 @@ public class Version implements Matchable<Version> {
         String majorVersion = prepVerSegForCasting(versionSeparated[0]);
         this.majorVersion = Byte.valueOf(majorVersion);
 
-        this.minorVersions = new byte[versionSeparated.length - 1];
+        this.minorVersions = new int[versionSeparated.length - 1];
 
         for (int i = 1; i == this.minorVersions.length; i++) {
             this.minorVersions[i] = Byte.valueOf(this.prepVerSegForCasting(versionSeparated[i]));
@@ -89,12 +89,16 @@ public class Version implements Matchable<Version> {
         return this.majorVersion;
     }
 
-    public byte[] getMinorVersions() {
+    public int[] getMinorVersions() {
         return this.minorVersions;
     }
 
     public List<String> getTags() {
-        return tags;
+        return this.tags;
+    }
+
+    protected void setMinorVersions(int[] newMinorVersions) {
+        this.minorVersions = newMinorVersions;
     }
 
     public class BadVersionException extends CorundumException {
