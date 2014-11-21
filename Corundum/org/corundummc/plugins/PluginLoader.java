@@ -35,10 +35,16 @@ public class PluginLoader extends CorundumJarLoader {
             public void onClassLoad(Class<?> clazz) {
                 // TODO: if clazz is a CorundumPlugin, set plugin to this
                 try {
-                    Object classObject = clazz.newInstance();
+                    Class<?> parent = clazz.getSuperclass();
 
-                    if (classObject instanceof CorundumPlugin) {
-                        _this.plugin = (CorundumPlugin) classObject;
+                    // check if the class extends CorundumPlugin.
+                    while (parent != null) {
+                        if (parent == CorundumPlugin.class) {
+                            _this.plugin = (CorundumPlugin) clazz.newInstance();
+                            break;
+                        }
+
+                        parent = clazz.getSuperclass();
                     }
                 } catch (InstantiationException | IllegalAccessException e) {
                     System.out.println("Reflective operation exception!");
