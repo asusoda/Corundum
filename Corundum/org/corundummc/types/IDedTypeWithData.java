@@ -3,7 +3,7 @@ package org.corundummc.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.corundummc.exceptions.CIE;
+import org.corundummc.hub.CIE;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.world.Block.BlockType;
 import org.corundummc.world.Block;

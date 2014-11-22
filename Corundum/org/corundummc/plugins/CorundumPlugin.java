@@ -11,8 +11,8 @@ import java.util.jar.JarFile;
 
 import org.corundummc.CorundumServer;
 import org.corundummc.entities.Player;
-import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.hub.CIE;
 import org.corundummc.listeners.CorundumListener;
 import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.plugins.PluginLoadListener;

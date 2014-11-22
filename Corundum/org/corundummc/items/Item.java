@@ -17,8 +17,9 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
+
 import org.corundummc.CorundumServer;
-import org.corundummc.exceptions.CIE;
+import org.corundummc.hub.CIE;
 import org.corundummc.types.HoldableType;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Block.BlockType;

@@ -13,8 +13,9 @@
 package org.corundummc.entities;
 
 import net.minecraft.entity.monster.EntityMob;
-import org.corundummc.exceptions.CIE;
+
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.hub.CIE;
 import org.corundummc.items.Item;
 import org.corundummc.world.Location;
 

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.corundummc.exceptions.CIE;
-
 public class CorundumThread extends Thread {
     private final File jar_file;
     private final CorundumJarLoader Minecraft_loader, Corundum_loader;

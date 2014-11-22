@@ -3,6 +3,7 @@ package org.corundummc.hub;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -34,12 +35,29 @@ public class CorundumHub {
      *            connect to the server</li> <li><tt>--offline-mode, -O</tt> to deactivate online mode</li> <li><tt>--world=[WORLD]</tt> to specify the name of your main world
      *            (usually the Overworld); leave it blank to specify the default world name, "world"</li> */
     public static void main(final String[] arguments) {
+        // set up the uncaught exception handler
+        Thread.currentThread().setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(@SuppressWarnings("unused") Thread thread, Throwable error) {
+                CIE formatted_error;
+                if (error instanceof CIE)
+                    formatted_error = (CIE) error;
+                else
+                    formatted_error = new CIE("Unknown error!!", error);
+
+                formatted_error.err();
+
+                System.exit(1);
+            }
+        });
+
         downloadMCServer(new File("minecraft_server.jar"));
 
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
-        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), ClassLoader.getSystemClassLoader(), true);
+        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumJarLoader.getHeadLoader(), true);
         if (Minecraft_loader == null)
             return;
 
@@ -86,11 +104,11 @@ public class CorundumHub {
      *            method. It is important that you choose your parent {@link ClassLoader}s wisely; a child {@link ClassLoader} can use all the classes loaded by its parent
      *            {@link ClassLoader}, even if both {@link ClassLoader}s are loading from different files or {@link URL}s.
      * @return the {@link URLClassLoader} used to load the classes inside the specified jar file or <b>null</b> if there was an error. */
-    public static CorundumJarLoader loadJar(File file, ClassLoader parent) {
+    public static CorundumJarLoader loadJar(File file, CorundumJarLoader parent) {
         return loadJar(file, parent, false);
     }
 
-    private static CorundumJarLoader loadJar(File file, ClassLoader parent, boolean is_Minecraft_server_jar) {
+    private static CorundumJarLoader loadJar(File file, CorundumJarLoader parent, boolean is_Minecraft_server_jar) {
         CorundumJarLoader loader;
         try {
             loader = new CorundumJarLoader(file, parent, is_Minecraft_server_jar);

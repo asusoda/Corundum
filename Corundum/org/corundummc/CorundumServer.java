@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -20,10 +21,10 @@ import org.apache.logging.log4j.LogManager;
 import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.Player;
 import org.corundummc.entities.Player.GameMode;
-import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.exceptions.CorundumSecurityException;
 import org.corundummc.hub.AbstractCorundumServer;
+import org.corundummc.hub.CIE;
 import org.corundummc.hub.CorundumHub;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.listeners.CommandListener;
