@@ -23,7 +23,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
             data = 0;
         } // if there was a previous value, infer the I.D. and data values form that type
         else {
-            IDedTypeWithData<T> previous_value = (IDedTypeWithData<T>) values[values.length - 1];
+            IDedTypeWithData<T> previous_value = values[values.length - 1];
 
             /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
             if (previous_value.data == -1) {
@@ -45,7 +45,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
         IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
 
         // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = (IDedTypeWithData<?>) values[values.length - 1];
+        IDedTypeWithData<?> previous_value = values[values.length - 1];
 
         // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
         if (data <= previous_value.data)
@@ -55,16 +55,31 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
             setID(previous_value.getID());
     }
 
+    protected IDedTypeWithData(int data, String name) {
+        this(data);
+        this.setName(name);
+    }
+
     protected IDedTypeWithData(int id, int data) {
         super(id);
 
         this.data = (short) data;
     }
 
+    protected IDedTypeWithData(int id, int data, String name) {
+        this(id, data);
+        this.setName(name);
+    }
+
     protected IDedTypeWithData(IDedTypeWithData<?> parent) {
         super(parent);
 
         this.data = parent.data;
+    }
+
+    protected IDedTypeWithData(IDedTypeWithData<?> parent, String name) {
+        this(parent);
+        this.setName(name);
     }
 
     // static utilities
