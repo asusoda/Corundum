@@ -170,4 +170,9 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
     public Object[] getSortPriorities() {
         return new Object[] { getID(), getData() };
     }
+
+    @Override
+    public String toString() {
+        return this.getName() + " (" + this.getID() + ":" + this.getData() + ")";
+    }
 }

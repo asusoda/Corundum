@@ -32,7 +32,7 @@ public class Item {
 
     // TODO private InventorySlot location;
 
-    // constrcutors
+    // constructors
     public Item(ItemType type, Enchantment... enchantments) {
         this.type = type;
         this.enchantments = new myList<Enchantment>(enchantments);

@@ -120,4 +120,9 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     public Object[] getSortPriorities() {
         return new Object[] { getID(), getName() };
     }
+
+    @Override
+    public String toString() {
+        return this.getName() + " (" + this.getID() + ")";
+    }
 }
