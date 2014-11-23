@@ -25,4 +25,9 @@ public class VersionHasSeparateBuildNum extends Version {
         super(majorVersion, minorVersions);
         this.buildNum = buildNum;
     }
+
+    @Override
+    public Object[] getSortPriorities() {
+        return new Object[] { this.getMajorVersion(), this.getMinorVersions(), this.buildNum, this.getTags() };
+    }
 }
