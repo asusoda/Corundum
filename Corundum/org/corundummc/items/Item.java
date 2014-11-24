@@ -27,15 +27,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
-    private final ItemType type;
+    //TODO make final again once we can figure out how to get an ItemType from an MC Item(Stack)
+    private/* final */ItemType type;
     private myList<Enchantment> enchantments;
+    private ItemStack mcStack;
+    private net.minecraft.item.Item mcItem;
 
     // TODO private InventorySlot location;
 
     // constructors
     public Item(ItemType type, Enchantment... enchantments) {
         this.type = type;
-        this.enchantments = new myList<Enchantment>(enchantments);
+        this.enchantments = new myList<>(enchantments);
+    }
+
+    // mc helper constructor.
+    public Item(net.minecraft.item.ItemStack mcStack, Enchantment... enchantments) {
+        this.mcStack = mcStack;
+        this.mcItem = this.mcStack.getItem();
+
+        for (Enchantment enchantment : enchantments) {
+            this.enchant(enchantment, enchantment.getLevel());
+        }
+    }
+
+    public Item(net.minecraft.item.Item mcItem, Enchantment... enchantments) {
+        this(new net.minecraft.item.ItemStack(mcItem), enchantments);
     }
 
     // type class
@@ -507,6 +524,10 @@ public class Item {
     }
 
     // TODO: add methods for adding, removing, and modifying enchantments
+
+    public void enchant(Enchantment enchantment, int level) {
+        this.mcStack.addEnchantment(enchantment.getMcEnchantment(), level);
+    }
 
     public myList<Enchantment> getEnchantments() {
         return enchantments;
