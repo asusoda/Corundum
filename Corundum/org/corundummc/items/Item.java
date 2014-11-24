@@ -47,7 +47,7 @@ public class Item {
         this.mcItem = this.mcStack.getItem();
 
         for (Enchantment enchantment : enchantments) {
-            this.enchant(enchantment, enchantment.getLevel());
+            this.enchant(enchantment);
         }
     }
 
@@ -525,8 +525,9 @@ public class Item {
 
     // TODO: add methods for adding, removing, and modifying enchantments
 
-    public void enchant(Enchantment enchantment, int level) {
-        this.mcStack.addEnchantment(enchantment.getMcEnchantment(), level);
+    public void enchant(Enchantment enchantment) {
+        this.mcStack.addEnchantment(enchantment.getMcEnchantment(), enchantment.getLevel());
+        enchantments.add(enchantment);
     }
 
     public myList<Enchantment> getEnchantments() {
