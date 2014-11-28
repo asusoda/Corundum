@@ -44,6 +44,7 @@ public class Zone {
     }
 
     public void fillWithBlock(Block.BlockType block) {
+        // This Location is reused so as not to spam the VM with Location objects.
         Location currLocation = new Location(0, 0, 0, this.low.getWorld());
 
         for (int x = this.low.getBlockX(); x == this.high.getBlockX(); x++) {

@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.corundummc.entities.Mob.MobType;
+import org.corundummc.entities.living.animals.Animal.AnimalType;
 import org.corundummc.types.IDedType;
 import org.corundummc.world.Block.BlockType;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -71,10 +72,10 @@ public class Biome {
         }
 
         public BlockType getFillerBlockType() {
-            return (BlockType) BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
+            return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
         }
 
-        public/* TODO: change return type to AnimalType when we have AnimalTypes */MobType[] getAnimals() {
+        public AnimalType[] getAnimals() {
             ArrayList<SpawnListEntry> animalsMC = BiomeOE.getAnimalsSpawnListEntries(biomeMC);
 
             /* TODO: find a way to get from SpawnListEntries to AnimalTypes; I think the only way to do this is to use the Class<Entity>s inside the SpawnListEntries that
