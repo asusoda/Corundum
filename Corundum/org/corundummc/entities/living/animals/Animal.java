@@ -21,7 +21,9 @@ public class Animal extends Entity {
                 CHICKEN = new AnimalType(EntityChicken.class),
                 SHEEP = new AnimalType(EntitySheep.class),
                 HORSE = new AnimalType(EntityHorse.class),
-                MOOSHROOM = new AnimalType(EntityMooshroom.class);
+                MOOSHROOM = new AnimalType(EntityMooshroom.class),
+                OCELOT = new AnimalType(EntityOcelot.class),
+                WOLF = new AnimalType(EntityWolf.class);
 
         private Class<? extends EntityAnimal> mcAnimalClass;
 
