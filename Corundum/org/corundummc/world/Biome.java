@@ -15,7 +15,7 @@ package org.corundummc.world;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import org.corundummc.entities.Mob.MobType;
+import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.entities.living.animals.Animal.AnimalType;
 import org.corundummc.types.IDedType;
 import org.corundummc.world.Block.BlockType;

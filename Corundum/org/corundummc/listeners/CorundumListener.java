@@ -1,7 +1,7 @@
 package org.corundummc.listeners;
 
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.Mob;
+import org.corundummc.entities.living.mobs.Mob;
 import org.corundummc.plugins.CorundumPlugin;
 
 /** This interface is the parent of each one of Corundum's "Listener" interfaces. Each one of Corundum's "Listener" interfaces includes one or more methods that are called each

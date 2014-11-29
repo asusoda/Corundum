@@ -1,7 +1,7 @@
 package org.corundummc.listeners;
 
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.Mob;
+import org.corundummc.entities.living.mobs.Mob;
 
 public interface MobKilledByEntityListener {
     /** This listener method is called whenever a {@link Mob} such as a sheep or a skeleton is killed by an {@link Entity}, which can also be a {@link Mob} or could also be
