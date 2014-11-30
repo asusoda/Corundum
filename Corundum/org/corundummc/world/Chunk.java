@@ -16,7 +16,7 @@ import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Biome.BiomeType;
 
 public class Chunk {
-    private static myList<Chunk> loaded_chunks = new myList<Chunk>();
+    private static myList<Chunk> loaded_chunks = new myList<>();
 
     private final net.minecraft.world.chunk.Chunk chunkMC;
 

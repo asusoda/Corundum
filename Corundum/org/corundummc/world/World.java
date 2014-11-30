@@ -23,7 +23,7 @@ import org.corundummc.utils.myList.myList;
 
 public class World implements Matchable<World> {
     // TODO: public static final World MAIN_WORLD;
-    public static myList<World> worlds = new myList<World>();
+    public static myList<World> worlds = new myList<>();
 
     private final WorldServer worldMC;
     private final WorldType type;

@@ -9,7 +9,7 @@ import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
 
 public abstract class Recipe implements Matchable<Recipe> {
-    public static final myList<Recipe> RECIPES = new myList<Recipe>( /* TODO */);
+    public static final myList<Recipe> RECIPES = new myList<>( /* TODO */);
 
     protected final IDedType<?>[] materials;
     protected final IDedType<?> resulting_material;
@@ -31,7 +31,7 @@ public abstract class Recipe implements Matchable<Recipe> {
 
     @Override
     public Object[] getSortPriorities() {
-        ArrayList<IDedType<?>> sort_priorities = new ArrayList<IDedType<?>>();
+        ArrayList<IDedType<?>> sort_priorities = new ArrayList<>();
 
         // sort priorities first by their resulting material type
         sort_priorities.add(resulting_material);

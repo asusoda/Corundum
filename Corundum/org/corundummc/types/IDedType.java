@@ -63,7 +63,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     protected static <R extends IDedType<R>> void addValue(R new_value) {
         R[] type_values = (R[]) values.get(new_value.getClass());
 
-        ArrayList<R> new_type_values = new ArrayList<R>(Arrays.asList(new_value));
+        ArrayList<R> new_type_values = new ArrayList<>(Arrays.asList(new_value));
         new_type_values.add(new_value);
 
         values.put((Class<IDedType<?>>) new_value.getClass(), (R[]) new_type_values.toArray());

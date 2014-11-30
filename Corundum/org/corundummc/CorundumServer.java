@@ -48,7 +48,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
-    public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>();
+    public myList<CorundumPlugin> plugins = new myList<>();
 
     private CorundumGui corundumGui;
     private boolean corundum_GUI_enabled = false;

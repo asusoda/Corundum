@@ -149,7 +149,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
 
         // build an list with the elements from first_index to last_index_plus_1 (not including [last_index_plus_1])
         // NOTE: an ArrayList has to be made and converted to an array because you can't make an array of a generic T in Java
-        return (T[]) new ArrayList<T>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
+        return (T[]) new ArrayList<>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
     }
 
     /** This method determines whether or not this {@link IDedType} is a "sibling" of the given {@link IDedType}. Corundum considered two {@link IDedType}s "siblings" if the
