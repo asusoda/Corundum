@@ -167,7 +167,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         try {
             main(arguments);
         } catch (Exception exception) {
-            CIE.err("There was a problem starting this Corundum server!", exception);
+            throw new CIE("There was a problem starting this Corundum server!", exception);
         }
 
         // Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from

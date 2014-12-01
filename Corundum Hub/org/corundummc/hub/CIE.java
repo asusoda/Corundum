@@ -33,6 +33,7 @@ public class CIE extends RuntimeException {
         cause = new NullPointerException();
         this.additional_information = additional_information;
 
+        /* here, we must skip the first line of the stack trace since that line will simply be the line on which the NullPointerException was created above */
         skip_first_line = true;
     }
 
@@ -57,29 +58,38 @@ public class CIE extends RuntimeException {
             // generate a full description of the issue
             String description = "There was ";
 
-            // skip stack trace lines until we get to some lines with line numbers associated with them not from the native Java code; those are the lines that will be helpful
-            int lines_to_skip = 0;
+            // skip stack trace lines from the beginning until we get to some lines not from the native Java code; those are the lines that will be helpful
+            int first_useful_line = 0;
             if (skip_first_line)
-                lines_to_skip++;
+                first_useful_line++;
+            while (first_useful_line < cause.getStackTrace().length
+                    && (cause.getStackTrace()[first_useful_line].getLineNumber() < 0 || cause.getStackTrace()[first_useful_line].getClassName().startsWith("java") || cause
+                            .getStackTrace()[first_useful_line].getClassName().startsWith("sun")))
+                first_useful_line++;
 
-            while (lines_to_skip < cause.getStackTrace().length
-                    && (cause.getStackTrace()[lines_to_skip].getLineNumber() < 0 || cause.getStackTrace()[lines_to_skip].getClassName().startsWith("java") || cause
-                            .getStackTrace()[lines_to_skip].getClassName().startsWith("sun")))
-                lines_to_skip++;
+            // skip lines at the end of the stack trace to filter out lines from the naitve Java code that will not help
+            int last_useful_line = cause.getStackTrace().length - 1;
+            while (last_useful_line >= first_useful_line
+                    && (cause.getStackTrace()[last_useful_line].getLineNumber() < 0 || cause.getStackTrace()[last_useful_line].getClassName().startsWith("java") || cause
+                            .getStackTrace()[last_useful_line].getClassName().startsWith("sun")))
+                last_useful_line--;
 
             // create and format a message that gives only pertinent information from the stack trace
             while (cause != null) {
                 description += aOrAn(issue) + "...\n";
                 if (cause.getMessage() != null)
                     description += "...to which Java says \"" + cause.getMessage() + "\"...\n";
-                if (lines_to_skip < cause.getStackTrace().length)
-                    description += "...at line " + cause.getStackTrace()[lines_to_skip].getLineNumber() + " of " + cause.getStackTrace()[lines_to_skip].getClassName();
-                if (lines_to_skip + 1 < cause.getStackTrace().length)
-                    for (int i = lines_to_skip + 1; i < cause.getStackTrace().length; i++)
-                        if (cause.getStackTrace()[i].getLineNumber() < 0 || !cause.getStackTrace()[i].getClassName().contains("REALDrummer"))
-                            break;
-                        else
-                            description += "\n...and at line " + cause.getStackTrace()[i].getLineNumber() + " of " + cause.getStackTrace()[i].getClassName();
+
+                if (first_useful_line < cause.getStackTrace().length)
+                    description +=
+                            "...at line " + cause.getStackTrace()[first_useful_line].getLineNumber() + " of " + cause.getStackTrace()[first_useful_line].getClassName() + "."
+                                    + cause.getStackTrace()[first_useful_line].getMethodName();
+                if (first_useful_line + 1 < cause.getStackTrace().length)
+                    for (int i = first_useful_line + 1; i <= last_useful_line; i++)
+                        description +=
+                                "\n...and at line " + cause.getStackTrace()[i].getLineNumber() + " of " + cause.getStackTrace()[i].getClassName() + "."
+                                        + cause.getStackTrace()[i].getMethodName();
+
                 cause = cause.getCause();
                 if (cause != null)
                     message += "\n...which was caused by:\n";

@@ -1,10 +1,11 @@
 package org.corundummc.hub;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -12,9 +13,11 @@ import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-import org.corundummc.exceptions.CorundumSecurityException;
-
 public class CorundumHub {
+    /** This <b>boolean</b> determines whether or not the {@link CorundumHub Corundum Hub} is being debugged. While debugging, debugging information can be outputted using
+     * {@link CorundumHub#debug(String) the debug() method} and is outputted to a file called "<tt>debug log.txt</tt>" in the same directory as the {@link CorundumHub Corundum
+     * Hub} jar. */
+    public static final boolean DEBUG = true;
     public static final String VERSION = "pre-α", MC_VERSION = "1.7.10";
 
     private static final Thread MAIN_THREAD = Thread.currentThread();
@@ -64,6 +67,17 @@ public class CorundumHub {
         // start Corundum
         CorundumThread server_thread = new CorundumThread("Corundum.jar", Minecraft_loader);
         server_thread.start();
+    }
+
+    public static void debug(String message) {
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(new File("debug log.txt"), true));
+            out.write(message);
+            out.newLine();
+            out.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static boolean isMainThread() {

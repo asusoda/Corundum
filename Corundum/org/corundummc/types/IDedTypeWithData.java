@@ -121,11 +121,10 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
         for (int i = 0; i < values.length; i++)
             if (values[i].getID() == getID())
                 first_index = getID();
-        if (first_index == -1) {
-            CIE.err("I couldn't find anything with this I.D. when searching through the list for values for this type when searching for this type's siblings... not even this type itself!",
+        if (first_index == -1)
+            throw new CIE(
+                    "I couldn't find anything with this I.D. when searching through the list for values for this type when searching for this type's siblings... not even this type itself!",
                     "missing type value", "type=" + getClass() + " " + toString(), "I.D.=" + getID(), "data=" + data);
-            return null;
-        }
 
         // find the last index with this I.D.
         int last_index_plus_1 = first_index + 1;
