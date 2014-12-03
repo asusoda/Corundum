@@ -16,45 +16,35 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
 
+import org.corundummc.entities.NonLivingEntity.NonLivingEntityType;
+import org.corundummc.exceptions.CIE;
+import org.corundummc.types.Creatable;
+import org.corundummc.types.CreatableType;
 import org.corundummc.types.Physical;
 import org.corundummc.types.Typed;
 import org.corundummc.types.IDedTypeWithData;
 import org.corundummc.world.Location;
-import org.corundummc.world.Rotation;
 import org.corundummc.world.World;
 
-public abstract class Entity implements Physical {
-    protected final net.minecraft.entity.Entity entityMC;
+public class Entity extends Creatable implements Physical {
+    public final net.minecraft.entity.Entity entityMC;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {
         this.entityMC = entityMC;
     }
 
-    /* TODO: implement the constructors below once we find a good way to make Entities without spawning them in the Minecraft code; I think this should be done one of two
-     * ways:
-     * 
-     * - preferably, we can store the type and location into a Minecraft Entity object, but we need to make sure this can be done without spawning the entity
-     * 
-     * - if the above is not possible, we can make entityMC null and store the request type and location in a map to be retrieved later; the map allows us to save space by
-     * avoiding having EntityType and Location instance variables with every entity when they're only used temporarily and only in optional cases */
-    public Entity(EntityType type, Location location) {
-        // TODO
-        entityMC = null;
+    public Entity(EntityType type) {
+        this(((Entity) type.newInstance()).entityMC);
     }
 
-    public Entity(EntityType type, Location location, Rotation rotation) {
-        // TODO
-        entityMC = null;
-    }
-
-    public static class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
+    public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
         // TODO: see if a Player entity has the I.D. 0
 
+        // TODO: replace all new EntityTypes here with subclass types where applicable
         public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
                 PAINTING = new EntityType(), ARROW = new EntityType(), SNOWBALL = new EntityType(), GHAST_FIREBALL = new EntityType(), BLAZE_FIREBALL = new EntityType(),
                 ENDER_PEARL = new EntityType(), EYE_OF_ENDER = new EntityType(), SPLASH_POTION = new EntityType(), BOTTLE_O_ENCHANTING = new EntityType(),
-                ITEM_FRAME = new EntityType(), WITHER_SKULL = new EntityType(),
-                EGG = new EntityType(),
+                ITEM_FRAME = new EntityType(), WITHER_SKULL = new EntityType(), EGG = new EntityType(),
                 TNT = new EntityType(),
                 FALLING_BLOCK = new EntityType(),
                 ARMOR_STAND = new EntityType(30),
@@ -143,14 +133,10 @@ public abstract class Entity implements Physical {
             super(id, data);
         }
 
-        protected EntityType(EntityType<?> parent) {
-            super(parent);
-        }
-
-        // instance utils
-        public boolean isLiving() {
-            // TODO: return LivingType.getByID(getID()) != null; (once LivingType is implemented)
-            return false;
+        @Override
+        public Creatable newInstance() {
+            throw new CIE("Some EntityType didn't override its newInstance() method!", "EntityType with an unimplemented newInstance() method", "type=" + toString(), "class="
+                    + getClass().getSimpleName());
         }
 
         // pseudo-enum utils
@@ -198,18 +184,42 @@ public abstract class Entity implements Physical {
         return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ, this);
     }
 
-    public void setVelocity(Velocity velocity) {
+    public Entity setLocation(Location location) {
+        entityMC.posX = location.getX();
+        entityMC.posY = location.getY();
+        entityMC.posZ = location.getZ();
+        entityMC.worldObj = location.getWorld().getMCWorld();
+        /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
+         * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
+        entityMC.dimension = location.getWorld().getMCWorld().provider.dimensionId;
+
+        return this;
+    }
+
+    public Entity setRotation(Rotation rotation) {
+        entityMC.rotationPitch = rotation.getPitch();
+        entityMC.rotationYaw = rotation.getYaw();
+
+        return this;
+    }
+
+    public Entity setVelocity(Velocity velocity) {
         // TODO TEST
         entityMC.motionX = velocity.getX();
         entityMC.motionY = velocity.getY();
         entityMC.motionZ = velocity.getZ();
+
+        return this;
     }
 
-    public void spawn() {
-        // TODO: if a location was declared earlier, use that location in spawn(Location); otherwise, throw a custom CorundumException
-    }
-
-    public void spawn(Location location) {
+    public Entity spawn(Location location) {
         // TODO
+        return this;
+    }
+
+    public Entity teleport(Location location) {
+        setLocation(location);
+
+        return this;
     }
 }

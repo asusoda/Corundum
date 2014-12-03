@@ -1,4 +1,4 @@
-package org.corundummc.world;
+package org.corundummc.entities;
 
 /**
  * Class that represents the rotation info of something, usually an entity. Deals with pitch and yaw.

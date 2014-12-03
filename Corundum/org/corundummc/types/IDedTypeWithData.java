@@ -55,31 +55,10 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
             setID(previous_value.getID());
     }
 
-    protected IDedTypeWithData(int data, String name) {
-        this(data);
-        this.setName(name);
-    }
-
     protected IDedTypeWithData(int id, int data) {
         super(id);
 
         this.data = (short) data;
-    }
-
-    protected IDedTypeWithData(int id, int data, String name) {
-        this(id, data);
-        this.setName(name);
-    }
-
-    protected IDedTypeWithData(IDedTypeWithData<?> parent) {
-        super(parent);
-
-        this.data = parent.data;
-    }
-
-    protected IDedTypeWithData(IDedTypeWithData<?> parent, String name) {
-        this(parent);
-        this.setName(name);
     }
 
     // static utilities

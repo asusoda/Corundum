@@ -23,10 +23,9 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
      * This isn't final because I couldn't find a way to initialize it statically in the constructors for {@link IDedTypeWithData} because of the type parameterization and the
      * way values are stored and accessed. */
     private short id;
-    // TODO: put name in the constrcutors
-    private String name = null;
 
     // constructors
+    @SuppressWarnings("unchecked")
     protected IDedType() {
         IDedType<T>[] values = values(getClass());
 
@@ -37,38 +36,16 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         else
             id = (short) (values[values.length - 1].id + 1);
 
-        addValue((T) this);
+        addValueAs((Class<IDedType<?>>) getClass());
     }
 
     protected IDedType(int id) {
         this.id = (short) id;
 
-        addValue((T) this);
-    }
-
-    protected IDedType(int id, String name) {
-        this(id);
-        this.name = name;
-    }
-
-    protected IDedType(IDedType<?> parent) {
-        this(parent.id);
-    }
-
-    protected IDedType(IDedType<?> parent, String name) {
-        this(parent.id, name);
+        addValueAs((Class<IDedType<?>>) getClass());
     }
 
     // static utilities
-    protected static <R extends IDedType<R>> void addValue(R new_value) {
-        R[] type_values = (R[]) values.get(new_value.getClass());
-
-        ArrayList<R> new_type_values = new ArrayList<>(Arrays.asList(new_value));
-        new_type_values.add(new_value);
-
-        values.put((Class<IDedType<?>>) new_value.getClass(), (R[]) new_type_values.toArray());
-    }
-
     protected static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
@@ -108,11 +85,19 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     }
 
     public String getName() {
-        return this.name;
+        // TODO
+        return null;
     }
 
-    void setName(String newName) {
-        this.name = newName;
+    protected IDedType<T> addValueAs(Class type_class) {
+        T[] type_values = (T[]) values.get(type_class);
+
+        ArrayList<T> new_type_values = new ArrayList<>(Arrays.asList((T) this));
+        new_type_values.add((T) this);
+
+        values.put((Class<IDedType<?>>) type_class, (IDedType<?>[]) new_type_values.toArray());
+
+        return this;
     }
 
     // data management overrides

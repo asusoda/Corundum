@@ -1,36 +1,42 @@
 package org.corundummc.entities.living.animals;
 
 import net.minecraft.entity.passive.*;
+
 import org.corundummc.entities.Entity;
+import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.world.Location;
 
-/**
- * The base for all animal entities.
- */
+/** The base for all animal entities. */
 public class Animal extends Entity {
-    public Animal(AnimalType animalType, Location location) {
-        super(animalType, location);
+    public Animal(AnimalType type) {
+        super(type);
+
         // TODO
     }
 
     // TODO constructors, utilities etc.
 
-    public static class AnimalType<T extends AnimalType<T>> extends Entity.EntityType<T> {
-        public static final AnimalType COW = new AnimalType(EntityCow.class),
-                PIG = new AnimalType(EntityPig.class),
-                CHICKEN = new AnimalType(EntityChicken.class),
-                SHEEP = new AnimalType(EntitySheep.class),
-                HORSE = new AnimalType(EntityHorse.class),
-                MOOSHROOM = new AnimalType(EntityMooshroom.class),
-                OCELOT = new AnimalType(EntityOcelot.class),
-                WOLF = new AnimalType(EntityWolf.class);
+    public static class AnimalType<T extends MobType<T>> extends MobType<T> {
 
-        private Class<? extends EntityAnimal> mcAnimalClass;
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public static final AnimalType<?> COW = null /* TODO */;
+        
+        
 
-        public AnimalType(Class<? extends EntityAnimal> clazz) {
-            this.mcAnimalClass = clazz;
+        // pseudo-enum utilities
+        @SuppressWarnings("unchecked")
+        public static AnimalType<?> getByID(int id) {
+            return getByID(AnimalType.class, id);
         }
 
+        @SuppressWarnings("unchecked")
+        public static AnimalType<?> getByID(int id, int data) {
+            return getByID(AnimalType.class, id, data);
+        }
 
+        @SuppressWarnings("unchecked")
+        public static AnimalType<?>[] values() {
+            return values(AnimalType.class);
+        }
     }
 }

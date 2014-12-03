@@ -9,24 +9,12 @@ public abstract class HoldableType<T extends HoldableType<T>> extends IDedTypeWi
         super(data);
     }
 
-    protected HoldableType(int data, String name) {
-        super(data, name);
-    }
-
     protected HoldableType(int id, int data) {
         super(id, data);
     }
 
-    protected HoldableType(int id, int data, String name) {
-        super(id, data, name);
-    }
-
     protected HoldableType(HoldableType<?> parent) {
         super(parent);
-    }
-
-    protected HoldableType(HoldableType<?> parent, String name) {
-        super(parent, name);
     }
 
     /** This method returns the maximum number of this type of item that can be put into one single inventory slot. Many items and all blocks have a max stack size of 64.
