@@ -18,27 +18,14 @@ public class CorundumJarLoader extends URLClassLoader {
 
     private final boolean is_Minecraft_server_jar;
 
-    /** <b><i>DEV NOTES</b></i>:<br>
-     * This parent exists to allow the {@link ClassLoader}s to search parents and children for a requested class. Though {@link ClassLoader}s already have parents, Log4J does
-     * weird things with {@link ClassLoader}s that break the code, so we have to use this separate parent variable to allow {@link CorundumJarLoader}s to search parents for
-     * requested classes while making sure that Log4J can't get a {@link CorundumJarLoader}'s parent and try to load things from the main {@link ClassLoader}, which does not
-     * have the resources it searches for and which we have no control over. */
-    private CorundumJarLoader parent = null;
-    private CorundumJarLoader child = null;
-
-    public CorundumJarLoader(File file, CorundumJarLoader parent) throws MalformedURLException {
+    public CorundumJarLoader(File file, ClassLoader parent) throws MalformedURLException {
         this(file, parent, false);
     }
 
-    CorundumJarLoader(File file, CorundumJarLoader parent, boolean is_Minecraft_server_jar) throws MalformedURLException {
+    CorundumJarLoader(File file, ClassLoader parent, boolean is_Minecraft_server_jar) throws MalformedURLException {
         super(new URL[] { file.toURI().toURL() }, parent);
 
         this.is_Minecraft_server_jar = is_Minecraft_server_jar;
-        // TODO TEMP CMT
-        // this.parent = parent;
-
-        if (parent != null)
-            parent.child = this;
 
         if (head_loader == null)
             head_loader = this;
@@ -51,43 +38,48 @@ public class CorundumJarLoader extends URLClassLoader {
     @SuppressWarnings("resource")
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        CorundumHub.debug("finding " + name + "...");
+        CorundumHub.debug("finding " + name + " for " + getURLs()[0] + "...");
 
         // first, try finding the class if it's loaded already
         Class<?> clazz = findLoadedClass(name);
         if (clazz != null)
             return clazz;
 
-        // find the file for the class in the appropriate jar
-        String resource_path = name.replaceAll("\\.", File.separator) + ".class";
-        InputStream class_stream = getResourceAsStream(resource_path);
-        if (class_stream == null && getParent() != null)
-            class_stream = getParent().getResourceAsStream(resource_path);
-        if (class_stream == null)
-            return null;
-
-        try {
-            // load the class file into a byte[]
-            byte[] bytes = new byte[class_stream.available()];
-            DataInputStream stream = new DataInputStream(class_stream);
-            stream.readFully(bytes);
-            stream.close();
-            class_stream.close();
-
-            // finally, define the class
-            return defineClass(name, bytes, 0, bytes.length);
-        } catch (FileNotFoundException exception) {
-            throw new CIE("I couldn't find the file for the class " + name + "!", exception, "path searched = \"" + class_stream.toString() + "\"");
-        } catch (IOException exception) {
-            throw new CIE("Something went wrong while loading this " + name + " class from file!", exception);
-        }
+        // TODO TEMP RPLC
+        // // find the file for the class in the appropriate jar
+        // String resource_path = name.replaceAll("\\.", File.separator) + ".class";
+        // InputStream class_stream = getResourceAsStream(resource_path);
+        // if (class_stream == null && getParent() != null)
+        // class_stream = getParent().getResourceAsStream(resource_path);
+        // if (class_stream == null)
+        // return null;
+        //
+        // try {
+        // // load the class file into a byte[]
+        // byte[] bytes = new byte[class_stream.available()];
+        // DataInputStream stream = new DataInputStream(class_stream);
+        // stream.readFully(bytes);
+        // stream.close();
+        // class_stream.close();
+        //
+        // // finally, define the class
+        // return defineClass(name, bytes, 0, bytes.length);
+        // } catch (FileNotFoundException exception) {
+        // throw new CIE("I couldn't find the file for the class " + name + "!", exception, "path searched = \"" + class_stream.toString() + "\"");
+        // } catch (IOException exception) {
+        // throw new CIE("Something went wrong while loading this " + name + " class from file!", exception);
+        // }
+        else
+            return loadClass(name);
     }
 
     @Override
     protected Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
+        CorundumHub.debug("loading " + class_name + " for " + getURLs()[0] + "...");
+
         // first, try loading it from here
         try {
-            if (class_name.startsWith("sun") || class_name.startsWith("java"))
+            if (class_name.startsWith("sun") || class_name.startsWith("java."))
                 return super.loadClass(class_name, resolve);
             else {
                 Class<?> clazz = findClass(class_name);

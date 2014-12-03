@@ -55,12 +55,20 @@ public class CorundumHub {
             }
         });
 
+        // if we're debugging, clear the debug log file
+        if (DEBUG) {
+            File debug_log = new File("debug log.txt");
+            if (debug_log.exists())
+                debug_log.delete();
+        }
+
+        // download the minecraft_server.jar as needed from minecraft.net
         downloadMCServer(new File("minecraft_server.jar"));
 
         // load the Minecraft server jar
         System.out.println("Loading the Minecraft server jar...");
         @SuppressWarnings("resource")
-        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumJarLoader.getHeadLoader(), true);
+        CorundumJarLoader Minecraft_loader = loadJar(new File("minecraft_server.jar"), CorundumHub.class.getClassLoader(), true);
         if (Minecraft_loader == null)
             return;
 
@@ -118,11 +126,11 @@ public class CorundumHub {
      *            method. It is important that you choose your parent {@link ClassLoader}s wisely; a child {@link ClassLoader} can use all the classes loaded by its parent
      *            {@link ClassLoader}, even if both {@link ClassLoader}s are loading from different files or {@link URL}s.
      * @return the {@link URLClassLoader} used to load the classes inside the specified jar file or <b>null</b> if there was an error. */
-    public static CorundumJarLoader loadJar(File file, CorundumJarLoader parent) {
+    public static CorundumJarLoader loadJar(File file, ClassLoader parent) {
         return loadJar(file, parent, false);
     }
 
-    private static CorundumJarLoader loadJar(File file, CorundumJarLoader parent, boolean is_Minecraft_server_jar) {
+    private static CorundumJarLoader loadJar(File file, ClassLoader parent, boolean is_Minecraft_server_jar) {
         CorundumJarLoader loader;
         try {
             loader = new CorundumJarLoader(file, parent, is_Minecraft_server_jar);

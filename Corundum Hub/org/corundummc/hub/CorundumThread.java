@@ -170,7 +170,7 @@ public class CorundumThread extends Thread {
             // make a new CorundumServer
             server = (AbstractCorundumServer) main_class.getConstructor().newInstance();
             // start the new CorundumServer
-            main_class.getMethod("start", String[].class).invoke(server, (Object) arguments);
+            server.start(arguments);
         } catch (ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
             System.out.println("I couldn't load the Corundum main class!");
             exception.printStackTrace();

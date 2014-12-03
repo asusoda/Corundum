@@ -3,10 +3,7 @@ package org.corundummc;
 import static org.corundummc.utils.StringUtilities.capitalize;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
-
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,9 +13,6 @@ import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.Player;
 import org.corundummc.entities.Player.GameMode;
 import org.corundummc.exceptions.CorundumException;
@@ -72,7 +66,6 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
      * {@link java.util.UUID}s represent players. Note that {@link #verbose_debuggers verbose debuggers} also appear in this list in addition to appearing in
      * {@link #verbose_debuggers the verbose debuggers list}. */
     private myList<UUID> debuggers = new myList<>();
-
     /** This {@link myList} keeps track of the players who are currently in verbose debugging mode; <b>null</b> represents {@link Corundum#CONSOLE the console} while
      * non-<b>null</b> {@link UUID}s represent players. Note that all players (+ {@link Corundum#CONSOLE console}) who are in verbose debugging mode are also in regular
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
