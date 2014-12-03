@@ -16,14 +16,14 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
 
-import org.corundummc.types.PhysicalObject;
-import org.corundummc.types.TypedObject;
+import org.corundummc.types.Physical;
+import org.corundummc.types.Typed;
 import org.corundummc.types.IDedTypeWithData;
 import org.corundummc.world.Location;
 import org.corundummc.world.Rotation;
 import org.corundummc.world.World;
 
-public abstract class Entity implements PhysicalObject {
+public abstract class Entity implements Physical {
     protected final net.minecraft.entity.Entity entityMC;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {

@@ -16,12 +16,12 @@ import org.corundummc.exceptions.CorundumException;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.items.Item.ItemType;
 import org.corundummc.types.IDedType;
-import org.corundummc.types.TypedObject;
+import org.corundummc.types.Typed;
 import org.corundummc.world.Location;
 
 import static org.corundummc.utils.StringUtilities.*;
 
-public class Enchantment implements TypedObject {
+public class Enchantment implements Typed {
     private int level;
     private EnchantmentType type;
 
