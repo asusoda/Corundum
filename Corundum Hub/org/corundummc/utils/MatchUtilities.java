@@ -1,10 +1,11 @@
-package org.corundummc.utils.interfaces;
+package org.corundummc.utils;
 
 import static org.corundummc.utils.StringUtilities.readResponse;
 
 import java.util.Arrays;
 
 import org.corundummc.exceptions.MatchingException;
+import org.corundummc.utils.interfaces.Matchable;
 
 public class MatchUtilities {
     public static int match(Object object, Object... match_parameters) {

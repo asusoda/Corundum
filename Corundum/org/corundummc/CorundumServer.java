@@ -395,11 +395,11 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
         return getHostname();
     }
 
-    /** Helper method as the actual method is SRG named in MCP 1.7.10 */
+    /** Helper method as the actual method is SRG named in MCP 1.7.10
+     * 
+     * @return this server's {@link PlayerProfileCache}. */
     public PlayerProfileCache getPlayerProfileCache() {
         return super.func_152358_ax();
-    }
-
     }
 
     public File getPluginsFolder() {

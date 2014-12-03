@@ -15,14 +15,13 @@ package org.corundummc.utils.myList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.corundummc.CorundumServer;
+import org.corundummc.hub.CorundumHub;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.utils.interfaces.Matchable;
 
-
 import static org.corundummc.utils.ListUtilities.*;
-import static org.corundummc.utils.interfaces.MatchUtilities.match;
+import static org.corundummc.utils.MatchUtilities.match;
 
 /** This list structure is an auto-sorting quick-searching structure based on "root-knockdown" auto-balancing binary trees.
  * <hr>
@@ -580,10 +579,12 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         free();
     }
 
-    /** This method prints debugging information concerning the {@link myList} using {@link #debug(String) myCoreLibrary's debug() method}. */
-    public void debug() {
-        ((CorundumServer) CorundumThread.currentThread().getServer()).debug(String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "")
-                + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "") + "\n" + toString());
+    /** This method gathers a bunch of debugging information concerning the {@link myList} and returns it as a <tt>String</tt>.
+     * 
+     * @return a <tt>String</tt> containing plenty of debugigng information concerning this {@link myList}. */
+    public String debug() {
+        return String.valueOf(length()) + (hasLeft() ? "; " + left.length() + "l" : "") + (hasRight() ? "; " + right.length() + "r" : "") + (hasRoot() ? "; has root!" : "")
+                + "\n" + toString();
     }
 
     public void debugFull() {

@@ -9,7 +9,8 @@ import java.util.List;
 
 /** Represents a version. By default, this only handles majorversion.minorversion[s], but subclasses are used to handle Minecraft's, how shall we say, <i>exotic</i> system of
  * versioning, particularly with snapshots and prereleases.
- * @author Niadel*/
+ * 
+ * @author Niadel */
 public class Version implements Matchable<Version> {
     private byte majorVersion;
     private int[] minorVersions;
@@ -36,7 +37,7 @@ public class Version implements Matchable<Version> {
         String majorVersion = prepVerSegForCasting(versionSeparated[0]);
         this.majorVersion = Byte.valueOf(majorVersion);
 
-        this.minorVersions = new byte[versionSeparated.length - 1];
+        this.minorVersions = new int[versionSeparated.length - 1];
 
         for (int i = 1; i == this.minorVersions.length; i++) {
             this.minorVersions[i] = Byte.valueOf(this.prepVerSegForCasting(versionSeparated[i]));

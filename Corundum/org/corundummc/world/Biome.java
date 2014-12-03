@@ -21,7 +21,6 @@ import org.corundummc.types.IDedType;
 import org.corundummc.world.Block.BlockType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
-import net.minecraft.world.biome.BiomeOE;
 
 public class Biome {
     private final BiomeType type;
@@ -75,25 +74,12 @@ public class Biome {
             return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
         }
 
-        public AnimalType[] getAnimals() {
-            ArrayList<SpawnListEntry> animalsMC = BiomeOE.getAnimalsSpawnListEntries(biomeMC);
-
-            /* TODO: find a way to get from SpawnListEntries to AnimalTypes; I think the only way to do this is to use the Class<Entity>s inside the SpawnListEntries that
-             * represent the kind of entity they will spawn, but since all their names will be obfuscated during runtime, we'll probably have to add a parameter to each
-             * EntityType for the Minecraft class that they represent */
-            return null;
-        }
-
         public BlockType getSurfaceBlockType() {
             return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
         }
 
         public float getTemperature() {
             return biomeMC.temperature;
-        }
-
-        public int getTreesPerChunk() {
-            return BiomeOE.getTreesPerChunk(biomeMC);
         }
 
         public BiomeType getVariant() {
@@ -110,10 +96,6 @@ public class Biome {
 
         public boolean hasSnow() {
             return biomeMC.getEnableSnow();
-        }
-
-        public boolean hasTrees() {
-            return BiomeOE.getTreesPerChunk(biomeMC) > 0;
         }
 
         public boolean isVariant() {

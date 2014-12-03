@@ -12,14 +12,6 @@
 
 package org.corundummc.utils.interfaces;
 
-import static org.corundummc.utils.ListUtilities.*;
-import static org.corundummc.utils.StringUtilities.*;
-
-import java.util.Arrays;
-
-import org.corundummc.exceptions.MatchingException;
-import org.corundummc.world.Location;
-
 public interface Matchable<T extends Matchable<T>> {
     public Object[] getSortPriorities();
 }
