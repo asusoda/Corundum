@@ -25,7 +25,7 @@ public abstract class CorundumPlugin implements CorundumListener {
 
     private boolean enabled = false;
     private myList<CorundumListener> listeners = new myList<CorundumListener>(this);
-    private HashMap<String, Method> commands = new HashMap<String, Method>();
+    private HashMap<String, Method> commands = new HashMap<>();
 
     public CorundumPlugin() throws CIE {
         // get the URLClassLoader used to load this class
@@ -86,7 +86,7 @@ public abstract class CorundumPlugin implements CorundumListener {
 
         // skip past the directories and resources in the jar to get to the classes
         Enumeration<JarEntry> entries = jar.entries();
-        ArrayList<Class<CorundumPlugin>> main_classes = new ArrayList<Class<CorundumPlugin>>();
+        ArrayList<Class<CorundumPlugin>> main_classes = new ArrayList<>();
 
         if (entries.hasMoreElements())
             for (JarEntry entry = entries.nextElement(); entries.hasMoreElements(); entry = entries.nextElement())

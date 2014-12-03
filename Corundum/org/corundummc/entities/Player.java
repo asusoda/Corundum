@@ -21,8 +21,8 @@ import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
 public class Player /* TODO extends LivingEntity */implements Commander, Matchable<Player> {
-    private static myList<Player> players = new myList<Player>();
-    private static HashMap<String, Player> players_by_name = new HashMap<String, Player>();
+    private static myList<Player> players = new myList<>();
+    private static HashMap<String, Player> players_by_name = new HashMap<>();
 
     private final EntityPlayerMP playerMC;
 

@@ -27,8 +27,10 @@ public class FileUtils {
             FileOutputStream outputStream = new FileOutputStream(out);
             Main.verbose("Beginning to transfer bytes!");
             outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+            Main.verbose("Finished downloading a file!");
             return out;
         } catch (IOException e) {
+            Main.verbose("Failure downloading " + fileLocation + "!");
             e.printStackTrace();
         }
 
@@ -59,13 +61,11 @@ public class FileUtils {
             while (enumZip.hasMoreElements()) {
                 ZipEntry next = enumZip.nextElement();
                 ZipInputStream inStream = new ZipInputStream(inFile.getInputStream(next));
+                Main.verbose("Constructing Zip channel!");
+                ReadableByteChannel zipInChannel = Channels.newChannel(inStream);
                 FileOutputStream outStream = new FileOutputStream(out);
-
-                Scanner inStreamScanner = new Scanner(inStream);
-
-                while (inStreamScanner.hasNextByte()) {
-                    outStream.write(inStreamScanner.nextByte());
-                }
+                Main.verbose("Transferring from zip channel to output!");
+                outStream.getChannel().transferFrom(zipInChannel, 0, Long.MAX_VALUE);
 
                 inStream.close();
                 outStream.close();

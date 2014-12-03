@@ -14,6 +14,7 @@ package org.corundummc.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.corundummc.exceptions.CorundumException;
@@ -22,10 +23,7 @@ public class ListUtilities {
 
     // contents
     public static <T> ArrayList<T> arrayToArrayList(T[] array) {
-        ArrayList<T> array_list = new ArrayList<T>();
-        for (T object : array)
-            array_list.add(object);
-        return array_list;
+        return (ArrayList<T>) Arrays.asList(array);
     }
 
     /** This method combines all of the given <tt>String</tt>s array into a single String.
@@ -170,6 +168,7 @@ public class ListUtilities {
      * @param target
      *            is the Object that <b><tt>objects</b></tt> may contain.
      * @return <b>true</b> if <b><tt>object</b></tt> contains <b><tt>target</b></tt>; <b>false</b> otherwise. */
+    @SafeVarargs
     public static <T> boolean contains(T target, @SuppressWarnings("unchecked") T... objects) {
         for (T object : objects)
             if (object.equals(target))
@@ -221,9 +220,8 @@ public class ListUtilities {
         String[] array = readArray(list, options);
         if (array == null)
             return null;
-        ArrayList<String> product = new ArrayList<String>();
-        for (String list_item : array)
-            product.add(list_item);
+        ArrayList<String> product = new ArrayList<>();
+        product.addAll(Arrays.asList(array));
         return product;
     }
 

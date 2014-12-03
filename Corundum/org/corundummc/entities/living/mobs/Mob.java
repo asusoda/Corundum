@@ -10,13 +10,11 @@
  * 
  * @author REALDrummer */
 
-package org.corundummc.entities;
+package org.corundummc.entities.living.mobs;
 
 import net.minecraft.entity.monster.EntityMob;
-import org.corundummc.exceptions.CIE;
-import org.corundummc.exceptions.CorundumException;
+import org.corundummc.entities.Entity;
 import org.corundummc.items.Item;
-import org.corundummc.world.Location;
 
 public class Mob extends Entity {
 

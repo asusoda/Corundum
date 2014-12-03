@@ -11,12 +11,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-#The Installler
-CorundumInstaller/build
-CorundumInstaller/CorundumInstaller.iml
-CorundumInstaller/zip4j_1.3.2.jar
-CorundumInstaller/zip4j_src_1.3.2.zip
-CorundumInstaller/.gradle
-CorundumInstaller/gradle
 #Used in the nongradle buildscript for the installer.
-CorundumInstaller/sources.txt
+Corundum installer/sources.txt
+
+#The Installler
+Corundum installer/build
+Corundum installer/CorundumInstaller.iml
+Corundum installer/.gradle
+Corundum installer/gradle

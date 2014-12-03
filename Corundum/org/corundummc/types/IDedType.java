@@ -17,7 +17,7 @@ import org.corundummc.world.Block.BlockType;
  *            is a self-parameterization; <b><tt>T</b></tt> should be the same type as the type implementing this interface. This parameterization allows certain methods in
  *            this interface to return the appropriate subtype of {@link IDedType}. */
 public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedType<T>> {
-    protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<Class<IDedType<?>>, IDedType<?>[]>();
+    protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<>();
 
     /** <b><i>DEV NOTES:</b></i><br>
      * This isn't final because I couldn't find a way to initialize it statically in the constructors for {@link IDedTypeWithData} because of the type parameterization and the
@@ -46,15 +46,24 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         addValue((T) this);
     }
 
+    protected IDedType(int id, String name) {
+        this(id);
+        this.name = name;
+    }
+
     protected IDedType(IDedType<?> parent) {
         this(parent.id);
+    }
+
+    protected IDedType(IDedType<?> parent, String name) {
+        this(parent.id, name);
     }
 
     // static utilities
     protected static <R extends IDedType<R>> void addValue(R new_value) {
         R[] type_values = (R[]) values.get(new_value.getClass());
 
-        ArrayList<R> new_type_values = new ArrayList<R>(Arrays.asList(new_value));
+        ArrayList<R> new_type_values = new ArrayList<>(Arrays.asList(new_value));
         new_type_values.add(new_value);
 
         values.put((Class<IDedType<?>>) new_value.getClass(), (R[]) new_type_values.toArray());
@@ -98,9 +107,22 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         this.id = id;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    void setName(String newName) {
+        this.name = newName;
+    }
+
     // data management overrides
     @Override
     public Object[] getSortPriorities() {
-        return new Object[] { getID() };
+        return new Object[] { getID(), getName() };
+    }
+
+    @Override
+    public String toString() {
+        return this.getName() + " (" + this.getID() + ")";
     }
 }

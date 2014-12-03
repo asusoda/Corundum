@@ -14,6 +14,7 @@ public class TaskPackageCorundumLauncher implements ITask {
 
     @Override
     public void execute() {
+        Main.logSpecial("Packaging the Corundum Hub!");
         this.prepareExtractToFolder();
         this.extractCorundumLauncherFromReobf();
         this.prepareMetaInf();
@@ -21,15 +22,15 @@ public class TaskPackageCorundumLauncher implements ITask {
     }
 
     public void prepareExtractToFolder() {
-        this.corundumPackageFolder = new File("Corundum/");
+        this.corundumPackageFolder = new File("org/corundummc/");
         this.corundumPackageFolder.mkdir();
-        File launcherBaseFolder = new File(this.corundumPackageFolder, "launcher");
+        File launcherBaseFolder = new File(this.corundumPackageFolder, "hub");
         launcherBaseFolder.mkdir();
     }
 
     public void extractCorundumLauncherFromReobf() {
-        File corundumRoot = new File("reobf/minecraft_server/Corundum");
-        File launcherRoot = new File(corundumRoot, "launcher");
+        File corundumRoot = new File("reobf/minecraft_server/org/corundummc");
+        File launcherRoot = new File(corundumRoot, "hub");
         File[] filesInLauncherFolder = launcherRoot.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -38,7 +39,7 @@ public class TaskPackageCorundumLauncher implements ITask {
         });
 
         for (File file : filesInLauncherFolder) {
-            FileUtils.copyFile(file, new File(this.corundumPackageFolder.getAbsolutePath() + "launcher/" + file.getName()));
+            FileUtils.copyFile(file, new File(this.corundumPackageFolder.getAbsolutePath() + "hub/" + file.getName()));
         }
     }
 
@@ -49,7 +50,7 @@ public class TaskPackageCorundumLauncher implements ITask {
 
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(this.corundumLauncherMetaInf)));
 
-            out.println("Main-Class: Corundum.launcher.CorundumLauncher");
+            out.println("Main-Class: org.corundummc.hub.CorundumLauncher");
             //To fulfil the META-INF ending in newline requirement.
             out.println();
             out.println();

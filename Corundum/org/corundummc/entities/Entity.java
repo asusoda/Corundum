@@ -52,6 +52,7 @@ public abstract class Entity extends TypedObject {
                 PAINTING = new EntityType(), ARROW = new EntityType(), SNOWBALL = new EntityType(), GHAST_FIREBALL = new EntityType(), BLAZE_FIREBALL = new EntityType(),
                 ENDER_PEARL = new EntityType(), EYE_OF_ENDER = new EntityType(), SPLASH_POTION = new EntityType(), BOTTLE_O_ENCHANTING = new EntityType(),
                 ITEM_FRAME = new EntityType(), WITHER_SKULL = new EntityType(),
+                EGG = new EntityType(),
                 TNT = new EntityType(),
                 FALLING_BLOCK = new EntityType(),
                 ARMOR_STAND = new EntityType(30),

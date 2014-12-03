@@ -1,21 +1,33 @@
 package org.corundummc.utils.versioning;
 
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.utils.interfaces.Matchable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /** Represents a version. By default, this only handles majorversion.minorversion[s], but subclasses are used to handle Minecraft's, how shall we say, <i>exotic</i> system of
- * versioning, particularly with snapshots and prereleases. */
-public class Version {
+ * versioning, particularly with snapshots and prereleases.
+ * @author Niadel*/
+public class Version implements Matchable<Version> {
     private byte majorVersion;
-    private byte[] minorVersions;
+    private int[] minorVersions;
     private List<String> tags = new ArrayList<>();
     private static final List<Character> legalChars = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
     public Version(String version) {
         this.parseVersion(version);
+    }
+
+    public Version(byte majorVersion, int[] minorVersions, String[] tags) {
+        this(majorVersion, minorVersions);
+        this.tags = Arrays.asList(tags);
+    }
+
+    public Version(byte majorVersion, int[] minorVersions) {
+        this.majorVersion = majorVersion;
+        this.minorVersions = minorVersions;
     }
 
     protected void parseVersion(String version) {
@@ -50,16 +62,43 @@ public class Version {
         return versionSegment;
     }
 
+    public boolean isVersionGreaterThan(Version otherVersion) {
+        boolean thisVersionGreater = true;
+
+        if (this.majorVersion < otherVersion.majorVersion || (this.tags.contains("Pre-") && !otherVersion.tags.contains("Pre-"))) {
+            thisVersionGreater = false;
+        } else {
+            boolean thisHasLessMinorVersions = this.minorVersions.length < otherVersion.minorVersions.length;
+
+            for (int i = 0; thisHasLessMinorVersions ? i == this.minorVersions.length : i == otherVersion.minorVersions.length; i++) {
+                if (this.minorVersions[i] < otherVersion.minorVersions[i]) {
+                    thisVersionGreater = false;
+                    break;
+                }
+            }
+        }
+
+        return thisVersionGreater;
+    }
+
+    public boolean isVersionLesserThan(Version otherVersion) {
+        return !this.isVersionGreaterThan(otherVersion);
+    }
+
     public byte getMajorVersion() {
         return this.majorVersion;
     }
 
-    public byte[] getMinorVersions() {
+    public int[] getMinorVersions() {
         return this.minorVersions;
     }
 
     public List<String> getTags() {
-        return tags;
+        return this.tags;
+    }
+
+    protected void setMinorVersions(int[] newMinorVersions) {
+        this.minorVersions = newMinorVersions;
     }
 
     public class BadVersionException extends CorundumException {
@@ -72,7 +111,7 @@ public class Version {
 
     public enum SpecialVersionSymbols {
         ALPHA_VERSION("α"), BETA_VERSION("ß"), PRE("Pre-"), DEV("Dev-"), SNAPSHOT_WEEK("w"), A_SNAPSHOT("a"), B_SNAPSHOT("b"), C_SNAPSHOT("c"), D_SNAPSHOT("d"), E_SNAPSHOT(
-                "e"), F_SNAPSHOT("f");
+                "e"), F_SNAPSHOT("f"), ALPHA_VERSION_WORD("alpha"), BETA_VERSION_WORD("beta");
 
         private String symbol;
 
@@ -83,5 +122,10 @@ public class Version {
         public String getSymbol() {
             return this.symbol;
         }
+    }
+
+    @Override
+    public Object[] getSortPriorities() {
+        return new Object[] { this.majorVersion, this.minorVersions, this.tags };
     }
 }

@@ -15,6 +15,10 @@ package org.corundummc.items;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.items.Item.ItemType;
 import org.corundummc.utils.ListUtilities;
+import org.corundummc.utils.myList.myList;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.corundummc.utils.StringUtilities.*;
 
@@ -40,43 +44,58 @@ public class Enchantment {
             ItemType.DIAMOND_SHOVEL };
     private static final ItemType[] allHoeTypes = new ItemType[] { ItemType.WOODEN_HOE, ItemType.STONE_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.DIAMOND_HOE };
 
+    private final net.minecraft.enchantment.Enchantment mcEnchantment;
+
     public Enchantment(int level, EnchantmentType type) {
         if (!(level > type.getMaxLevel())) {
             this.level = level;
             this.type = type;
+            this.mcEnchantment = type.getMcEnchant();
         } else {
             throw new EnchantmentLevelException("Attempted to create an enchantment with a level higher than the maximum possible for it's enchantment type!", type, level);
         }
     }
 
-    public enum EnchantmentType {
-        // TODO: reimplement with an EnchantmentType analog from Minecraft code (see ItemType and BlockType as examples)
-        PROTECTION(4, allArmourTypes),
-        FIRE_PROTECTION(4, allArmourTypes),
-        FEATHER_FALLING(4, allBootArmourTypes),
-        BLAST_PROTECTION(4, allArmourTypes),
-        PROJECTILE_PROTECTION(4, allArmourTypes),
-        RESPIRATION(3, allHelmetArmourTypes),
-        AQUA_AFFINITY(1, allHelmetArmourTypes),
-        THORNS(3, allArmourTypes),
-        SHARPNESS(5, ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
-        SMITE(5, ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
-        BANE_OF_ARTHROPODS(5, ListUtilities.concatenate(allSwordTypes, allAxeTypes)),
-        KNOCKBACK(2, allSwordTypes),
-        FIRE_ASPECT(2, allSwordTypes),
-        LOOTING(3, allSwordTypes),
-        EFFICIENCY(5, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS })),
-        SILK_TOUCH(1, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS })),
-        UNBREAKING(3, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, allSwordTypes, allArmourTypes, allHoeTypes, new ItemType[] { ItemType.SHEARS,
-                ItemType.FISHING_ROD, ItemType.CARROT_ON_A_STICK, ItemType.BOW })),
-        FORTUNE(3, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes)),
-        POWER(5, ItemType.BOW),
-        PUNCH(2, ItemType.BOW),
-        FLAME(1, ItemType.BOW),
-        INFINITY(1, ItemType.BOW);
+    public int getLevel() {
+        return this.level;
+    }
 
+    public EnchantmentType getType() {
+        return this.type;
+    }
+
+    public net.minecraft.enchantment.Enchantment getMcEnchantment() {
+        return this.mcEnchantment;
+    }
+
+    public enum EnchantmentType {
+        PROTECTION(net.minecraft.enchantment.Enchantment.protection),
+        FIRE_PROTECTION(net.minecraft.enchantment.Enchantment.fireProtection),
+        FEATHER_FALLING(net.minecraft.enchantment.Enchantment.featherFalling),
+        BLAST_PROTECTION(net.minecraft.enchantment.Enchantment.blastProtection),
+        PROJECTILE_PROTECTION(net.minecraft.enchantment.Enchantment.projectileProtection),
+        RESPIRATION(net.minecraft.enchantment.Enchantment.respiration),
+        AQUA_AFFINITY(net.minecraft.enchantment.Enchantment.aquaAffinity),
+        THORNS(net.minecraft.enchantment.Enchantment.thorns),
+        SHARPNESS(net.minecraft.enchantment.Enchantment.sharpness),
+        SMITE(net.minecraft.enchantment.Enchantment.smite),
+        BANE_OF_ARTHROPODS(net.minecraft.enchantment.Enchantment.baneOfArthropods),
+        KNOCKBACK(net.minecraft.enchantment.Enchantment.knockback),
+        FIRE_ASPECT(net.minecraft.enchantment.Enchantment.fireAspect),
+        LOOTING(net.minecraft.enchantment.Enchantment.fireAspect),
+        EFFICIENCY(net.minecraft.enchantment.Enchantment.efficiency),
+        SILK_TOUCH(net.minecraft.enchantment.Enchantment.silkTouch),
+        UNBREAKING(net.minecraft.enchantment.Enchantment.unbreaking),
+        FORTUNE(net.minecraft.enchantment.Enchantment.fortune),
+        POWER(net.minecraft.enchantment.Enchantment.power),
+        PUNCH(net.minecraft.enchantment.Enchantment.punch),
+        FLAME(net.minecraft.enchantment.Enchantment.flame),
+        INFINITY(net.minecraft.enchantment.Enchantment.infinity);
+
+        private static Map<net.minecraft.enchantment.Enchantment, ItemType[]> enchantsMap = new HashMap<>();
         private byte max_level;
         private ItemType[] applicable_items;
+        private net.minecraft.enchantment.Enchantment mcEnchant;
 
         private EnchantmentType(int max_level, ItemType... applicable_items) throws CorundumException {
             this.max_level = (byte) max_level;
@@ -115,6 +134,15 @@ public class Enchantment {
             }
         }
 
+        private EnchantmentType(net.minecraft.enchantment.Enchantment mcEnchant) {
+            this(mcEnchant.getMaxLevel(), getTypesForMCEnchant(mcEnchant));
+            this.mcEnchant = mcEnchant;
+        }
+
+        public static ItemType[] getTypesForMCEnchant(net.minecraft.enchantment.Enchantment mcEnchant) {
+            return enchantsMap.get(mcEnchant);
+        }
+
         public byte getMaxLevel() {
             return this.max_level;
         }
@@ -123,9 +151,39 @@ public class Enchantment {
             return this.applicable_items;
         }
 
+        public net.minecraft.enchantment.Enchantment getMcEnchant() {
+            return this.mcEnchant;
+        }
+
         @Override
         public String toString() {
             return capitalizeFully(name().replaceAll("_", " "));
+        }
+
+        static {
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.protection, allArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.fireProtection, allArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.featherFalling, allBootArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.blastProtection, allArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.projectileProtection, allArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.respiration, allHelmetArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.aquaAffinity, allHelmetArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.thorns, allArmourTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.sharpness, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.smite, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.baneOfArthropods, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.knockback, allSwordTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.fireAspect, allSwordTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.looting, allSwordTypes);
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.efficiency, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS }));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.silkTouch, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS }));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.unbreaking, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, allSwordTypes, allArmourTypes, allHoeTypes, new ItemType[] { ItemType.SHEARS,
+                    ItemType.FISHING_ROD, ItemType.CARROT_ON_A_STICK, ItemType.BOW }));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.fortune, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes));
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.power, new ItemType[] {ItemType.BOW});
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.punch, new ItemType[] {ItemType.BOW});
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.infinity, new ItemType[] {ItemType.BOW});
+            enchantsMap.put(net.minecraft.enchantment.Enchantment.infinity, new ItemType[] {ItemType.BOW});
         }
     }
 
@@ -174,6 +232,5 @@ public class Enchantment {
         public Item getItem() {
             return item;
         }
-
     }
 }

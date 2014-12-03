@@ -18,6 +18,7 @@ public class TaskDownloadAndExtractMCP implements ITask {
 
     @Override
     public void execute() {
+        Main.logSpecial("Downloading and extracting MCP!");
         this.extractMCPZip(this.downloadMCPZip(Main.runningDir));
         new File("src/minecraft_server").mkdir();
     }

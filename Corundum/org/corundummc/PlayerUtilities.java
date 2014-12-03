@@ -26,7 +26,7 @@ public class PlayerUtilities {
      * that they were on this server). If a player logs onto the server with a known username but a different {@link UUID}, then the username associate with that username's
      * old {@link} will be replaced with the <tt>String</tt> form of said old {@link UUID}, preventing the acquisition of the previous username owner's data through
      * "username sniping". */
-    public static HashMap<UUID, String> players = new HashMap<UUID, String>();
+    public static HashMap<UUID, String> players = new HashMap<>();
 
     /** This enum Object is to be used in specifying different parameters for the {@link #getTargetBlock(Player player, BlockSearch... parameters) getTargetBlock()} method.
      * 

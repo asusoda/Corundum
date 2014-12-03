@@ -99,4 +99,12 @@ public class Main {
             System.out.println(message);
         }
     }
+
+    public static void logSpecial(String message) {
+        System.out.println();
+        System.out.println("#################################");
+        System.out.println(message);
+        System.out.println("#################################");
+        System.out.println();
+    }
 }
