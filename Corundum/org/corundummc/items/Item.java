@@ -17,8 +17,12 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.nbt.NBTTagList;
+
 import org.corundummc.CorundumServer;
+import org.corundummc.entities.Player;
 import org.corundummc.exceptions.CIE;
+import org.corundummc.items.Enchantment.EnchantmentType;
 import org.corundummc.types.HoldableType;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Block.BlockType;
@@ -26,33 +30,20 @@ import org.corundummc.world.Block.BlockType;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: link "inventory"
+/** This class represents an item <i>or stack of items</i> in Minecraft inside an inventory. */
 public class Item {
-    //TODO make final again once we can figure out how to get an ItemType from an MC Item(Stack)
-    private/* final */ItemType type;
-    private myList<Enchantment> enchantments;
-    private ItemStack mcStack;
-    private net.minecraft.item.Item mcItem;
-
-    // TODO private InventorySlot location;
+    private ItemStack itemMC;
 
     // constructors
     public Item(ItemType type, Enchantment... enchantments) {
-        this.type = type;
-        this.enchantments = new myList<>(enchantments);
+        itemMC = new net.minecraft.item.ItemStack(type.itemTypeMC);
+
+        enchant(enchantments);
     }
 
-    // mc helper constructor.
-    public Item(net.minecraft.item.ItemStack mcStack, Enchantment... enchantments) {
-        this.mcStack = mcStack;
-        this.mcItem = this.mcStack.getItem();
-
-        for (Enchantment enchantment : enchantments) {
-            this.enchant(enchantment);
-        }
-    }
-
-    public Item(net.minecraft.item.Item mcItem, Enchantment... enchantments) {
-        this(new net.minecraft.item.ItemStack(mcItem), enchantments);
+    Item(net.minecraft.item.ItemStack itemMC) {
+        this.itemMC = itemMC;
     }
 
     // type class
@@ -349,7 +340,7 @@ public class Item {
                 MUSIC_DISK_FAR = new ItemType(), MUSIC_DISK_MALL = new ItemType(), MUSIC_DISK_MELLOHI = new ItemType(), MUSIC_DISK_STAL = new ItemType(),
                 MUSIC_DISK_STRAD = new ItemType(), MUSIC_DISK_WARD = new ItemType(), MUSIC_DISK_11 = new ItemType(), MUSIC_DISK_WAIT = new ItemType();
 
-        private final net.minecraft.item.Item itemMC;
+        private final net.minecraft.item.Item itemTypeMC;
 
         // constructors
         /** This constructor makes a ItemType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
@@ -361,7 +352,7 @@ public class Item {
             super();
 
             // find the Item with the given I.D.
-            itemMC = net.minecraft.item.Item.getItemById(getID());
+            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
         }
 
         /** This constructor makes a ItemType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
@@ -376,7 +367,7 @@ public class Item {
             super(data);
 
             // find the Item with the given I.D.
-            itemMC = net.minecraft.item.Item.getItemById(getID());
+            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
         }
 
         /** This constructor makes a ItemType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
@@ -390,7 +381,7 @@ public class Item {
             super(id, data);
 
             // find the Item with the given I.D.
-            itemMC = net.minecraft.item.Item.getItemById(id);
+            itemTypeMC = net.minecraft.item.Item.getItemById(id);
         }
 
         // private utilities
@@ -435,7 +426,7 @@ public class Item {
          * 
          * @return the maximum amount of damage an {@link Item} of this {@link ItemType} can take before breaking or 0 if this {@link ItemType} is not damageable. */
         public short getMaxDurability() {
-            return (short) itemMC.getMaxDamage();
+            return (short) itemTypeMC.getMaxDamage();
         }
 
         /** This method returns the type of material -- either a {@link BlockType} or an {@link ItemType} -- that can be used to repair this type of item in an
@@ -446,10 +437,10 @@ public class Item {
          * @return the {@link BlockType} or {@link ItemType} that can be used to repair this item in an anvil or <b>null</b> if an item of this type cannot be repaired in an
          *         {@link BlockType#ANVIL anvil} with any other type of item besides itself. */
         public HoldableType<?> getRepairMaterial() {
-            if (itemMC instanceof ItemTool)
-                return fromMCToolMaterial(((ItemTool) itemMC).func_150913_i());
-            else if (itemMC instanceof ItemArmor)
-                return fromMCArmorMaterial(((ItemArmor) itemMC).getArmorMaterial());
+            if (itemTypeMC instanceof ItemTool)
+                return fromMCToolMaterial(((ItemTool) itemTypeMC).func_150913_i());
+            else if (itemTypeMC instanceof ItemArmor)
+                return fromMCArmorMaterial(((ItemArmor) itemTypeMC).getArmorMaterial());
             else
                 return null;
         }
@@ -482,7 +473,7 @@ public class Item {
         // overridden properties
         @Override
         public byte getMaxStackSize() {
-            return (byte) itemMC.getItemStackLimit();
+            return (byte) itemTypeMC.getItemStackLimit();
         }
 
         @Override
@@ -524,18 +515,24 @@ public class Item {
     }
 
     // TODO: add methods for adding, removing, and modifying enchantments
-
-    public void enchant(Enchantment enchantment) {
-        this.mcStack.addEnchantment(enchantment.getMcEnchantment(), enchantment.getLevel());
-        enchantments.add(enchantment);
+    public void enchant(Enchantment... enchantments) {
+        for (Enchantment enchantment : enchantments)
+            itemMC.addEnchantment(enchantment.getMCEnchantment(), enchantment.getLevel());
     }
 
     public myList<Enchantment> getEnchantments() {
+        myList<Enchantment> enchantments = new myList<>();
+
+        NBTTagList list = itemMC.getEnchantmentTagList();
+        if (list != null)
+            for (int i = 0; i < list.tagCount(); i++)
+                enchantments.add(new Enchantment(list.getCompoundTagAt(i).getShort("lvl"), EnchantmentType.getByID(list.getCompoundTagAt(i).getShort("id"))));
+
         return enchantments;
     }
 
     public ItemType getType() {
-        return type;
+        return ItemType.getByID(net.minecraft.item.Item.getIdFromItem(itemMC.getItem()));
     }
 
     public static Item[] fromMCItems(ItemStack... item_stacks) {

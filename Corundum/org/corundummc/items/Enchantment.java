@@ -17,6 +17,9 @@ import org.corundummc.items.Item.ItemType;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.utils.myList.myList;
 
+import org.corundummc.types.IDedType;
+import org.corundummc.types.IDedTypeWithData;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,126 +67,47 @@ public class Enchantment {
         return this.type;
     }
 
-    public net.minecraft.enchantment.Enchantment getMcEnchantment() {
+    net.minecraft.enchantment.Enchantment getMCEnchantment() {
         return this.mcEnchantment;
     }
 
-    public enum EnchantmentType {
-        PROTECTION(net.minecraft.enchantment.Enchantment.protection),
-        FIRE_PROTECTION(net.minecraft.enchantment.Enchantment.fireProtection),
-        FEATHER_FALLING(net.minecraft.enchantment.Enchantment.featherFalling),
-        BLAST_PROTECTION(net.minecraft.enchantment.Enchantment.blastProtection),
-        PROJECTILE_PROTECTION(net.minecraft.enchantment.Enchantment.projectileProtection),
-        RESPIRATION(net.minecraft.enchantment.Enchantment.respiration),
-        AQUA_AFFINITY(net.minecraft.enchantment.Enchantment.aquaAffinity),
-        THORNS(net.minecraft.enchantment.Enchantment.thorns),
-        SHARPNESS(net.minecraft.enchantment.Enchantment.sharpness),
-        SMITE(net.minecraft.enchantment.Enchantment.smite),
-        BANE_OF_ARTHROPODS(net.minecraft.enchantment.Enchantment.baneOfArthropods),
-        KNOCKBACK(net.minecraft.enchantment.Enchantment.knockback),
-        FIRE_ASPECT(net.minecraft.enchantment.Enchantment.fireAspect),
-        LOOTING(net.minecraft.enchantment.Enchantment.fireAspect),
-        EFFICIENCY(net.minecraft.enchantment.Enchantment.efficiency),
-        SILK_TOUCH(net.minecraft.enchantment.Enchantment.silkTouch),
-        UNBREAKING(net.minecraft.enchantment.Enchantment.unbreaking),
-        FORTUNE(net.minecraft.enchantment.Enchantment.fortune),
-        POWER(net.minecraft.enchantment.Enchantment.power),
-        PUNCH(net.minecraft.enchantment.Enchantment.punch),
-        FLAME(net.minecraft.enchantment.Enchantment.flame),
-        INFINITY(net.minecraft.enchantment.Enchantment.infinity);
+    public static class EnchantmentType extends IDedType<EnchantmentType> {
+        public static final EnchantmentType PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.protection), FIRE_PROTECTION = new EnchantmentType(
+                net.minecraft.enchantment.Enchantment.fireProtection), FEATHER_FALLING = new EnchantmentType(net.minecraft.enchantment.Enchantment.featherFalling),
+                BLAST_PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.blastProtection), PROJECTILE_PROTECTION = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.projectileProtection), RESPIRATION = new EnchantmentType(net.minecraft.enchantment.Enchantment.respiration),
+                AQUA_AFFINITY = new EnchantmentType(net.minecraft.enchantment.Enchantment.aquaAffinity), THORNS = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.thorns), SHARPNESS = new EnchantmentType(net.minecraft.enchantment.Enchantment.sharpness),
+                SMITE = new EnchantmentType(net.minecraft.enchantment.Enchantment.smite), BANE_OF_ARTHROPODS = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.baneOfArthropods), KNOCKBACK = new EnchantmentType(net.minecraft.enchantment.Enchantment.knockback),
+                FIRE_ASPECT = new EnchantmentType(net.minecraft.enchantment.Enchantment.fireAspect), LOOTING = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.fireAspect), EFFICIENCY = new EnchantmentType(net.minecraft.enchantment.Enchantment.efficiency),
+                SILK_TOUCH = new EnchantmentType(net.minecraft.enchantment.Enchantment.silkTouch), UNBREAKING = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.unbreaking), FORTUNE = new EnchantmentType(net.minecraft.enchantment.Enchantment.fortune),
+                POWER = new EnchantmentType(net.minecraft.enchantment.Enchantment.power), PUNCH = new EnchantmentType(net.minecraft.enchantment.Enchantment.punch),
+                FLAME = new EnchantmentType(net.minecraft.enchantment.Enchantment.flame), INFINITY = new EnchantmentType(net.minecraft.enchantment.Enchantment.infinity);
 
-        private static Map<net.minecraft.enchantment.Enchantment, ItemType[]> enchantsMap = new HashMap<>();
-        private byte max_level;
-        private ItemType[] applicable_items;
         private net.minecraft.enchantment.Enchantment mcEnchant;
 
-        private EnchantmentType(int max_level, ItemType... applicable_items) throws CorundumException {
-            this.max_level = (byte) max_level;
-
-            if (applicable_items.length == 0) {
-                this.applicable_items = null;
-                throw new EnchantmentException("Someone forgot to list the items that " + name() + "works with!", "item-less enchantment");
-            } else
-                this.applicable_items = applicable_items;
-        }
-
-        private EnchantmentType(int max_level, int... applicable_item_id_ranges) throws CorundumException {
-            this.max_level = (byte) max_level;
-            if (applicable_item_id_ranges.length == 0) {
-                this.applicable_items = null;
-                throw new EnchantmentException("Someone forgot to list the items that " + name() + "works with!", "item-less enchantment");
-            } else if (applicable_item_id_ranges.length % 2 != 0) {
-                this.applicable_items = null;
-                throw new EnchantmentException("Someone forgot to close a range in the applicable item I.D. ranges for " + name() + "!", "invalid applicable item I.D. list");
-            } else {
-                // first, calculate the size of the array that we'll need
-                int number_of_applicable_items = 0;
-                for (int i = 0; i < applicable_item_id_ranges.length; i += 2)
-                    number_of_applicable_items += applicable_item_id_ranges[i + 1] - applicable_item_id_ranges[i] + 1;
-
-                // create the array
-                applicable_items = new ItemType[number_of_applicable_items];
-
-                // add all the ItemTypes within the given ranges to the new array
-                int applicable_items_index = 0;
-                for (int i = 0; i < applicable_item_id_ranges.length; i += 2)
-                    for (int id = applicable_item_id_ranges[i]; id <= applicable_item_id_ranges[i + 1]; id++) {
-                        applicable_items[applicable_items_index] = ItemType.getByID(id);
-                        applicable_items_index++;
-                    }
-            }
-        }
-
         private EnchantmentType(net.minecraft.enchantment.Enchantment mcEnchant) {
-            this(mcEnchant.getMaxLevel(), getTypesForMCEnchant(mcEnchant));
             this.mcEnchant = mcEnchant;
         }
 
-        public static ItemType[] getTypesForMCEnchant(net.minecraft.enchantment.Enchantment mcEnchant) {
-            return enchantsMap.get(mcEnchant);
+        public static ItemType[] getApplicableItems() {
+            // TODO
+            return null;
         }
 
         public byte getMaxLevel() {
-            return this.max_level;
-        }
-
-        public ItemType[] getApplicableItems() {
-            return this.applicable_items;
+            return (byte) mcEnchant.getMaxLevel();
         }
 
         public net.minecraft.enchantment.Enchantment getMcEnchant() {
             return this.mcEnchant;
         }
 
-        @Override
-        public String toString() {
-            return capitalizeFully(name().replaceAll("_", " "));
-        }
-
-        static {
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.protection, allArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.fireProtection, allArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.featherFalling, allBootArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.blastProtection, allArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.projectileProtection, allArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.respiration, allHelmetArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.aquaAffinity, allHelmetArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.thorns, allArmourTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.sharpness, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.smite, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.baneOfArthropods, ListUtilities.concatenate(allSwordTypes, allAxeTypes));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.knockback, allSwordTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.fireAspect, allSwordTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.looting, allSwordTypes);
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.efficiency, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS }));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.silkTouch, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, new ItemType[] { ItemType.SHEARS }));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.unbreaking, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes, allSwordTypes, allArmourTypes, allHoeTypes, new ItemType[] { ItemType.SHEARS,
-                    ItemType.FISHING_ROD, ItemType.CARROT_ON_A_STICK, ItemType.BOW }));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.fortune, ListUtilities.concatenate(allAxeTypes, allPickAxeTypes, allShovelTypes));
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.power, new ItemType[] {ItemType.BOW});
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.punch, new ItemType[] {ItemType.BOW});
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.infinity, new ItemType[] {ItemType.BOW});
-            enchantsMap.put(net.minecraft.enchantment.Enchantment.infinity, new ItemType[] {ItemType.BOW});
+        public static EnchantmentType getByID(int id) {
+            return IDedType.getByID(EnchantmentType.class, id);
         }
     }
 
