@@ -15,13 +15,15 @@ package org.corundummc.entities;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
+
+import org.corundummc.types.PhysicalObject;
 import org.corundummc.types.TypedObject;
 import org.corundummc.types.IDedTypeWithData;
 import org.corundummc.world.Location;
 import org.corundummc.world.Rotation;
 import org.corundummc.world.World;
 
-public abstract class Entity extends TypedObject {
+public abstract class Entity implements PhysicalObject {
     protected final net.minecraft.entity.Entity entityMC;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {

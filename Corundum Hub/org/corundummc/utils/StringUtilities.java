@@ -43,6 +43,11 @@ public class StringUtilities {
         return border;
     }
 
+    /** This method capitalizes the first letter of the given <tt>String</tt>.
+     * 
+     * @param to_capitalize
+     *            is the <tt>String</tt> to be capitalized.
+     * @return the given <tt>String</tt> with the first character capitalized (if it is a letter). */
     public static String capitalize(String to_capitalize) {
         if (to_capitalize == null || to_capitalize.equals(""))
             return to_capitalize;

@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -23,7 +24,7 @@ import org.corundummc.entities.Player.GameMode;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.exceptions.CorundumSecurityException;
-import org.corundummc.hub.AbstractCorundumServer;
+import org.corundummc.hub.Server;
 import org.corundummc.hub.CorundumHub;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.listeners.CommandListener;
@@ -35,12 +36,13 @@ import org.corundummc.plugins.PluginThread;
 import org.corundummc.types.IDedType;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.utils.versioning.Version;
 
 /** This class represents the entirety of a Corundum server.
  * 
  * @author REALDrummer */
-public class CorundumServer extends DedicatedServer implements AbstractCorundumServer, Commander {
-    public static final String VERSION = "pre-α", MCVERSION = "1.7.10";
+public class CorundumServer extends DedicatedServer implements Server, Commander {
+    private static final Version VERSION = new Version("pre-α"), MCVERSION = new Version("1.7.10");
 
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public static final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
@@ -254,7 +256,7 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     // overrides
     @Override
     public String toString() {
-        return "\\Corundum";
+        return "the Corundum server \"" + getName() + "\" (v" + getVersion() + ")";
     }
 
     // Minecraft utils
@@ -305,6 +307,10 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
 
     public int getSpawnRadius() {
         return getSpawnProtectionSize();
+    }
+
+    public String getHostName() {
+        return getHostname();
     }
 
     public boolean hasNether() {
@@ -391,8 +397,19 @@ public class CorundumServer extends DedicatedServer implements AbstractCorundumS
     }
 
     @Override
+    public Version getMCVersion() {
+        return MCVERSION;
+    }
+
+    @Override
     public String getName() {
-        return getHostname();
+        // TODO: make "Corundum" the default, but allow the name of the server to be configured
+        return "Corundum";
+    }
+
+    @Override
+    public Version getVersion() {
+        return VERSION;
     }
 
     /** Helper method as the actual method is SRG named in MCP 1.7.10

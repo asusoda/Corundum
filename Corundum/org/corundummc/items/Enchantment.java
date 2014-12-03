@@ -13,19 +13,15 @@
 package org.corundummc.items;
 
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.hub.CorundumThread;
 import org.corundummc.items.Item.ItemType;
-import org.corundummc.utils.ListUtilities;
-import org.corundummc.utils.myList.myList;
-
 import org.corundummc.types.IDedType;
-import org.corundummc.types.IDedTypeWithData;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.corundummc.types.TypedObject;
+import org.corundummc.world.Location;
 
 import static org.corundummc.utils.StringUtilities.*;
 
-public class Enchantment {
+public class Enchantment implements TypedObject {
     private int level;
     private EnchantmentType type;
 
@@ -47,15 +43,13 @@ public class Enchantment {
             ItemType.DIAMOND_SHOVEL };
     private static final ItemType[] allHoeTypes = new ItemType[] { ItemType.WOODEN_HOE, ItemType.STONE_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.DIAMOND_HOE };
 
-    private final net.minecraft.enchantment.Enchantment mcEnchantment;
-
     public Enchantment(int level, EnchantmentType type) {
         if (!(level > type.getMaxLevel())) {
             this.level = level;
             this.type = type;
-            this.mcEnchantment = type.getMcEnchant();
         } else {
-            throw new EnchantmentLevelException("Attempted to create an enchantment with a level higher than the maximum possible for it's enchantment type!", type, level);
+            throw new EnchantmentLevelException(capitalize(CorundumThread.currentThread().getActor())
+                    + " attempted to create an enchantment with a level higher than the maximum possible for it's enchantment type!", type, level);
         }
     }
 
@@ -65,10 +59,6 @@ public class Enchantment {
 
     public EnchantmentType getType() {
         return this.type;
-    }
-
-    net.minecraft.enchantment.Enchantment getMCEnchantment() {
-        return this.mcEnchantment;
     }
 
     public static class EnchantmentType extends IDedType<EnchantmentType> {
@@ -87,10 +77,10 @@ public class Enchantment {
                 POWER = new EnchantmentType(net.minecraft.enchantment.Enchantment.power), PUNCH = new EnchantmentType(net.minecraft.enchantment.Enchantment.punch),
                 FLAME = new EnchantmentType(net.minecraft.enchantment.Enchantment.flame), INFINITY = new EnchantmentType(net.minecraft.enchantment.Enchantment.infinity);
 
-        private net.minecraft.enchantment.Enchantment mcEnchant;
+        private net.minecraft.enchantment.Enchantment enchantmentMC;
 
         private EnchantmentType(net.minecraft.enchantment.Enchantment mcEnchant) {
-            this.mcEnchant = mcEnchant;
+            this.enchantmentMC = mcEnchant;
         }
 
         public static ItemType[] getApplicableItems() {
@@ -99,11 +89,7 @@ public class Enchantment {
         }
 
         public byte getMaxLevel() {
-            return (byte) mcEnchant.getMaxLevel();
-        }
-
-        public net.minecraft.enchantment.Enchantment getMcEnchant() {
-            return this.mcEnchant;
+            return (byte) enchantmentMC.getMaxLevel();
         }
 
         public static EnchantmentType getByID(int id) {
@@ -157,4 +143,5 @@ public class Enchantment {
             return item;
         }
     }
+
 }

@@ -11,7 +11,7 @@ public class CorundumThread extends Thread {
     private final CorundumJarLoader Minecraft_loader, Corundum_loader;
     private final String[] arguments;
 
-    private AbstractCorundumServer server = null;
+    private Server server = null;
 
     public CorundumThread(String file_path, CorundumJarLoader Minecraft_loader, String... arguments) {
         this.Minecraft_loader = Minecraft_loader;
@@ -158,7 +158,11 @@ public class CorundumThread extends Thread {
         return (CorundumThread) Thread.currentThread();
     }
 
-    public AbstractCorundumServer getServer() {
+    public String getActor() {
+        return server.toString();
+    }
+
+    public Server getServer() {
         return server;
     }
 
@@ -170,7 +174,7 @@ public class CorundumThread extends Thread {
             // get the CorundumServer class
             Class<?> main_class = Class.forName("org.corundummc.CorundumServer", true, Corundum_loader);
             // make a new CorundumServer
-            server = (AbstractCorundumServer) main_class.getConstructor().newInstance();
+            server = (Server) main_class.getConstructor().newInstance();
             // start the new CorundumServer
             main_class.getMethod("start", String[].class).invoke(server, (Object) arguments);
         } catch (ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {

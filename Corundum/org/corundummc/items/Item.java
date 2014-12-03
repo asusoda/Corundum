@@ -37,7 +37,11 @@ public class Item {
 
     // constructors
     public Item(ItemType type, Enchantment... enchantments) {
-        itemMC = new net.minecraft.item.ItemStack(type.itemTypeMC);
+        this(type, 1, enchantments);
+    }
+
+    public Item(ItemType type, int amount, Enchantment... enchantments) {
+        itemMC = new net.minecraft.item.ItemStack(type.itemTypeMC, amount);
 
         enchant(enchantments);
     }
@@ -398,7 +402,7 @@ public class Item {
                     return ItemType.LEATHER;
                 default:
                     throw new CIE("This piece of armor is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
-                            + CorundumServer.MCVERSION + "?", "unidentified tool material", "material=" + material.toString());
+                            + CorundumServer.getInstance().getMCVersion() + "?", "unidentified tool material", "material=" + material.toString());
             }
         }
 
@@ -416,7 +420,7 @@ public class Item {
                     return BlockType.OAK_WOOD_PLANKS;
                 default:
                     throw new CIE("This tool is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
-                            + CorundumServer.MCVERSION + "?", "unidentified tool material", "material=" + material.toString());
+                            + CorundumServer.getInstance().getMCVersion() + "?", "unidentified tool material", "material=" + material.toString());
             }
         }
 
@@ -516,8 +520,17 @@ public class Item {
 
     // TODO: add methods for adding, removing, and modifying enchantments
     public void enchant(Enchantment... enchantments) {
-        for (Enchantment enchantment : enchantments)
-            itemMC.addEnchantment(enchantment.getMCEnchantment(), enchantment.getLevel());
+        for (Enchantment enchantment : enchantments) {
+            net.minecraft.enchantment.Enchantment enchantmentMC = null;
+            if (enchantment.getType().getID() >= 0 && enchantment.getType().getID() < net.minecraft.enchantment.Enchantment.enchantmentsList.length)
+                enchantmentMC = net.minecraft.enchantment.Enchantment.enchantmentsList[enchantment.getType().getID()];
+
+            if (enchantmentMC == null)
+                throw new CIE("A Corundum Enchantment had an I.D. that didn't correspond to any Minecraft Enchantment!", "unrecognized enchantment I.D.", "enchantment="
+                        + enchantment, "I.D.=" + enchantment);
+            else
+                itemMC.addEnchantment(enchantmentMC, enchantment.getLevel());
+        }
     }
 
     public myList<Enchantment> getEnchantments() {
