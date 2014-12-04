@@ -34,6 +34,7 @@ import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
 import org.corundummc.plugins.PluginThread;
 import org.corundummc.types.IDedType;
+import org.corundummc.utils.SettingsManager;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.utils.versioning.Version;
@@ -78,6 +79,8 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * non-<b>null</b> {@link UUID}s represent players. Note that all players (+ {@link Corundum#CONSOLE console}) who are in verbose debugging mode are also in regular
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
+
+    private SettingsManager settings = new SettingsManager(new File("corundum_settings.json"), /* TODO decide on standard file type for Corundum settings */ "server_name", "Corundum");
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -403,8 +406,8 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
 
     @Override
     public String getName() {
-        // TODO: make "Corundum" the default, but allow the name of the server to be configured
-        return "Corundum";
+        // TODO: decide on var to change the server's name.
+        return settings.getString("server_name");
     }
 
     @Override
