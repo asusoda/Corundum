@@ -33,10 +33,6 @@ public class Entity extends Creatable implements Physical {
         this.entityMC = entityMC;
     }
 
-    public Entity(EntityType type) {
-        this(((Entity) type.newInstance()).entityMC);
-    }
-
     public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
         // TODO: see if a Player entity has the I.D. 0
 
@@ -108,6 +104,8 @@ public class Entity extends Creatable implements Physical {
          * a block and declaring one with a data value >= 0 will start a new block. */
         protected EntityType() {
             super();
+
+            addValueAs(EntityType.class);
         }
 
         /** This constructor makes a EntityType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
@@ -120,6 +118,8 @@ public class Entity extends Creatable implements Physical {
          *            is the data value for this {@link EntityType}. */
         protected EntityType(int data) {
             super(data);
+
+            addValueAs(EntityType.class);
         }
 
         /** This constructor makes a EntityType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
@@ -131,12 +131,8 @@ public class Entity extends Creatable implements Physical {
          * @see {@link #EntityType(int)} */
         protected EntityType(int id, int data) {
             super(id, data);
-        }
 
-        @Override
-        public Creatable newInstance() {
-            throw new CIE("Some EntityType didn't override its newInstance() method!", "EntityType with an unimplemented newInstance() method", "type=" + toString(), "class="
-                    + getClass().getSimpleName());
+            addValueAs(EntityType.class);
         }
 
         // pseudo-enum utils

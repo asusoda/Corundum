@@ -1,4 +1,4 @@
-package org.corundummc.entities.living.animals;
+package org.corundummc.entities.living.mobs.animals;
 
 import net.minecraft.entity.passive.*;
 

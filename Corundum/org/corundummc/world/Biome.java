@@ -16,9 +16,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.corundummc.entities.living.mobs.Mob.MobType;
-import org.corundummc.entities.living.animals.Animal.AnimalType;
+import org.corundummc.entities.living.mobs.animals.Animal.AnimalType;
 import org.corundummc.types.IDedType;
 import org.corundummc.world.Block.BlockType;
+
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
@@ -30,6 +31,7 @@ public class Biome {
     }
 
     public static class BiomeType extends IDedType<BiomeType> {
+
         public static final BiomeType OCEAN = new BiomeType(), PLAINS = new BiomeType(), DESERT = new BiomeType(), EXTREME_HILLS = new BiomeType(), FOREST = new BiomeType(),
                 TAIGA = new BiomeType(), SWAMPLAND = new BiomeType(), RIVER = new BiomeType(), NETHER = new BiomeType(), END = new BiomeType(),
                 FROZEN_OCEAN = new BiomeType(), FROZEN_RIVER = new BiomeType(), ICE_PLAINS = new BiomeType(), ICE_MOUNTAINS = new BiomeType(),
@@ -58,8 +60,6 @@ public class Biome {
             this.biomeMC = BiomeGenBase.func_150568_d(getID());
         }
 
-        /* DEV NOTES: This constructor should only be useful for variant biomes since their I.D.s skip values. Also, note that variant biome I.D.s are equal to their parent
-         * biomes' I.D.s + 128 */
         private BiomeType(int id) {
             super(id);
 

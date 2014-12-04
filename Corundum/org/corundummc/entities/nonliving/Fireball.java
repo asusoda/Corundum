@@ -4,19 +4,14 @@ import org.corundummc.world.Location;
 
 /** Base for Fireballs. */
 public class Fireball extends Projectile {
-    public Fireball(Location location) {
-        // TODO: what are the differences between Blaze and Ghast fireballs and which should we default to?
-        this(FireballType.BLAZE_FIREBALL, location);
-    }
-
-    public Fireball(FireballType fireballType, Location location) {
-        super(fireballType, location);
+    protected Fireball(net.minecraft.entity.Entity entityMC) {
+        super(entityMC);
     }
 
     public static class FireballType extends ProjectileType<FireballType> {
         @SuppressWarnings("unchecked")
-        public static final FireballType BLAZE_FIREBALL = new FireballType((ProjectileType<FireballType>) ProjectileType.BLAZE_FIREBALL), GHAST_FIREBALL = new FireballType(
-                (ProjectileType<FireballType>) ProjectileType.GHAST_FIREBALL);
+        public static final FireballType BLAZE_FIREBALL = new FireballType((ProjectileType<FireballType>) ProjectileType.SMALL_FIREBALL), GHAST_FIREBALL = new FireballType(
+                (ProjectileType<FireballType>) ProjectileType.LARGE_FIREBALL);
 
         protected FireballType(ProjectileType<FireballType> parent) {
             super(parent);

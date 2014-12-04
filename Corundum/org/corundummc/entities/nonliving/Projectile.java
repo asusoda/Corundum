@@ -30,7 +30,7 @@ public class Projectile extends NonLivingEntity {
             }
 
         }, // TODO: override create() methods for each type here
-                SNOWBALL = new ProjectileType(), GHAST_FIREBALL = new ProjectileType(), BLAZE_FIREBALL = new ProjectileType(),
+                SNOWBALL = new ProjectileType(), LARGE_FIREBALL = new ProjectileType(), SMALL_FIREBALL = new ProjectileType(),
                 ENDER_PEARL = new ProjectileType(),
                 EYE_OF_ENDER = new ProjectileType(), SPLASH_POTION = new ProjectileType(), BOTTLE_O_ENCHANTING = new ProjectileType(), WITHER_SKULL = new ProjectileType();
 

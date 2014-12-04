@@ -1,6 +1,9 @@
 package org.corundummc.entities;
 
+import net.minecraft.entity.EntityList;
+
 import org.corundummc.entities.nonliving.Projectile.ProjectileType;
+import org.corundummc.types.Creatable;
 import org.corundummc.world.Location;
 
 /** Class that represents an entity that isn't alive like Cows. Examples include arrows, item entities, boats, etc. Also a base for the specialised non living Entity classes. */
@@ -8,10 +11,6 @@ public class NonLivingEntity extends Entity {
 
     protected NonLivingEntity(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
-    }
-
-    protected NonLivingEntity(NonLivingEntityType<?> type) {
-        super(type);
     }
 
     public static abstract class NonLivingEntityType<T extends NonLivingEntityType<T>> extends EntityType<T> {
@@ -28,7 +27,7 @@ public class NonLivingEntity extends Entity {
                                                                                                * EntityType . FISHING_ROD_BOBBER ) , LIGHTNING_BOLT = new NonLivingEntityType (
                                                                                                * EntityType . LIGHTNING_BOLT ) , */
                 PAINTING = new NonLivingEntityType(EntityType.PAINTING), ITEM_FRAME = new NonLivingEntityType(EntityType.ITEM_FRAME),
-                GHAST_FIREBALL = ProjectileType.GHAST_FIREBALL, BLAZE_FIREBALL = ProjectileType.BLAZE_FIREBALL, ENDER_CRYSTAL = new NonLivingEntityType(
+                LARGE_FIREBALL = ProjectileType.LARGE_FIREBALL, SMALL_FIREBALL = ProjectileType.SMALL_FIREBALL, ENDER_CRYSTAL = new NonLivingEntityType(
                         EntityType.ENDER_CRYSTAL)/* , EGG = new NonLivingEntityType(EntityType.EGG) */;
 
         protected NonLivingEntityType() {

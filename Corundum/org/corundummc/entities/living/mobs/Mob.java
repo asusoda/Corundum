@@ -12,14 +12,18 @@
 
 package org.corundummc.entities.living.mobs;
 
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityMob;
+
 import org.corundummc.entities.Entity;
+import org.corundummc.entities.LivingEntity.LivingEntityType;
 import org.corundummc.items.Item;
+import org.corundummc.types.Creatable;
 
 public class Mob extends Entity {
 
-    public Mob(EntityMob mobMC) {
-        super(mobMC);
+    public Mob(net.minecraft.entity.Entity entityMC) {
+        super(entityMC);
     }
 
     public Item[] getDrops() {
@@ -27,57 +31,48 @@ public class Mob extends Entity {
         return null;
     }
 
-    public MobType getMobType() {
-        // TODO
-        return null;
-    }
+    /** This class is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different
+     * I.D.s, but also many of those differentiated by different data values; for example, {@link #FARMER_VILLAGER farmer villagers} and {@link #LIBRARIAN_VILLAGER librarian
+     * villager} are both represented as separate types despite the fact that they both have the same I.D. value.
+     * 
+     * @param <T>
+     *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
+    public static class MobType<T extends LivingEntityType<T>> extends LivingEntityType<T> {
 
-    /** This enum is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different
-     * I.D.s, but also many of those differentiated by different data values; for example, {@link #ZOMBIE zombies} and {@link #ZOMBIFIED_VILLAGER zombified villagers} are both
-     * represented as separate types despite the fact that they both have the same I.D. value. */
-    public enum MobType {
-        PLAYER(EntityType.PLAYER, false, true),
-        PIG(EntityType.PIG, false, false),
-        SKELETON(EntityType.SKELETON, true, false),
-        ZOMBIE(EntityType.ZOMBIE, true, false),
-        ZOMBIFIED_VILLAGER(EntityType.ZOMBIFIED_VILLAGER, true, false),
-        ZOMBIE_PIGMAN(EntityType.ZOMBIE_PIGMAN, false, false),
-        COW(EntityType.COW, false, false),
-        CHICKEN(EntityType.CHICKEN, false, false),
-        HORSE(EntityType.HORSE, false, false),
-        SHEEP(EntityType.SHEEP, false, false),
-        MOOSHROOM(EntityType.MOOSHROOM, false, false),
-        FARMER_VILLAGER(EntityType.FARMER_VILLAGER, false, false),
-        LIBRARIAN_VILLAGER(EntityType.LIBRARIAN_VILLAGER, false, false),
-        PRIEST_VILLAGER(EntityType.PRIEST_VILLAGER, false, false),
-        BLACKSMITH_VILLAGER(EntityType.BLACKSMITH_VILLAGER, false, false),
-        BUTCHER_VILLAGER(EntityType.BUTCHER_VILLAGER, false, false),
-        WOLF(EntityType.WOLF, false, false),
-        OCELOT(EntityType.OCELOT, false, false),
-        SQUID(EntityType.SQUID, false, false),
-        BAT(EntityType.BAT, false, true),
-        CREEPER(EntityType.CREEPER, false, false),
-        SPIDER(EntityType.SPIDER, false, false),
-        CAVE_SPIDER(EntityType.CAVE_SPIDER, false, false),
-        ENDERMAN(EntityType.ENDERMAN, false, false),
-        WITCH(EntityType.WITCH, false, false),
-        BLAZE(EntityType.BLAZE, false, true),
-        SLIME(EntityType.SLIME, false, false),
-        MAGMA_CUBE(EntityType.MAGMA_CUBE, false, false),
-        GHAST(EntityType.GHAST, false, true),
-        ENDER_DRAGON(EntityType.ENDER_DRAGON, false, true),
-        WITHER(EntityType.WITHER, false, true);
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public static final MobType<?> FARMER_VILLAGER = VillagerType.FARMER_VILLAGER, LIBRARIAN_VILLAGER = VillagerType.LIBRARIAN_VILLAGER;
 
-        // Used to get basic data about the mob, mainly used because I don't want to redo all of EntityType again.
-        private final EntityType entityType;
-
-        private MobType(EntityType entityType, boolean burnsInSunlight, boolean canFly) {
-            this.entityType = entityType;
+        protected MobType() {
+            super();
         }
 
-        public EntityType getEntityType() {
-            return this.entityType;
+        protected MobType(int data) {
+            super(data);
         }
 
+        protected MobType(int id, int data) {
+            super(id, data);
+        }
+
+        @Override
+        public Mob create() {
+            return new Mob(EntityList.createEntityByID(getID(), null));
+        }
+
+        // pseudo-enum utilities
+        @SuppressWarnings("unchecked")
+        public static MobType<?> getByID(int id) {
+            return getByID(MobType.class, id);
+        }
+
+        @SuppressWarnings("unchecked")
+        public static MobType<?> getByID(int id, int data) {
+            return getByID(MobType.class, id, data);
+        }
+
+        @SuppressWarnings("unchecked")
+        public static MobType<?>[] values() {
+            return values(MobType.class);
+        }
     }
 }

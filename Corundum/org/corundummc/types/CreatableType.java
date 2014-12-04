@@ -13,5 +13,5 @@ public abstract class CreatableType<T extends CreatableType<T>> extends IDedType
         super(id, data);
     }
 
-    public abstract Creatable newInstance();
+    public abstract Creatable create();
 }
