@@ -80,7 +80,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
 
-    private SettingsManager settings = new SettingsManager(new File("corundum_settings.json"), /* TODO decide on standard file type for Corundum settings */ "server_name", "Corundum");
+    private SettingsManager settings = new SettingsManager(new File("settings.json"), "name", "Corundum");
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -406,8 +406,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
 
     @Override
     public String getName() {
-        // TODO: decide on var to change the server's name.
-        return settings.getString("server_name");
+        return settings.getString("name");
     }
 
     @Override
