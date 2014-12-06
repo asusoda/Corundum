@@ -1,23 +1,14 @@
 package org.corundummc.entities.nonliving;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 
-import org.corundummc.entities.LivingEntity;
 import org.corundummc.entities.NonLivingEntity;
-import org.corundummc.entities.Velocity;
-import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.types.Creatable;
-import org.corundummc.world.Location;
 
 /** Base for projectile non-living entities */
 public class Projectile extends NonLivingEntity {
     protected Projectile(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
-    }
-
-    public Projectile(ProjectileType type) {
-        super(type);
     }
 
     public static class ProjectileType<T extends NonLivingEntityType<T>> extends NonLivingEntityType<T> {
