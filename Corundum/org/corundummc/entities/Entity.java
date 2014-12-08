@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
 
+import org.corundummc.exceptions.CorundumException;
 import org.corundummc.types.Physical;
 import org.corundummc.types.Typed;
 import org.corundummc.types.IDedTypeWithData;
@@ -25,9 +26,13 @@ import org.corundummc.world.World;
 
 public abstract class Entity implements Physical {
     protected final net.minecraft.entity.Entity entityMC;
+    private Rotation rotation;
+    private Location location;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {
         this.entityMC = entityMC;
+        this.rotation = new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
+        this.location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, new World((WorldServer) entityMC.worldObj));
     }
 
     /* TODO: implement the constructors below once we find a good way to make Entities without spawning them in the Minecraft code; I think this should be done one of two
@@ -40,11 +45,15 @@ public abstract class Entity implements Physical {
     public Entity(EntityType type, Location location) {
         // TODO
         entityMC = null;
+        this.rotation = new Rotation(this.entityMC.rotationPitch, this.entityMC.rotationYaw);
+        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
     }
 
     public Entity(EntityType type, Location location, Rotation rotation) {
         // TODO
         entityMC = null;
+        this.rotation = rotation;
+        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
     }
 
     public static class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
@@ -206,10 +215,39 @@ public abstract class Entity implements Physical {
     }
 
     public void spawn() {
-        // TODO: if a location was declared earlier, use that location in spawn(Location); otherwise, throw a custom CorundumException
+        if (this.getLocation() != null) {
+            this.spawn(this.getLocation());
+        } else {
+            throw new EntityNotFullyInitialisedException("Location");
+        }
     }
 
     public void spawn(Location location) {
-        // TODO
+        if (this.entityMC != null) {
+            this.entityMC.posX = location.getX();
+            this.entityMC.posY = location.getY();
+            this.entityMC.posZ = location.getZ();
+            this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
+            this.entityMC.rotationPitch = this.rotation.getPitch();
+            this.entityMC.rotationYaw = this.rotation.getYaw();
+        } else {
+            throw new EntityNotFullyInitialisedException("MC Entity");
+        }
+    }
+
+    public Rotation getRotation() {
+        return this.rotation;
+    }
+
+    public void setRotation(Rotation rotation) {
+        this.entityMC.rotationPitch = rotation.getPitch();
+        this.entityMC.rotationYaw = rotation.getYaw();
+        this.rotation = rotation;
+    }
+
+    public class EntityNotFullyInitialisedException extends CorundumException {
+        public EntityNotFullyInitialisedException(String thingsNotInited, Object... additionalInformation) {
+            super("An entity hasn't been fully initialised!", "The entity's " + thingsNotInited + " has/have not been fully initialised.", additionalInformation);
+        }
     }
 }
