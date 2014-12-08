@@ -60,7 +60,22 @@ public class NonLivingEntity extends Entity {
 
     public void setRotation(Rotation rotation) {
         // TODO
+        this.entityMC.rotationPitch = rotation.getPitch();
+        this.entityMC.rotationYaw = rotation.getYaw();
     }
 
     // TODO: spawn() and spawn(Location)
+    public void spawn() {
+        this.entityMC.posX = this.getLocation().getX();
+        this.entityMC.posY = this.getLocation().getY();
+        this.entityMC.posZ = this.getLocation().getZ();
+        this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
+    }
+
+    public void spawn(Location location) {
+        this.entityMC.posX = location.getX();
+        this.entityMC.posY = location.getY();
+        this.entityMC.posZ = location.getZ();
+        this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
+    }
 }
