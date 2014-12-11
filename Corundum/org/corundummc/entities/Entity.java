@@ -28,11 +28,13 @@ public abstract class Entity implements Physical {
     protected final net.minecraft.entity.Entity entityMC;
     private Rotation rotation;
     private Location location;
+    private Velocity velocity;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {
         this.entityMC = entityMC;
         this.rotation = new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
         this.location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, new World((WorldServer) entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     /* TODO: implement the constructors below once we find a good way to make Entities without spawning them in the Minecraft code; I think this should be done one of two
@@ -47,6 +49,7 @@ public abstract class Entity implements Physical {
         entityMC = null;
         this.rotation = new Rotation(this.entityMC.rotationPitch, this.entityMC.rotationYaw);
         this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     public Entity(EntityType type, Location location, Rotation rotation) {
@@ -54,6 +57,7 @@ public abstract class Entity implements Physical {
         entityMC = null;
         this.rotation = rotation;
         this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     public static class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
@@ -184,7 +188,10 @@ public abstract class Entity implements Physical {
 
     @Override
     public Location getLocation() {
-        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+        this.location.setX(this.entityMC.posX);
+        this.location.setY(this.entityMC.posY);
+        this.location.setZ(this.entityMC.posZ);
+        return this.location;
     }
 
     @Override
@@ -204,7 +211,10 @@ public abstract class Entity implements Physical {
 
     public Velocity getVelocity() {
         // TODO TEST
-        return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ, this);
+        this.velocity.setX(this.entityMC.motionX);
+        this.velocity.setY(this.entityMC.motionY);
+        this.velocity.setZ(this.entityMC.motionZ);
+        return this.velocity;
     }
 
     public void setVelocity(Velocity velocity) {
@@ -236,6 +246,8 @@ public abstract class Entity implements Physical {
     }
 
     public Rotation getRotation() {
+        this.rotation.setPitch(this.entityMC.rotationPitch);
+        this.rotation.setYaw(this.entityMC.rotationYaw);
         return this.rotation;
     }
 
@@ -247,7 +259,7 @@ public abstract class Entity implements Physical {
 
     public class EntityNotFullyInitialisedException extends CorundumException {
         public EntityNotFullyInitialisedException(String thingsNotInited, Object... additionalInformation) {
-            super("An entity hasn't been fully initialised!", "The entity's " + thingsNotInited + " has/have not been fully initialised.", additionalInformation);
+            super("An entity hasn't been fully initialised!", "The Entity's " + thingsNotInited + " has/have not been fully initialised.", additionalInformation);
         }
     }
 }
