@@ -16,8 +16,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
 
-import org.corundummc.entities.NonLivingEntity.NonLivingEntityType;
+import org.corundummc.entities.living.LivingEntity.LivingEntityType;
+import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
 import org.corundummc.exceptions.CIE;
+import org.corundummc.items.Item;
 import org.corundummc.types.Creatable;
 import org.corundummc.types.CreatableType;
 import org.corundummc.types.Physical;
@@ -33,67 +35,106 @@ public class Entity extends Creatable implements Physical {
         this.entityMC = entityMC;
     }
 
-    public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
-        // TODO: see if a Player entity has the I.D. 0
+    public Item[] getDrops() {
+        // TODO
+        return null;
+    }
 
+    public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
         // TODO: replace all new EntityTypes here with subclass types where applicable
-        public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
-                PAINTING = new EntityType(), ARROW = new EntityType(), SNOWBALL = new EntityType(), GHAST_FIREBALL = new EntityType(), BLAZE_FIREBALL = new EntityType(),
-                ENDER_PEARL = new EntityType(), EYE_OF_ENDER = new EntityType(), SPLASH_POTION = new EntityType(), BOTTLE_O_ENCHANTING = new EntityType(),
-                ITEM_FRAME = new EntityType(), WITHER_SKULL = new EntityType(), EGG = new EntityType(),
-                TNT = new EntityType(),
-                FALLING_BLOCK = new EntityType(),
-                ARMOR_STAND = new EntityType(30),
-                COMMAND_MINECART = new EntityType(40),
-                BOAT = new EntityType(),
-                MINECART = new EntityType(),
-                STORAGE_MINECART = new EntityType(),
-                POWERED_MINECART = new EntityType(),
-                TNT_MINECART = new EntityType(),
-                HOPPER_MINECART = new EntityType(),
-                SPAWNER_MINECART = new EntityType(),
-                MOB = new EntityType(),
-                MONSTER = new EntityType(),
-                CREEPER = new EntityType(),
-                // skeletons
-                SKELETON = new EntityType(0),
-                WITHER_SKELETON = new EntityType(),
-                // END skeletons
-                SPIDER = new EntityType(-1),
-                GIANT = new EntityType(),
-                // zombies
-                // TODO: figure out if these data values are correct
-                ZOMBIE = new EntityType(0),
-                ZOMBIFIED_VILLAGER = new EntityType(),
-                BABY_ZOMBIE = new EntityType(),
-                BABY_ZOMBIFIED_VILLAGER = new EntityType(),
-                // END zombies
-                SLIME = new EntityType(-1), GHAST = new EntityType(), ZOMBIE_PIGMAN = new EntityType(), ENDERMAN = new EntityType(), CAVE_SPIDER = new EntityType(),
-                SILVERFISH = new EntityType(), BLAZE = new EntityType(), MAGMA_CUBE = new EntityType(), ENDER_DRAGON = new EntityType(),
-                WITHER = new EntityType(),
-                BAT = new EntityType(),
-                WITCH = new EntityType(),
-                ENDERMITE = new EntityType(),
-                // guardians
-                // TODO: figure out if these data values are correct
-                GUARDIAN = new EntityType(0),
-                ELDER_GUARDIAN = new EntityType(),
-                // END guardians
-                PIG = new EntityType(90, -1), SHEEP = new EntityType(), COW = new EntityType(), CHICKEN = new EntityType(), SQUID = new EntityType(), WOLF = new EntityType(),
-                MOOSHROOM = new EntityType(), SNOW_GOLEM = new EntityType(), OCELOT = new EntityType(), IRON_GOLEM = new EntityType(),
-                HORSE = new EntityType(),
-                // rabbits
-                // TODO: figure out if these data values are correct
-                RABBIT = new EntityType(0),
-                KILLER_RABBIT = new EntityType(),
-                // END rabbits
-                // villagers
-                /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd,
-                 * of fletcher) are handled. */
-                FARMER_VILLAGER = new EntityType(120, 0), LIBRARIAN_VILLAGER = new EntityType(), PRIEST_VILLAGER = new EntityType(), BLACKSMITH_VILLAGER = new EntityType(),
-                BUTCHER_VILLAGER = new EntityType(),
-                // END villagers
-                ENDER_CRYSTAL = new EntityType(200, -1);
+
+        public static final EntityType<?> PLAYER = LivingEntityType.PLAYER;
+        public static final EntityType<?> DROPPED_ITEM = NonLivingEntityType.DROPPED_ITEM;
+        public static final EntityType<?> XP_ORB = NonLivingEntityType.XP_ORB;
+        public static final EntityType<?> LEAD = NonLivingEntityType.LEAD;
+        public static final EntityType<?> PAINTING = NonLivingEntityType.PAINTING;
+        public static final EntityType<?> ARROW = NonLivingEntityType.ARROW;
+        public static final EntityType<?> SNOWBALL = NonLivingEntityType.SNOWBALL;
+        public static final EntityType<?> LARGE_FIREBALL = NonLivingEntityType.LARGE_FIREBALL;
+        public static final EntityType<?> SMALL_FIREBALL = NonLivingEntityType.SMALL_FIREBALL;
+        public static final EntityType<?> ENDER_PEARL = NonLivingEntityType.ENDER_PEARL;
+        public static final EntityType<?> EYE_OF_ENDER = NonLivingEntityType.EYE_OF_ENDER;
+        public static final EntityType<?> SPLASH_POTION = NonLivingEntityType.SPLASH_POTION;
+        public static final EntityType<?> BOTTLE_O_ENCHANTING = NonLivingEntityType.BOTTLE_O_ENCHANTING;
+        public static final EntityType<?> ITEM_FRAME = NonLivingEntityType.ITEM_FRAME;
+        public static final EntityType<?> WITHER_SKULL = NonLivingEntityType.WITHER_SKULL;
+        public static final EntityType<?> EGG = NonLivingEntityType.EGG;
+        public static final EntityType<?> TNT = NonLivingEntityType.TNT;
+        public static final EntityType<?> FALLING_BLOCK = NonLivingEntityType.FALLING_BLOCK;
+        // public static final EntityType<?> ARMOR_STAND = NonLivingEntityType.ARMOR_STAND;
+        public static final EntityType<?> COMMAND_MINECART = NonLivingEntityType.COMMAND_MINECART;
+        public static final EntityType<?> BOAT = NonLivingEntityType.BOAT;
+        public static final EntityType<?> MINECART = NonLivingEntityType.MINECART;
+        public static final EntityType<?> STORAGE_MINECART = NonLivingEntityType.STORAGE_MINECART;
+        public static final EntityType<?> POWERED_MINECART = NonLivingEntityType.POWERED_MINECART;
+        public static final EntityType<?> TNT_MINECART = NonLivingEntityType.TNT_MINECART;
+        public static final EntityType<?> HOPPER_MINECART = NonLivingEntityType.HOPPER_MINECART;
+        public static final EntityType<?> SPAWNER_MINECART = NonLivingEntityType.SPAWNER_MINECART;
+        public static final EntityType<?> MOB = LivingEntityType.MOB;
+        public static final EntityType<?> MONSTER = LivingEntityType.MONSTER;
+        public static final EntityType<?> CREEPER = LivingEntityType.CREEPER;
+        // skeletons
+        public static final EntityType<?> SKELETON = LivingEntityType.SKELETON;
+        public static final EntityType<?> WITHER_SKELETON = LivingEntityType.WITHER_SKELETON;
+        // END skeletons
+        public static final EntityType<?> SPIDER = LivingEntityType.SPIDER;
+        public static final EntityType<?> GIANT = LivingEntityType.GIANT;
+        // zombies
+        // TODO: figure out if these data values are correct
+        public static final EntityType<?> ZOMBIE = LivingEntityType.ZOMBIE;
+        public static final EntityType<?> ZOMBIFIED_VILLAGER = LivingEntityType.ZOMBIFIED_VILLAGER;
+        public static final EntityType<?> BABY_ZOMBIE = LivingEntityType.BABY_ZOMBIE;
+        public static final EntityType<?> BABY_ZOMBIFIED_VILLAGER = LivingEntityType.BABY_ZOMBIFIED_VILLAGER;
+        // END zombies
+        public static final EntityType<?> SLIME = LivingEntityType.SLIME;
+        public static final EntityType<?> GHAST = LivingEntityType.GHAST;
+        public static final EntityType<?> ZOMBIE_PIGMAN = LivingEntityType.ZOMBIE_PIGMAN;
+        public static final EntityType<?> ENDERMAN = LivingEntityType.ENDERMAN;
+        public static final EntityType<?> CAVE_SPIDER = LivingEntityType.CAVE_SPIDER;
+        public static final EntityType<?> SILVERFISH = LivingEntityType.SILVERFISH;
+        public static final EntityType<?> BLAZE = LivingEntityType.BLAZE;
+        public static final EntityType<?> MAGMA_CUBE = LivingEntityType.MAGMA_CUBE;
+        public static final EntityType<?> ENDER_DRAGON = LivingEntityType.ENDER_DRAGON;
+        public static final EntityType<?> WITHER = LivingEntityType.WITHER;
+        public static final EntityType<?> BAT = LivingEntityType.BAT;
+        public static final EntityType<?> WITCH = LivingEntityType.WITCH;
+        public static final EntityType<?> ENDERMITE = LivingEntityType.ENDERMITE;
+        // guardians
+        public static final EntityType<?> GUARDIAN = LivingEntityType.GUARDIAN;
+        public static final EntityType<?> ELDER_GUARDIAN = LivingEntityType.ELDER_GUARDIAN;
+        // END guardians
+        public static final EntityType<?> PIG = LivingEntityType.PIG;
+        public static final EntityType<?> SHEEP = LivingEntityType.SHEEP;
+        public static final EntityType<?> COW = LivingEntityType.COW;
+        public static final EntityType<?> CHICKEN = LivingEntityType.CHICKEN;
+        public static final EntityType<?> SQUID = LivingEntityType.SQUID;
+        public static final EntityType<?> WOLF = LivingEntityType.WOLF;
+        public static final EntityType<?> MOOSHROOM = LivingEntityType.MOOSHROOM;
+        public static final EntityType<?> SNOW_GOLEM = LivingEntityType.SNOW_GOLEM;
+        public static final EntityType<?> OCELOT = LivingEntityType.OCELOT;
+        public static final EntityType<?> IRON_GOLEM = LivingEntityType.IRON_GOLEM;
+        public static final EntityType<?> HORSE = LivingEntityType.HORSE;
+        // rabbits
+        // TODO: figure out if these data values are correct
+        public static final EntityType<?> RABBIT = LivingEntityType.RABBIT;
+        public static final EntityType<?> KILLER_RABBIT = LivingEntityType.KILLER_RABBIT;
+        // END rabbits
+        // villagers
+        /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd, of
+         * fletcher) are handled. */
+        public static final EntityType<?> FARMER_VILLAGER = LivingEntityType.FARMER_VILLAGER;
+        public static final EntityType<?> LIBRARIAN_VILLAGER = LivingEntityType.LIBRARIAN_VILLAGER;
+        public static final EntityType<?> PRIEST_VILLAGER = LivingEntityType.PRIEST_VILLAGER;
+        public static final EntityType<?> BLACKSMITH_VILLAGER = LivingEntityType.BLACKSMITH_VILLAGER;
+        public static final EntityType<?> BUTCHER_VILLAGER = LivingEntityType.BUTCHER_VILLAGER;
+        // END villagers
+        public static final EntityType<?> ENDER_CRYSTAL = NonLivingEntityType.ENDER_CRYSTAL;
+
+        static {
+            /* TODO: if debugging mode is on, do a check to see if all the EntityTypes are organized correctly; we need to somehow make sure that 1) all the values of any
+             * given EntityType subclass has corresponding values with the same name in their parent class, 2) every type has their own overridden create() method (so their
+             * create() method should not throw a custom CorundumException that we'll make parent type create() methods throw unles overridden) */
+        }
 
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
@@ -136,11 +177,11 @@ public class Entity extends Creatable implements Physical {
         }
 
         // pseudo-enum utils
-        public static EntityType getByID(int id) {
+        public static EntityType<?> getByID(int id) {
             return getByID(EntityType.class, id);
         }
 
-        public static EntityType getByID(int id, int data) {
+        public static EntityType<?> getByID(int id, int data) {
             return getByID(EntityType.class, id, data);
         }
 
@@ -161,7 +202,7 @@ public class Entity extends Creatable implements Physical {
     }
 
     @Override
-    public EntityType getType() {
+    public EntityType<?> getType() {
         /* because Minecraft decided to not use regular data values for different types of sibling entities, like skeletons and Wither skeletons, the data values will have to
          * be found based on different methods for different types of entities here */
         if (entityMC instanceof EntitySkeleton)
@@ -178,6 +219,15 @@ public class Entity extends Creatable implements Physical {
     public Velocity getVelocity() {
         // TODO TEST
         return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ, this);
+    }
+
+    /** This method determines whether or not this {@link Entity} is one of the "unsaved {@link Entity Entities}". Unsaved {@link Entity Entities} differ from other
+     * {@link Entity Entities} in that they have no I.D. or data value associated with them and they are not saved when the server is stopped. Examples include
+     * {@link EntityType#PLAYER player Entities}, {@link EntityType#EGG thrown eggs}, and {@link EntityType#LIGHTNING_BOLT lightning bolts}.
+     * 
+     * @return <b>true</b> if this {@link Entity} is an "unsaved {@link Entity}"; <b>false</b> otherwise. */
+    public boolean isUnsaved() {
+        return getType().getID() == -1;
     }
 
     public Entity setLocation(Location location) {

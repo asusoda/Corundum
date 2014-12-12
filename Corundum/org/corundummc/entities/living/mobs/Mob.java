@@ -16,19 +16,16 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityMob;
 
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.LivingEntity.LivingEntityType;
+import org.corundummc.entities.living.LivingEntity;
+import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.items.Item;
 import org.corundummc.types.Creatable;
 
-public class Mob extends Entity {
+/** This class represents a "mob", an autonomous {@link LivingEntity} */
+public class Mob extends LivingEntity {
 
-    public Mob(net.minecraft.entity.Entity entityMC) {
+    protected Mob(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
-    }
-
-    public Item[] getDrops() {
-        // TODO
-        return null;
     }
 
     /** This class is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different
@@ -40,7 +37,8 @@ public class Mob extends Entity {
     public static class MobType<T extends LivingEntityType<T>> extends LivingEntityType<T> {
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
-        public static final MobType<?> FARMER_VILLAGER = VillagerType.FARMER_VILLAGER, LIBRARIAN_VILLAGER = VillagerType.LIBRARIAN_VILLAGER;
+        public static final MobType<?> FARMER_VILLAGER = NonHostileMobs.FARMER_VILLAGER;
+        public static final MobType<?> LIBRARIAN_VILLAGER = NonHostileMobs.LIBRARIAN_VILLAGER;
 
         protected MobType() {
             super();
@@ -52,11 +50,6 @@ public class Mob extends Entity {
 
         protected MobType(int id, int data) {
             super(id, data);
-        }
-
-        @Override
-        public Mob create() {
-            return new Mob(EntityList.createEntityByID(getID(), null));
         }
 
         // pseudo-enum utilities

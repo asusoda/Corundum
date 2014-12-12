@@ -1,15 +1,14 @@
-package org.corundummc.entities;
+package org.corundummc.entities.living;
 
+import org.corundummc.entities.Entity;
+import org.corundummc.entities.Entity.EntityType;
+import org.corundummc.items.Item;
 import org.corundummc.types.Creatable;
 
 public class LivingEntity extends Entity {
 
     protected LivingEntity(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
-    }
-
-    public LivingEntity(LivingEntityType type) {
-        super(type);
     }
 
     public static class LivingEntityType<T extends EntityType<T>> extends EntityType<T> {

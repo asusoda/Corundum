@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 import org.corundummc.items.Item;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.world.Block;
@@ -70,7 +71,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
      * {@link BlockType#STONE stone} and {@link BlockType#GRANITE granite} both have the I.D. 1, but {@link BlockType#STONE stone} has a data value of 0 while
      * {@link BlockType#GRANITE granite} has a data value of 1. Corundum refers to {@link IDedType}s with the same I.D. but different data values as "siblings".
      * 
-     * @return the I.D. associated with this {@link IDedType}. */
+     * @return the I.D. associated with this {@link IDedType} or -1 if this type is an "unsaved entity" that has no I.D. such as a {@link ProjectileType#EGG thrown egg}. */
     public short getID() {
         return id;
     }
