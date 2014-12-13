@@ -41,8 +41,6 @@ public class Entity extends Creatable implements Physical {
     }
 
     public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
-        // TODO: replace all new EntityTypes here with subclass types where applicable
-
         public static final EntityType<?> PLAYER = LivingEntityType.PLAYER;
         public static final EntityType<?> DROPPED_ITEM = NonLivingEntityType.DROPPED_ITEM;
         public static final EntityType<?> XP_ORB = NonLivingEntityType.XP_ORB;
@@ -80,7 +78,6 @@ public class Entity extends Creatable implements Physical {
         public static final EntityType<?> SPIDER = LivingEntityType.SPIDER;
         public static final EntityType<?> GIANT = LivingEntityType.GIANT;
         // zombies
-        // TODO: figure out if these data values are correct
         public static final EntityType<?> ZOMBIE = LivingEntityType.ZOMBIE;
         public static final EntityType<?> ZOMBIFIED_VILLAGER = LivingEntityType.ZOMBIFIED_VILLAGER;
         public static final EntityType<?> BABY_ZOMBIE = LivingEntityType.BABY_ZOMBIE;
@@ -120,7 +117,7 @@ public class Entity extends Creatable implements Physical {
         public static final EntityType<?> KILLER_RABBIT = LivingEntityType.KILLER_RABBIT;
         // END rabbits
         // villagers
-        /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd, of
+        /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd, or
          * fletcher) are handled. */
         public static final EntityType<?> FARMER_VILLAGER = LivingEntityType.FARMER_VILLAGER;
         public static final EntityType<?> LIBRARIAN_VILLAGER = LivingEntityType.LIBRARIAN_VILLAGER;
@@ -133,43 +130,13 @@ public class Entity extends Creatable implements Physical {
         static {
             /* TODO: if debugging mode is on, do a check to see if all the EntityTypes are organized correctly; we need to somehow make sure that 1) all the values of any
              * given EntityType subclass has corresponding values with the same name in their parent class, 2) every type has their own overridden create() method (so their
-             * create() method should not throw a custom CorundumException that we'll make parent type create() methods throw unles overridden) */
+             * create() method should not throw a custom CorundumException that we'll make parent type create() methods throw unless overridden), 3) every type class has their
+             * own overridden create() method that returns that specific type (rather than their less specific parent type) */
         }
 
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
-        /** This constructor makes a EntityType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
-         * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this EntityType the same
-         * I.D. and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by
-         * the use of the {@link #EntityType(int)} and {@link #EntityType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end
-         * a block and declaring one with a data value >= 0 will start a new block. */
-        protected EntityType() {
-            super();
-
-            addValueAs(EntityType.class);
-        }
-
-        /** This constructor makes a EntityType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
-         * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
-         * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #EntityType(int)} and
-         * {@link #EntityType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
-         * >= 0 will start a new block.
-         * 
-         * @param data
-         *            is the data value for this {@link EntityType}. */
-        protected EntityType(int data) {
-            super(data);
-
-            addValueAs(EntityType.class);
-        }
-
-        /** This constructor makes a EntityType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
-         * 
-         * @param id
-         *            is the item I.D. that this {@link EntityType} is associated with.
-         * @param data
-         *            is the data value associated with this {@link EntityType}.
-         * @see {@link #EntityType(int)} */
+        @SuppressWarnings("javadoc")
         protected EntityType(int id, int data) {
             super(id, data);
 

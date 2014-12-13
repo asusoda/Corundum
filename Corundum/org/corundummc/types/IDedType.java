@@ -26,24 +26,10 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     private short id;
 
     // constructors
-    @SuppressWarnings("unchecked")
-    protected IDedType() {
-        IDedType<T>[] values = values(getClass());
-
-        // if there are no previous values, default to 0
-        if (values.length == 0)
-            id = 0;
-        // if there is a previous value, infer the I.D. from the previous value
-        else
-            id = (short) (values[values.length - 1].id + 1);
-
-        addValueAs((Class<IDedType<?>>) getClass());
-    }
-
     protected IDedType(int id) {
         this.id = (short) id;
 
-        addValueAs((Class<IDedType<?>>) getClass());
+        addValueAs(getClass());
     }
 
     // static utilities
@@ -74,15 +60,6 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
      * @return the I.D. associated with this {@link IDedType} or -1 if this type is an "unsaved entity" that has no I.D. such as a {@link ProjectileType#EGG thrown egg}. */
     public short getID() {
         return id;
-    }
-
-    /** <b><i>DEV NOTES:</b</i><br>
-     * This is necessary to allow {@link IDedTypeWithData} to modify {@link IDedType#id} without giving direct access to {@link IDedType#id} to extended types.
-     * 
-     * @param id
-     *            is the new I.D. to set this to. (I know you already knew that; I made this param tag so Eclipse wouldn't give me errors.) */
-    void setID(short id) {
-        this.id = id;
     }
 
     public String getName() {

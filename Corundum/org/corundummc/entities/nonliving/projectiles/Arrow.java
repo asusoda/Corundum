@@ -12,6 +12,8 @@ import org.corundummc.world.Location;
  * fires a bow. */
 public class Arrow extends Projectile {
     public Arrow() {
+        /* TODO TEST: you can pass null into here without getting immediate NPEs in the constructor as far as I can tell, but I noticed that if you pass a null world, the
+         * dimension I.D. will not be set and the dimension I.D. is also not set in Minecraft's Entity.setWorld(), so that may cause issues */
         super(new EntityArrow(null));
     }
 }

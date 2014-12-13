@@ -7,6 +7,7 @@ import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
+import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
 import org.corundummc.types.Creatable;
 import org.corundummc.world.Location;
 import org.omg.CosNaming.NamingContextPackage.NotEmpty;
@@ -15,6 +16,7 @@ import org.omg.CosNaming.NamingContextPackage.NotEmpty;
  * frames}. Note that {@link LivingEntityType#ZOMBIE zombies} are actually {@link LivingEntityType}s even though they are technically not "living", but rather "undead". */
 public class NonLivingEntity extends Entity {
 
+    @SuppressWarnings("javadoc")
     protected NonLivingEntity(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
     }
@@ -56,17 +58,12 @@ public class NonLivingEntity extends Entity {
         public static final NonLivingEntityType<?> PAINTING = HangingType.PAINTING;
 
         // others
-        public static final NonLivingEntityType<?> ENDER_CRYSTAL = new NonLivingEntityType(200);
+        public static final NonLivingEntityType<?> ENDER_CRYSTAL = new NonLivingEntityType<>(200);
         public static final NonLivingEntity.NonLivingEntityType<?> FISH_HOOK = new NonLivingEntityType<>(-1);
         public static final NonLivingEntityType<?> LEAD = new NonLivingEntityType<>(8);
         public static final NonLivingEntity.NonLivingEntityType<?> LIGHTNING_BOLT = new NonLivingEntityType<>(-1);
 
-        protected NonLivingEntityType() {
-            super(-1);
-
-            addValueAs(NonLivingEntityType.class);
-        }
-
+        @SuppressWarnings("javadoc")
         protected NonLivingEntityType(int id) {
             super(id, -1);
 

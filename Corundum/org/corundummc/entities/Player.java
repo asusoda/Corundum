@@ -36,7 +36,11 @@ public class Player /* TODO extends LivingEntity */implements Commander, Matchab
      * 
      * @author REALDrummer */
     public static class GameMode extends IDedType<GameMode> {
-        public static final GameMode SURVIVAL = new GameMode(), CREATIVE = new GameMode(), ADVENTURE = new GameMode();
+        public static final GameMode SURVIVAL = new GameMode(), CREATIVE = new GameMode(), ADVENTURE = new GameMode(), SPECTATOR = new GameMode(), HARDCORE = new GameMode();
+
+        private GameMode() {
+            super(values() == null ? 0 : values()[values().length - 1].getID() + 1);
+        }
 
         // pseudo-enum utilities
         public static GameMode getByID(int id) {

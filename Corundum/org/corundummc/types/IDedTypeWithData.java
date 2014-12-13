@@ -12,49 +12,6 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
     private final short data;
 
     // constructors
-    protected IDedTypeWithData() {
-        super();
-
-        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
-
-        // if there is no previous value, default to I.D. = data = 0
-        if (values.length == 0) {
-            setID((short) 0);
-            data = 0;
-        } // if there was a previous value, infer the I.D. and data values form that type
-        else {
-            IDedTypeWithData<T> previous_value = values[values.length - 1];
-
-            /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
-            if (previous_value.data == -1) {
-                setID((short) (previous_value.getID() + 1));
-                data = -1;
-            } /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
-            else {
-                setID(previous_value.getID());
-                data = (short) (previous_value.data + 1);
-            }
-        }
-    }
-
-    protected IDedTypeWithData(int data) {
-        super();
-
-        this.data = (short) data;
-
-        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
-
-        // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = values[values.length - 1];
-
-        // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
-        if (data <= previous_value.data)
-            setID((short) (previous_value.getID() + 1));
-        // otherwise, this is the continuation of an I.D. block, so use the same I.D.
-        else
-            setID(previous_value.getID());
-    }
-
     protected IDedTypeWithData(int id, int data) {
         super(id);
 
