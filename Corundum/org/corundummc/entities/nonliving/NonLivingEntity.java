@@ -6,6 +6,8 @@ import org.corundummc.entities.Entity;
 import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
+import org.corundummc.entities.nonliving.blocks.BlockEntityType;
+import org.corundummc.entities.nonliving.drops.Drop.DropType;
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
 import org.corundummc.types.Creatable;
@@ -14,7 +16,7 @@ import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 /** This class represents all the {@link Entity Entities} that are not living such as {@link NonLivingEntityType#BOAT boats} and {@link NonLivingEntityType#ITEM_FRAME item
  * frames}. Note that {@link LivingEntityType#ZOMBIE zombies} are actually {@link LivingEntityType}s even though they are technically not "living", but rather "undead". */
-public class NonLivingEntity extends Entity {
+public abstract class NonLivingEntity extends Entity {
 
     @SuppressWarnings("javadoc")
     protected NonLivingEntity(net.minecraft.entity.Entity entityMC) {
@@ -39,7 +41,7 @@ public class NonLivingEntity extends Entity {
         public static final NonLivingEntityType<?> BOAT = VehicleType.BOAT;
         public static final NonLivingEntityType<?> COMMAND_MINECART = VehicleType.COMMAND_MINECART;
         public static final NonLivingEntityType<?> HOPPER_MINECART = VehicleType.HOPPER_MINECART;
-        public static final NonLivingEntityType<?> MINECART = VehicleType.MINECART;
+        public static final NonLivingEntityType<?> PASSENGER_MINECART = VehicleType.PASSENGER_MINECART;
         public static final NonLivingEntityType<?> POWERED_MINECART = VehicleType.POWERED_MINECART;
         public static final NonLivingEntityType<?> SPAWNER_MINECART = VehicleType.SPAWNER_MINECART;
         public static final NonLivingEntityType<?> STORAGE_MINECART = VehicleType.STORAGE_MINECART;

@@ -1,7 +1,7 @@
 package org.corundummc.entities.living.mobs;
 
-import org.corundummc.entities.Player;
 import org.corundummc.entities.living.LivingEntity;
+import org.corundummc.entities.living.Player;
 import org.corundummc.items.Item.ItemType;
 
 /** This interface describes all {@link Mob mobs} that are capable of attacking other mobs. This includes not only {@link Monster monsters} that attack {@link Player players}

@@ -17,7 +17,7 @@ public class Vehicle extends NonLivingEntity {
         public static final VehicleType<?> BOAT = new VehicleType<>(41);
         public static final VehicleType<?> COMMAND_MINECART = MinecartType.COMMAND_MINECART;
         public static final VehicleType<?> HOPPER_MINECART = MinecartType.HOPPER_MINECART;
-        public static final VehicleType<?> MINECART = MinecartType.MINECART;
+        public static final VehicleType<?> PASSENGER_MINECART = MinecartType.PASSENGER_MINECART;
         public static final VehicleType<?> POWERED_MINECART = MinecartType.POWERED_MINECART;
         public static final VehicleType<?> SPAWNER_MINECART = MinecartType.SPAWNER_MINECART;
         public static final VehicleType<?> STORAGE_MINECART = MinecartType.STORAGE_MINECART;

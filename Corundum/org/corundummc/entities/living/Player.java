@@ -1,4 +1,4 @@
-package org.corundummc.entities;
+package org.corundummc.entities.living;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -20,14 +20,12 @@ import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public class Player /* TODO extends LivingEntity */implements Commander, Matchable<Player> {
+public class Player extends LivingEntity implements Commander, Matchable<Player> {
     private static myList<Player> players = new myList<>();
     private static HashMap<String, Player> players_by_name = new HashMap<>();
 
-    private final EntityPlayerMP playerMC;
-
     public Player(EntityPlayerMP playerMC) {
-        this.playerMC = playerMC;
+        super(playerMC);
     }
 
     // inner classes

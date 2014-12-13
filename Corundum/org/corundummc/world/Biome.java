@@ -40,25 +40,19 @@ public class Biome {
                 JUNGLE_HILLS_EDGE = new BiomeType(), DEEP_OCEAN = new BiomeType(), STONE_BEACH = new BiomeType(), COLD_BEACH = new BiomeType(),
                 BIRCH_FOREST = new BiomeType(), BIRCH_FOREST_HILLS = new BiomeType(), ROOFED_FOREST = new BiomeType(), COLD_TAIGA = new BiomeType(),
                 COLD_TAIGA_HILLS = new BiomeType(), MEGA_TAIGA = new BiomeType(), MEGA_TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_PLUS = new BiomeType(),
-                SAVANNA = new BiomeType(), SAVANNA_PLATEAU = new BiomeType(), MESA = new BiomeType(), MESA_PLATEAU = new BiomeType(), MESA_PLATEAU_F = new BiomeType(),
-                SUNFLOWER_PLAINS = new BiomeType(129), DESERT_M = new BiomeType(), EXTREME_HILLS_M = new BiomeType(), FLOWER_FOREST = new BiomeType(),
-                TAIGA_M = new BiomeType(), SWAMPLAND_M = new BiomeType(), ICE_PLAINS_SPIKES = new BiomeType(140), JUNGLE_M = new BiomeType(149),
-                JUNGLE_EDGE_M = new BiomeType(151), BIRCH_FOREST_M = new BiomeType(155), BIRCH_FOREST_HILLS_M = new BiomeType(), ROOFED_FOREST_M = new BiomeType(),
-                COLD_TAIGA_M = new BiomeType(), MEGA_SPRUCE_TAIGA = new BiomeType(160), MEGA_SPRUCE_TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_PLUS_M = new BiomeType(),
-                SAVANNAH_M = new BiomeType(), SAVANNAH_PLATEAU_M = new BiomeType(), MESA_BRYCE = new BiomeType(), MESA_PLATEAU_F_M = new BiomeType(),
-                MESA_PLATEAU_M = new BiomeType();
+                SAVANNA = new BiomeType(), SAVANNA_PLATEAU = new BiomeType(), MESA = new BiomeType(), MESA_PLATEAU = new BiomeType(), MESA_PLATEAU_FOREST = new BiomeType(),
+                SUNFLOWER_PLAINS = new BiomeType(129), DESERT_MODIFIED = new BiomeType(), EXTREME_HILLS_MODIFIED = new BiomeType(), FLOWER_FOREST = new BiomeType(),
+                TAIGA_MODIFIED = new BiomeType(), SWAMPLAND_MODIFIED = new BiomeType(), ICE_PLAINS_SPIKES = new BiomeType(140), JUNGLE_MODIFIED = new BiomeType(149),
+                JUNGLE_EDGE_MODIFIED = new BiomeType(151), BIRCH_FOREST_MODIFIED = new BiomeType(155), BIRCH_FOREST_HILLS_MODIFIED = new BiomeType(),
+                ROOFED_FOREST_MODIFIED = new BiomeType(), COLD_TAIGA_MODIFIED = new BiomeType(), MEGA_SPRUCE_TAIGA = new BiomeType(160),
+                MEGA_SPRUCE_TAIGA_HILLS = new BiomeType(), EXTREME_HILLS_PLUS_MODIFIED = new BiomeType(), SAVANNAH_MODIFIED = new BiomeType(),
+                SAVANNAH_PLATEAU_MODIFIED = new BiomeType(), MESA_BRYCE = new BiomeType(), MESA_PLATEAU_FOREST_MODIFIED = new BiomeType(),
+                MESA_PLATEAU_MODIFIED = new BiomeType();
 
         private BiomeGenBase biomeMC;
 
         private static final MobType[] defaultNaturalSpawningMobs = new MobType[] { MobType.ZOMBIE, MobType.BAT, MobType.CREEPER, MobType.SKELETON, MobType.ENDERMAN,
                 MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP, MobType.SQUID, MobType.WITCH };
-
-        private BiomeType() {
-            super();
-
-            // if no I.D. is given, assume the I.D. is the next I.D. after the previous (0 for the first ordinal)
-            this.biomeMC = BiomeGenBase.func_150568_d(getID());
-        }
 
         private BiomeType(int id) {
             super(id);

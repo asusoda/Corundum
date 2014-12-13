@@ -33,7 +33,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     }
 
     // static utilities
-    protected static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
+    protected static <R extends IDedType<?>> R getByID(Class<R> clazz, int id) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
@@ -43,7 +43,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     }
 
     @SuppressWarnings("unchecked")
-    protected static <R extends IDedType<R>> R[] values(Class<R> clazz) {
+    protected static <R extends IDedType<?>> R[] values(Class<R> clazz) {
         return (R[]) values.get(clazz);
     }
 

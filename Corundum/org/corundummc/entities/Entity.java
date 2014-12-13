@@ -28,7 +28,7 @@ import org.corundummc.types.IDedTypeWithData;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public class Entity extends Creatable implements Physical {
+public abstract class Entity extends Creatable implements Physical {
     public final net.minecraft.entity.Entity entityMC;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {
@@ -62,7 +62,7 @@ public class Entity extends Creatable implements Physical {
         // public static final EntityType<?> ARMOR_STAND = NonLivingEntityType.ARMOR_STAND;
         public static final EntityType<?> COMMAND_MINECART = NonLivingEntityType.COMMAND_MINECART;
         public static final EntityType<?> BOAT = NonLivingEntityType.BOAT;
-        public static final EntityType<?> MINECART = NonLivingEntityType.MINECART;
+        public static final EntityType<?> PASSENGER_MINECART = NonLivingEntityType.PASSENGER_MINECART;
         public static final EntityType<?> STORAGE_MINECART = NonLivingEntityType.STORAGE_MINECART;
         public static final EntityType<?> POWERED_MINECART = NonLivingEntityType.POWERED_MINECART;
         public static final EntityType<?> TNT_MINECART = NonLivingEntityType.TNT_MINECART;

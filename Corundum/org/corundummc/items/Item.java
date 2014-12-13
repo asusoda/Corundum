@@ -20,7 +20,7 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.nbt.NBTTagList;
 
 import org.corundummc.CorundumServer;
-import org.corundummc.entities.Player;
+import org.corundummc.entities.living.Player;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.items.Enchantment.EnchantmentType;
 import org.corundummc.types.HoldableType;

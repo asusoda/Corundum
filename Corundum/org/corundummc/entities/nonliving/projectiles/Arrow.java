@@ -3,8 +3,8 @@ package org.corundummc.entities.nonliving.projectiles;
 import net.minecraft.entity.projectile.EntityArrow;
 
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.Player;
 import org.corundummc.entities.Velocity;
+import org.corundummc.entities.living.Player;
 import org.corundummc.world.Location;
 
 // TODO: link "Arrow item" to the Arrow in the item packages in the Javadoc below; also link "bow"

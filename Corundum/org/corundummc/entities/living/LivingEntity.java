@@ -5,7 +5,7 @@ import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.items.Item;
 import org.corundummc.types.Creatable;
 
-public class LivingEntity extends Entity {
+public abstract class LivingEntity extends Entity {
 
     protected LivingEntity(net.minecraft.entity.Entity entityMC) {
         super(entityMC);
@@ -14,15 +14,12 @@ public class LivingEntity extends Entity {
     public static class LivingEntityType<T extends EntityType<T>> extends EntityType<T> {
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
-        public static final LivingEntityType<?> PLAYER = new LivingEntityType<>(/* TODO */);
-
-        protected LivingEntityType() {
-            super();
-        }
-
-        protected LivingEntityType(int data) {
-            super(data);
-        }
+        public static final LivingEntityType<?> PLAYER = new LivingEntityType(-1, -1) {
+            @Override
+            public Player create() {
+                return new Player();
+            }
+        };
 
         protected LivingEntityType(int id, int data) {
             super(id, data);

@@ -11,13 +11,42 @@ public class Minecart extends NonLivingEntity {
     }
 
     public static class MinecartType<T extends NonLivingEntityType<T>> extends VehicleType<T> {
-        public static final MinecartType<?> COMMAND_MINECART = new MinecartType<>(40);
-        public static final MinecartType<?> HOPPER_MINECART = new MinecartType<>(46);
-        public static final MinecartType<?> MINECART = new MinecartType<>(42);
-        public static final MinecartType<?> POWERED_MINECART = new MinecartType<>(44);
-        public static final MinecartType<?> SPAWNER_MINECART = new MinecartType<>(47);
-        public static final MinecartType<?> STORAGE_MINECART = new MinecartType<>(43);
-        public static final MinecartType<?> TNT_MINECART = new MinecartType<>(45);
+        public static final MinecartType<?> COMMAND_MINECART = new MinecartType(40) {
+            @Override
+            public CommandMinecart create() {
+                return new CommandMinecart();
+            }
+        };
+        public static final MinecartType<?> HOPPER_MINECART = new MinecartType(46) {
+            public HopperMinecart create() {
+                return new HopperMinecart();
+            }
+        };
+        public static final MinecartType<?> PASSENGER_MINECART = new MinecartType(42) {
+            public PassengerMinecart create() {
+                return new PassengerMinecart();
+            }
+        };
+        public static final MinecartType<?> POWERED_MINECART = new MinecartType(44) {
+            public PoweredMinecart create() {
+                return new PoweredMinecart();
+            }
+        };
+        public static final MinecartType<?> SPAWNER_MINECART = new MinecartType(47) {
+            public SpawnerMinecart create() {
+                return new SpawnerMinecart();
+            }
+        };
+        public static final MinecartType<?> STORAGE_MINECART = new MinecartType(43) {
+            public StorageMinecart create() {
+                return new StorageMinecart();
+            }
+        };
+        public static final MinecartType<?> TNT_MINECART = new MinecartType(45) {
+            public TNTMinecart create() {
+                return new TNTMinecart();
+            }
+        };
 
         @SuppressWarnings("javadoc")
         protected MinecartType(int id) {

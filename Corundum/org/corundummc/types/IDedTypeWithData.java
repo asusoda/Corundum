@@ -29,7 +29,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
      *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
      * @return the {@link IDedTypeWithData} that matches the given item I.D. and data value or <b>null</b> if no {@link IDedTypeWithData} has the given I.D. and data value. */
-    protected static <R extends IDedTypeWithData<R>> R getByID(Class<R> clazz, int id, int data) {
+    protected static <R extends IDedTypeWithData<?>> R getByID(Class<R> clazz, int id, int data) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
