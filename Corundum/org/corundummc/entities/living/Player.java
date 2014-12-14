@@ -20,12 +20,17 @@ import org.corundummc.utils.myList.myList;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public class Player extends LivingEntity implements Commander, Matchable<Player> {
+public class Player extends LivingEntity<EntityPlayerMP> implements Commander, Matchable<Player> {
     private static myList<Player> players = new myList<>();
     private static HashMap<String, Player> players_by_name = new HashMap<>();
 
-    public Player(EntityPlayerMP playerMC) {
+    Player(EntityPlayerMP playerMC) {
         super(playerMC);
+    }
+
+    public Player() {
+        // TODO: figure out how to make one of the fake Player Entities that are not represented by actual players
+        super(null);
     }
 
     // inner classes
@@ -57,8 +62,8 @@ public class Player extends LivingEntity implements Commander, Matchable<Player>
 
     // instance utilities
     public Location getLocation() {
-        return new Location(playerMC.getCommandSenderPosition().posX, playerMC.getCommandSenderPosition().posY, playerMC.getCommandSenderPosition().posZ, World
-                .fromMCWorld((WorldServer) playerMC.worldObj));
+        return new Location(getEntityMC().getCommandSenderPosition().posX, getEntityMC().getCommandSenderPosition().posY, getEntityMC().getCommandSenderPosition().posZ, World
+                .fromMCWorld((WorldServer) getEntityMC().worldObj));
     }
 
     /** This method returns the {@link UUID} associated with this {@link Player}. Every {@link Player} in Minecraft has a {@link UUID}, a
@@ -67,7 +72,7 @@ public class Player extends LivingEntity implements Commander, Matchable<Player>
      * 
      * @return the {@link UUID} associated with this {@link Player}. */
     public UUID getUUID() {
-        return playerMC.getUniqueID();
+        return getEntityMC().getUniqueID();
     }
 
     // Commander overrides
@@ -96,7 +101,7 @@ public class Player extends LivingEntity implements Commander, Matchable<Player>
 
     @Override
     public String getName() {
-        return playerMC.getCommandSenderName();
+        return getEntityMC().getCommandSenderName();
     }
 
     @Override
@@ -107,36 +112,36 @@ public class Player extends LivingEntity implements Commander, Matchable<Player>
     // overridden properties
     @Override
     public void addChatMessage(IChatComponent message) {
-        playerMC.addChatMessage(message);
+        getEntityMC().addChatMessage(message);
     }
 
     @Override
     public boolean canCommandSenderUseCommand(int permission_level, String command) {
-        return playerMC.canCommandSenderUseCommand(permission_level, command);
+        return getEntityMC().canCommandSenderUseCommand(permission_level, command);
     }
 
     public boolean isOp() {
-        return CorundumServer.getInstance().isPlayerOp(this.playerMC.getGameProfile());
+        return CorundumServer.getInstance().isPlayerOp(this.getEntityMC().getGameProfile());
     }
 
     @Override
     public String getCommandSenderName() {
-        return playerMC.getCommandSenderName();
+        return getEntityMC().getCommandSenderName();
     }
 
     @Override
     public ChunkCoordinates getCommandSenderPosition() {
-        return playerMC.getCommandSenderPosition();
+        return getEntityMC().getCommandSenderPosition();
     }
 
     @Override
     public net.minecraft.world.World getEntityWorld() {
-        return playerMC.getEntityWorld();
+        return getEntityMC().getEntityWorld();
     }
 
     @Override
     public IChatComponent func_145748_c_() {
-        return playerMC.func_145748_c_();
+        return getEntityMC().func_145748_c_();
     }
 
     // data management overrides
@@ -147,7 +152,7 @@ public class Player extends LivingEntity implements Commander, Matchable<Player>
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof Player && playerMC.getUniqueID().equals(((Player) object).playerMC.getUniqueID());
+        return object instanceof Player && getEntityMC().getUniqueID().equals(((Player) object).getEntityMC().getUniqueID());
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.corundummc.entities.Entity;
 import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
-import org.corundummc.entities.nonliving.blocks.BlockEntityType;
+import org.corundummc.entities.nonliving.blocks.BlockEntity;
 import org.corundummc.entities.nonliving.drops.Drop.DropType;
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
@@ -15,8 +15,11 @@ import org.corundummc.world.Location;
 import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 /** This class represents all the {@link Entity Entities} that are not living such as {@link NonLivingEntityType#BOAT boats} and {@link NonLivingEntityType#ITEM_FRAME item
- * frames}. Note that {@link LivingEntityType#ZOMBIE zombies} are actually {@link LivingEntityType}s even though they are technically not "living", but rather "undead". */
-public abstract class NonLivingEntity extends Entity {
+ * frames}. Note that {@link LivingEntityType#ZOMBIE zombies} are actually {@link LivingEntityType}s even though they are technically not "living", but rather "undead".
+ * 
+ * @param <T>
+ *            determines the type of {@link net.minecraft.entity.Entity Minecraft Entity} that this class represents. */
+public abstract class NonLivingEntity<T extends net.minecraft.entity.Entity> extends Entity<T> {
 
     @SuppressWarnings("javadoc")
     protected NonLivingEntity(net.minecraft.entity.Entity entityMC) {
@@ -52,8 +55,8 @@ public abstract class NonLivingEntity extends Entity {
         public static final NonLivingEntityType<?> XP_ORB = DropType.XP_ORB;
 
         // block entities
-        public static final NonLivingEntityType<?> FALLING_BLOCK = BlockEntityType.FALLING_BLOCK;
-        public static final NonLivingEntityType<?> TNT = BlockEntityType.TNT;
+        public static final NonLivingEntityType<?> FALLING_BLOCK = BlockEntity.FALLING_BLOCK;
+        public static final NonLivingEntityType<?> TNT = BlockEntity.TNT;
 
         // hanging entities
         public static final NonLivingEntityType<?> ITEM_FRAME = HangingType.ITEM_FRAME;

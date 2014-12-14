@@ -28,16 +28,11 @@ import org.corundummc.types.IDedTypeWithData;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public abstract class Entity extends Creatable implements Physical {
+public abstract class Entity<T extends net.minecraft.entity.Entity> extends Creatable implements Physical {
     public final net.minecraft.entity.Entity entityMC;
 
     protected Entity(net.minecraft.entity.Entity entityMC) {
         this.entityMC = entityMC;
-    }
-
-    public Item[] getDrops() {
-        // TODO
-        return null;
     }
 
     public static abstract class EntityType<T extends EntityType<T>> extends CreatableType<EntityType<T>> {
@@ -157,8 +152,17 @@ public abstract class Entity extends Creatable implements Physical {
         }
     }
 
+    protected T getEntityMC() {
+        return (T) entityMC;
+    }
+
     @Override
     public String getCustomName() {
+        // TODO
+        return null;
+    }
+
+    public Item[] getDrops() {
         // TODO
         return null;
     }
