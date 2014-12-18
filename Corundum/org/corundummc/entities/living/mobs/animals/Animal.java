@@ -18,7 +18,7 @@ public class Animal extends Mob {
      * 
      * @param <T>
      *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class AnimalType<T extends MobType<T>> extends MobType<T> {
+    public static class AnimalType<T extends AnimalType<T>> /* extends MobType<T> */ {
 
         public static final AnimalType<?> KILLER_RABBIT = RabbitType.KILLER_RABBIT;
         public static final AnimalType<?> RABBIT = RabbitType.RABBIT;

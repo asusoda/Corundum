@@ -63,21 +63,15 @@ public abstract class Entity<T extends net.minecraft.entity.Entity> extends Crea
         public static final EntityType<?> TNT_MINECART = NonLivingEntityType.TNT_MINECART;
         public static final EntityType<?> HOPPER_MINECART = NonLivingEntityType.HOPPER_MINECART;
         public static final EntityType<?> SPAWNER_MINECART = NonLivingEntityType.SPAWNER_MINECART;
-        public static final EntityType<?> MOB = LivingEntityType.MOB;
-        public static final EntityType<?> MONSTER = LivingEntityType.MONSTER;
         public static final EntityType<?> CREEPER = LivingEntityType.CREEPER;
-        // skeletons
         public static final EntityType<?> SKELETON = LivingEntityType.SKELETON;
         public static final EntityType<?> WITHER_SKELETON = LivingEntityType.WITHER_SKELETON;
-        // END skeletons
         public static final EntityType<?> SPIDER = LivingEntityType.SPIDER;
         public static final EntityType<?> GIANT = LivingEntityType.GIANT;
-        // zombies
         public static final EntityType<?> ZOMBIE = LivingEntityType.ZOMBIE;
-        public static final EntityType<?> ZOMBIFIED_VILLAGER = LivingEntityType.ZOMBIFIED_VILLAGER;
+        public static final EntityType<?> ZOMBIFIED = LivingEntityType.ZOMBIFIED;
         public static final EntityType<?> BABY_ZOMBIE = LivingEntityType.BABY_ZOMBIE;
-        public static final EntityType<?> BABY_ZOMBIFIED_VILLAGER = LivingEntityType.BABY_ZOMBIFIED_VILLAGER;
-        // END zombies
+        public static final EntityType<?> BABY_ZOMBIFIED = LivingEntityType.BABY_ZOMBIFIED;
         public static final EntityType<?> SLIME = LivingEntityType.SLIME;
         public static final EntityType<?> GHAST = LivingEntityType.GHAST;
         public static final EntityType<?> ZOMBIE_PIGMAN = LivingEntityType.ZOMBIE_PIGMAN;
@@ -91,10 +85,8 @@ public abstract class Entity<T extends net.minecraft.entity.Entity> extends Crea
         public static final EntityType<?> BAT = LivingEntityType.BAT;
         public static final EntityType<?> WITCH = LivingEntityType.WITCH;
         public static final EntityType<?> ENDERMITE = LivingEntityType.ENDERMITE;
-        // guardians
         public static final EntityType<?> GUARDIAN = LivingEntityType.GUARDIAN;
         public static final EntityType<?> ELDER_GUARDIAN = LivingEntityType.ELDER_GUARDIAN;
-        // END guardians
         public static final EntityType<?> PIG = LivingEntityType.PIG;
         public static final EntityType<?> SHEEP = LivingEntityType.SHEEP;
         public static final EntityType<?> COW = LivingEntityType.COW;
@@ -106,28 +98,14 @@ public abstract class Entity<T extends net.minecraft.entity.Entity> extends Crea
         public static final EntityType<?> OCELOT = LivingEntityType.OCELOT;
         public static final EntityType<?> IRON_GOLEM = LivingEntityType.IRON_GOLEM;
         public static final EntityType<?> HORSE = LivingEntityType.HORSE;
-        // rabbits
-        // TODO: figure out if these data values are correct
         public static final EntityType<?> RABBIT = LivingEntityType.RABBIT;
         public static final EntityType<?> KILLER_RABBIT = LivingEntityType.KILLER_RABBIT;
-        // END rabbits
-        // villagers
-        /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd, or
-         * fletcher) are handled. */
-        public static final EntityType<?> FARMER_VILLAGER = LivingEntityType.FARMER_VILLAGER;
-        public static final EntityType<?> LIBRARIAN_VILLAGER = LivingEntityType.LIBRARIAN_VILLAGER;
-        public static final EntityType<?> PRIEST_VILLAGER = LivingEntityType.PRIEST_VILLAGER;
-        public static final EntityType<?> BLACKSMITH_VILLAGER = LivingEntityType.BLACKSMITH_VILLAGER;
-        public static final EntityType<?> BUTCHER_VILLAGER = LivingEntityType.BUTCHER_VILLAGER;
-        // END villagers
+        public static final EntityType<?> FARMER = LivingEntityType.FARMER;
+        public static final EntityType<?> LIBRARIAN = LivingEntityType.LIBRARIAN;
+        public static final EntityType<?> PRIEST = LivingEntityType.PRIEST;
+        public static final EntityType<?> BLACKSMITH = LivingEntityType.BLACKSMITH;
+        public static final EntityType<?> BUTCHER = LivingEntityType.BUTCHER;
         public static final EntityType<?> ENDER_CRYSTAL = NonLivingEntityType.ENDER_CRYSTAL;
-
-        static {
-            /* TODO: if debugging mode is on, do a check to see if all the EntityTypes are organized correctly; we need to somehow make sure that 1) all the values of any
-             * given EntityType subclass has corresponding values with the same name in their parent class, 2) every type has their own overridden create() method (so their
-             * create() method should not throw a custom CorundumException that we'll make parent type create() methods throw unless overridden), 3) every type class has their
-             * own overridden create() method that returns that specific type (rather than their less specific parent type) */
-        }
 
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
@@ -147,7 +125,7 @@ public abstract class Entity<T extends net.minecraft.entity.Entity> extends Crea
             return getByID(EntityType.class, id, data);
         }
 
-        public static EntityType[] values() {
+        public static EntityType<?>[] values() {
             return values(EntityType.class);
         }
     }

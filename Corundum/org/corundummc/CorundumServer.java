@@ -42,10 +42,10 @@ import org.corundummc.utils.versioning.Version;
  * 
  * @author REALDrummer */
 public class CorundumServer extends DedicatedServer implements Server, Commander {
-    private static final Version VERSION = new Version("pre-α"), MCVERSION = new Version("1.7.10");
-
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
-    public static final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
+    public final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
+
+    private final Version VERSION = new Version("pre-α"), MCVERSION = new Version("1.7.10");
     private final File PLUGINS_FOLDER = new File("plugins");
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
@@ -130,11 +130,10 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     public static class Difficulty extends IDedType<Difficulty> {
         public static final Difficulty PEACEFUL = new Difficulty(), EASY = new Difficulty(), NORMAL = new Difficulty(), HARD = new Difficulty();
 
-        /** This method returns the {@link Difficulty} associated with the given I.D.
-         * 
-         * @param id
-         *            is the I.D. of the {@link Difficulty} to search for.
-         * @return the {@link Difficulty} with the give I.D. of <b>null</b> if no {@link Difficulty} has the given I.D. */
+        protected Difficulty() {
+            super(values() == null ? 0 : values().length);
+        }
+
         public static Difficulty getByID(int id) {
             return getByID(Difficulty.class, id);
         }
@@ -334,14 +333,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         return isCommandBlockEnabled();
     }
 
-    public ServerConfigurationManager getServerConfigurationManager() {
-        return super.getConfigurationManager();
-    }
-
-    public boolean isPlayerOp(GameProfile playerProfile) {
-        return this.getServerConfigurationManager().func_152596_g(playerProfile);
-    }
-
     // Corundum utils
     public void bloviate(String message) {
         message(message);
@@ -359,8 +350,8 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     public void broadcast(String message) {
         message(message);
 
-        for (EntityPlayerMP player : (List<EntityPlayerMP>) super.getEntityWorld().playerEntities)
-            new Player(player).message(message);
+        for (Player player : Player.getOnlinePlayers())
+            player.message(message);
     }
 
     @Override
@@ -415,7 +406,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     /** Helper method as the actual method is SRG named in MCP 1.7.10
      * 
      * @return this server's {@link PlayerProfileCache}. */
-    public PlayerProfileCache getPlayerProfileCache() {
+    PlayerProfileCache getPlayerProfileCache() {
         return super.func_152358_ax();
     }
 

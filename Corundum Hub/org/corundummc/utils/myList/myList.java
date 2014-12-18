@@ -189,14 +189,14 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
             return -1;
     }
 
-    private int findMatchIndex(String[] match_parameters, int current_index) {
+    private int findMatchIndex(Object[] match_parameters, int current_index) {
         if (match(data, match_parameters) == 0) {
             // find the lowest index value of that item
             int lower_index = -1;
             if (hasLeft())
                 lower_index = left.findMatchIndex(match_parameters, current_index - 1 - (left.hasRight() ? left.right.length() : 0));
 
-            // return the lowest index if there was a lower index or this index otherwise (adjusted for the left)
+            // return the lowest index if there was a lower index or this index otherwise
             if (lower_index == -1)
                 return current_index;
             else
@@ -278,36 +278,46 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
 
     private int lastIndexOf(T object, int current_index) {
         if (compareTo(object) == 0) {
-            // find the highest index value of that item
-            myList<T> clone = this;
-            while (clone.hasRight() && right.compareTo(object) == 0)
-                clone = clone.right;
-            return current_index + (clone.hasLeft() ? clone.left.length() : 0);
+            // f// find the highest index value of that item
+            int higher_index = -1;
+            if (hasRight())
+                higher_index = right.lastIndexOf(object, current_index + 1 + (right.hasLeft() ? right.left.length() : 0));
+
+            // return the highest index if there was a higher index or this index otherwise (adjusted for the left)
+            if (higher_index == -1)
+                return current_index;
+            else
+                return higher_index;
         } else if (compareTo(object) > 0)
             if (hasRight())
-                return right.find(object, current_index + (hasLeft() ? left.length() : 0) + 1);
+                return right.find(object, current_index + 1 + (right.hasLeft() ? right.left.length() : 0));
             else
                 return -1;
         else if (hasLeft())
-            return left.find(object, current_index);
+            return left.find(object, current_index - 1 - (left.hasRight() ? right.length() : 0));
         else
             return -1;
     }
 
-    private int lastIndexOfMatch(String[] match_parameters, int current_index) {
+    private int lastIndexOfMatch(Object[] match_parameters, int current_index) {
         if (match(data, match_parameters) == 0) {
             // find the highest index value of that item
-            myList<T> clone = this;
-            while (clone.hasRight() && match(right.data, match_parameters) == 0)
-                clone = clone.right;
-            return current_index + (clone.hasLeft() ? clone.left.length() : 0);
+            int higher_index = -1;
+            if (hasRight())
+                higher_index = right.lastIndexOfMatch(match_parameters, current_index + 1 + (right.hasLeft() ? right.left.length() : 0));
+
+            // return the highest index if there was a higher index or this index otherwise (adjusted for the left)
+            if (higher_index == -1)
+                return current_index;
+            else
+                return higher_index;
         } else if (match(data, match_parameters) > 0)
             if (hasRight())
-                return right.findMatchIndex(match_parameters, current_index + (hasLeft() ? left.length() : 0) + 1);
+                return right.findMatchIndex(match_parameters, current_index + 1 + (right.hasLeft() ? right.left.length() : 0));
             else
                 return -1;
         else if (hasLeft())
-            return left.findMatchIndex(match_parameters, current_index);
+            return left.findMatchIndex(match_parameters, current_index - 1 - (left.hasRight() ? right.length() : 0));
         else
             return -1;
     }
@@ -650,6 +660,52 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return find(objects.toArray());
     }
 
+    public T findLastMatch(Object... match_parameters) {
+        myList<T> node = findLastMatchingNode(match_parameters);
+        if (node == null)
+            return null;
+        else
+            return node.data;
+    }
+
+    public T[] findLastMatches(Object... match_parameter_sets) {
+        T[] matches = (T[]) new Object[match_parameter_sets.length];
+        for (int i = 0; i < match_parameter_sets.length; i++)
+            matches[i] = findLastMatch(match_parameter_sets[i]);
+        return matches;
+    }
+
+    public T[] findLastMatches(Collection<Object[]> match_parameter_sets) {
+        return findLastMatches(match_parameter_sets.toArray());
+    }
+
+    public T[] findLastMatches(myList<Object[]> match_parameter_sets) {
+        return findLastMatches(match_parameter_sets.toArray());
+    }
+
+    public myList<T> findLastMatchingNode(Object... match_parameters) {
+        if (match(data, match_parameters) == 0) {
+            // find the highest index value of that item
+            myList<T> higher_match = null;
+            if (hasLeft())
+                higher_match = left.findLastMatchingNode(match_parameters);
+
+            // return the lowest index if there was a lower index or this index otherwise (adjusted for the left)
+            if (higher_match == null)
+                return this;
+            else
+                return higher_match;
+        } else if (match(data, match_parameters) <= 0)
+            if (hasRight())
+                return right.findMatchingNode(match_parameters);
+            else
+                return null;
+        else if (hasLeft())
+            return left.findMatchingNode(match_parameters);
+        else
+            return null;
+    }
+
     /** This method finds the <tt>Object</tt> in the {@link myList} that matches the given <b><tt>match_parameters</b></tt> using the <tt>Object</tt>'s
      * {@link Matchable#matchTo(Object...)} method.
      * <hr>
@@ -678,11 +734,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return matches;
     }
 
-    public T[] findMatches(Collection<String[]> match_parameter_sets) {
+    public T[] findMatches(Collection<Object[]> match_parameter_sets) {
         return findMatches((String[][]) match_parameter_sets.toArray());
     }
 
-    public T[] findMatches(myList<String[]> match_parameter_sets) {
+    public T[] findMatches(myList<Object[]> match_parameter_sets) {
         return findMatches(match_parameter_sets.toArray());
     }
 
@@ -697,18 +753,15 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return matches;
     }
 
-    public int[] findMatchIndices(Collection<String[]> match_parameter_sets) {
+    public int[] findMatchIndices(Collection<Object[]> match_parameter_sets) {
         return findMatchIndices((String[][]) match_parameter_sets.toArray());
     }
 
-    public int[] findMatchIndices(myList<String[]> match_parameter_sets) {
+    public int[] findMatchIndices(myList<Object[]> match_parameter_sets) {
         return findMatchIndices(match_parameter_sets.toArray());
     }
 
     public myList<T> findMatchingNode(Object... match_parameters) {
-        if (data == null)
-            return null;
-
         if (match(data, match_parameters) == 0) {
             // find the lowest index value of that item
             myList<T> lower_match = null;
@@ -738,11 +791,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return matches;
     }
 
-    public myList<T>[] findMatchingNodes(Collection<String[]> match_parameter_sets) {
+    public myList<T>[] findMatchingNodes(Collection<Object[]> match_parameter_sets) {
         return findMatchingNodes((String[][]) match_parameter_sets.toArray());
     }
 
-    public myList<T>[] findMatchingNodes(myList<String[]> match_parameter_sets) {
+    public myList<T>[] findMatchingNodes(myList<Object[]> match_parameter_sets) {
         return findMatchingNodes(match_parameter_sets.toArray());
     }
 
@@ -828,11 +881,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return findMatches(match_parameter_sets);
     }
 
-    public T[] getMatch(Collection<String[]> match_parameter_sets) {
+    public T[] getMatch(Collection<Object[]> match_parameter_sets) {
         return findMatches(match_parameter_sets);
     }
 
-    public T[] getMatch(myList<String[]> match_parameter_sets) {
+    public T[] getMatch(myList<Object[]> match_parameter_sets) {
         return findMatches(match_parameter_sets);
     }
 
@@ -938,11 +991,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return findMatchIndices(match_parameters);
     }
 
-    public int[] indicesOfMatches(Collection<String[]> match_parameters) {
+    public int[] indicesOfMatches(Collection<Object[]> match_parameters) {
         return findMatchIndices(match_parameters);
     }
 
-    public int[] indicesOfMatches(myList<String[]> match_parameters) {
+    public int[] indicesOfMatches(myList<Object[]> match_parameters) {
         return findMatchIndices(match_parameters);
     }
 
@@ -983,7 +1036,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     }
 
     public int lastIndexOf(T object) {
-        return lastIndexOf(object, 0);
+        return lastIndexOf(object, hasLeft() ? left.length() : 0);
     }
 
     public int[] lastIndicesOf(T... objects) {
@@ -1002,7 +1055,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     }
 
     public int lastIndexOfMatch(Object... match_parameters) {
-        return lastIndexOfMatch(match_parameters, 0);
+        return lastIndexOfMatch(match_parameters, hasLeft() ? left.length() : 0);
     }
 
     public int[] lastIndicesOfMatches(Object[]... match_parameters) {
@@ -1012,11 +1065,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return results;
     }
 
-    public int[] lastIndicesOfMatches(Collection<String[]> match_parameters) {
+    public int[] lastIndicesOfMatches(Collection<Object[]> match_parameters) {
         return lastIndicesOfMatches((String[][]) match_parameters.toArray());
     }
 
-    public int[] lastIndicesOfMatches(myList<String[]> match_parameters) {
+    public int[] lastIndicesOfMatches(myList<Object[]> match_parameters) {
         return lastIndicesOfMatches(match_parameters.toArray());
     }
 

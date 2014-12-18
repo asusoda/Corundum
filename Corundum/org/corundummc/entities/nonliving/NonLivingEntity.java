@@ -1,18 +1,13 @@
 package org.corundummc.entities.nonliving;
 
-import net.minecraft.entity.EntityList;
-
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
-import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
-import org.corundummc.entities.nonliving.blocks.BlockEntity;
+import org.corundummc.entities.nonliving.blocks.BlockEntity.BlockEntityType;
 import org.corundummc.entities.nonliving.drops.Drop.DropType;
+import org.corundummc.entities.nonliving.hanging.HangingEntity.HangingEntityType;
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
 import org.corundummc.types.Creatable;
-import org.corundummc.world.Location;
-import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 /** This class represents all the {@link Entity Entities} that are not living such as {@link NonLivingEntityType#BOAT boats} and {@link NonLivingEntityType#ITEM_FRAME item
  * frames}. Note that {@link LivingEntityType#ZOMBIE zombies} are actually {@link LivingEntityType}s even though they are technically not "living", but rather "undead".
@@ -22,7 +17,7 @@ import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 public abstract class NonLivingEntity<T extends net.minecraft.entity.Entity> extends Entity<T> {
 
     @SuppressWarnings("javadoc")
-    protected NonLivingEntity(net.minecraft.entity.Entity entityMC) {
+    protected NonLivingEntity(T entityMC) {
         super(entityMC);
     }
 
@@ -55,18 +50,42 @@ public abstract class NonLivingEntity<T extends net.minecraft.entity.Entity> ext
         public static final NonLivingEntityType<?> XP_ORB = DropType.XP_ORB;
 
         // block entities
-        public static final NonLivingEntityType<?> FALLING_BLOCK = BlockEntity.FALLING_BLOCK;
-        public static final NonLivingEntityType<?> TNT = BlockEntity.TNT;
+        public static final NonLivingEntityType<?> FALLING_BLOCK = BlockEntityType.FALLING_BLOCK;
+        public static final NonLivingEntityType<?> TNT = BlockEntityType.TNT;
 
         // hanging entities
-        public static final NonLivingEntityType<?> ITEM_FRAME = HangingType.ITEM_FRAME;
-        public static final NonLivingEntityType<?> PAINTING = HangingType.PAINTING;
+        public static final NonLivingEntityType<?> ITEM_FRAME = HangingEntityType.ITEM_FRAME;
+        public static final NonLivingEntityType<?> PAINTING = HangingEntityType.PAINTING;
 
         // others
-        public static final NonLivingEntityType<?> ENDER_CRYSTAL = new NonLivingEntityType<>(200);
-        public static final NonLivingEntity.NonLivingEntityType<?> FISH_HOOK = new NonLivingEntityType<>(-1);
-        public static final NonLivingEntityType<?> LEAD = new NonLivingEntityType<>(8);
-        public static final NonLivingEntity.NonLivingEntityType<?> LIGHTNING_BOLT = new NonLivingEntityType<>(-1);
+        @SuppressWarnings("rawtypes")
+        public static final NonLivingEntityType<?> ENDER_CRYSTAL = new NonLivingEntityType(200) {
+            @Override
+            public EnderCrystal create() {
+                return new EnderCrystal();
+            }
+        };
+        @SuppressWarnings("rawtypes")
+        public static final NonLivingEntity.NonLivingEntityType<?> FISH_HOOK = new NonLivingEntityType(-1) {
+            @Override
+            public FishHook create() {
+                return new FishHook();
+            }
+        };
+        @SuppressWarnings("rawtypes")
+        public static final NonLivingEntityType<?> LEAD = new NonLivingEntityType(8) {
+            @Override
+            public Lead create() {
+                return new Lead();
+            }
+        };
+        @SuppressWarnings("rawtypes")
+        public static final NonLivingEntity.NonLivingEntityType<?> LIGHTNING_BOLT = new NonLivingEntityType(-1) {
+            @Override
+            public LightningBolt create() {
+                return new LightningBolt();
+            }
+        };
 
         @SuppressWarnings("javadoc")
         protected NonLivingEntityType(int id) {
@@ -76,17 +95,14 @@ public abstract class NonLivingEntity<T extends net.minecraft.entity.Entity> ext
         }
 
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
         public static NonLivingEntityType<?> getByID(int id) {
             return getByID(NonLivingEntityType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
         public static NonLivingEntityType<?> getByID(int id, int data) {
             return getByID(NonLivingEntityType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
         public static NonLivingEntityType<?>[] values() {
             return values(NonLivingEntityType.class);
         }
