@@ -9,6 +9,8 @@ import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.LivingEntity;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.entities.living.mobs.animals.Animal;
+import org.corundummc.entities.living.mobs.animals.Animal.AnimalType;
+import org.corundummc.entities.living.mobs.golems.Golem.GolemType;
 import org.corundummc.entities.living.mobs.villagers.Villager.VillagerType;
 import org.corundummc.items.Item;
 import org.corundummc.types.Creatable;
@@ -54,20 +56,23 @@ public abstract class Mob<T extends EntityLiving> extends LivingEntity<T> {
         public static final MobType<?> ENDERMITE = MonsterType.ENDERMITE;
         public static final MobType<?> GUARDIAN = MonsterType.GUARDIAN;
         public static final MobType<?> ELDER_GUARDIAN = MonsterType.ELDER_GUARDIAN;
-        public static final MobType<?> BAT = AnimalType.BAT;
+
         public static final MobType<?> PIG = AnimalType.PIG;
         public static final MobType<?> SHEEP = AnimalType.SHEEP;
         public static final MobType<?> COW = AnimalType.COW;
         public static final MobType<?> CHICKEN = AnimalType.CHICKEN;
+        public static final MobType<?> MOOSHROOM = AnimalType.MOOSHROOM;
+        public static final MobType<?> BAT = AnimalType.BAT;
         public static final MobType<?> SQUID = AnimalType.SQUID;
         public static final MobType<?> WOLF = AnimalType.WOLF;
-        public static final MobType<?> MOOSHROOM = AnimalType.MOOSHROOM;
         public static final MobType<?> HORSE = AnimalType.HORSE;
+        public static final MobType<?> OCELOT = AnimalType.OCELOT;
         public static final MobType<?> RABBIT = AnimalType.RABBIT;
         public static final MobType<?> KILLER_RABBIT = AnimalType.KILLER_RABBIT;
-        public static final MobType<?> OCELOT = AnimalType.OCELOT;
+
         public static final MobType<?> SNOW_GOLEM = GolemType.SNOW_GOLEM;
         public static final MobType<?> IRON_GOLEM = GolemType.IRON_GOLEM;
+
         public static final MobType<?> FARMER = VillagerType.FARMER;
         public static final MobType<?> LIBRARIAN = VillagerType.LIBRARIAN;
         public static final MobType<?> PRIEST = VillagerType.PRIEST;

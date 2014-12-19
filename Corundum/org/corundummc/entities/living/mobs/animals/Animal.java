@@ -18,21 +18,35 @@ public class Animal extends Mob {
      * 
      * @param <T>
      *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class AnimalType<T extends AnimalType<T>> /* extends MobType<T> */ {
+    public static class AnimalType<T extends AnimalType<T>> /* extends MobType<T> */{
 
         public static final AnimalType<?> KILLER_RABBIT = RabbitType.KILLER_RABBIT;
         public static final AnimalType<?> RABBIT = RabbitType.RABBIT;
 
-        protected AnimalType() {
-            super();
+        @SuppressWarnings("rawtypes")
+        public static final AnimalType<?> BAT = new AnimalType(65) {
+            @Override
+            public Bat create() {
+                return new Bat();
+            }
+        };
+        @SuppressWarnings("rawtypes")
+        public static final AnimalType<?> SQUID = new AnimalType(94) {
+            @Override
+            public Squid create() {
+                return new Squid();
+            }
+        };
+        @SuppressWarnings("rawtypes")
+        public static final AnimalType<?> HORSE = new AnimalType(100) {
+            @Override
+            public Horse create() {
+                return new Horse();
+            }
+        };
 
-            addValueAs(Animal.class);
-        }
-
-        protected AnimalType(int data) {
-            super(data);
-
-            addValueAs(Animal.class);
+        protected AnimalType(int id) {
+            this(id, -1);
         }
 
         protected AnimalType(int id, int data) {
