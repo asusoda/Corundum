@@ -8,7 +8,7 @@ import org.corundummc.utils.ListUtilities;
 import org.corundummc.world.Block.BlockType;
 import org.corundummc.world.Block;
 
-public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends IDedType<T> {
+public abstract class IDedTypeWithData extends IDedType {
     private final short data;
 
     // constructors
@@ -29,7 +29,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      *            is the data value for the item you wish to locate. A negative value is considered a "wild card", meaning that is will consider the given data value
      *            irrelevant and match the item with the given I.D. and the lowest available data value (almost always 0 or -1).
      * @return the {@link IDedTypeWithData} that matches the given item I.D. and data value or <b>null</b> if no {@link IDedTypeWithData} has the given I.D. and data value. */
-    protected static <R extends IDedTypeWithData<?>> R getByID(Class<R> clazz, int id, int data) {
+    protected static <R extends IDedTypeWithData> R getByID(Class<R> clazz, int id, int data) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
@@ -62,9 +62,9 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      * 
      * @return all the siblings of this {@link IDedType}. */
     @SuppressWarnings("unchecked")
-    public T[] getSiblings() {
+    public IDedTypeWithData[] getSiblings() {
         // retrieve the values for this type
-        T[] values = (T[]) values(getClass());
+        IDedTypeWithData[] values = (IDedTypeWithData[]) values(getClass());
 
         // find the first index with a value with the same I.D. as this type
         // TODO: replace this linear search with a binary search algorithm
@@ -85,7 +85,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
 
         // build an list with the elements from first_index to last_index_plus_1 (not including [last_index_plus_1])
         // NOTE: an ArrayList has to be made and converted to an array because you can't make an array of a generic T in Java
-        return (T[]) new ArrayList<>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
+        return (IDedTypeWithData[]) new ArrayList<>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
     }
 
     /** This method determines whether or not this {@link IDedType} is a "sibling" of the given {@link IDedType}. Corundum considered two {@link IDedType}s "siblings" if the
@@ -97,7 +97,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      * @param material
      *            is the {@link IDedType} to compare to this {@link IDedType} to see if they're "siblings".
      * @return <b>true</b> if this {@link IDedType} has the same I.D. as <b><tt>type</b></tt>; <b>false</b> otherwise. */
-    public boolean isASiblingOf(T material) {
+    public boolean isASiblingOf(IDedTypeWithData material) {
         return material.getID() == getID();
     }
 

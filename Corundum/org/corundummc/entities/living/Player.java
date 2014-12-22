@@ -119,13 +119,13 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
     }
 
     public Location getLocation() {
-        return new Location(getEntityMC().getCommandSenderPosition().posX, getEntityMC().getCommandSenderPosition().posY, getEntityMC().getCommandSenderPosition().posZ, World
-                .fromMCWorld((WorldServer) getEntityMC().worldObj));
+        return new Location(entityMC.getCommandSenderPosition().posX, entityMC.getCommandSenderPosition().posY, entityMC.getCommandSenderPosition().posZ, World
+                .fromMCWorld((WorldServer) entityMC.worldObj));
     }
 
     @Override
     public String getName() {
-        return getEntityMC().getCommandSenderName();
+        return entityMC.getCommandSenderName();
     }
 
     /** This method returns the {@link UUID} associated with this {@link Player}. Every {@link Player} in Minecraft has a {@link UUID}, a
@@ -134,7 +134,7 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
      * 
      * @return the {@link UUID} associated with this {@link Player}. */
     public UUID getUUID() {
-        return getEntityMC().getUniqueID();
+        return entityMC.getUniqueID();
     }
 
     @Override
@@ -145,36 +145,36 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
     // overridden properties
     @Override
     public void addChatMessage(IChatComponent message) {
-        getEntityMC().addChatMessage(message);
+        entityMC.addChatMessage(message);
     }
 
     @Override
     public boolean canCommandSenderUseCommand(int permission_level, String command) {
-        return getEntityMC().canCommandSenderUseCommand(permission_level, command);
+        return entityMC.canCommandSenderUseCommand(permission_level, command);
     }
 
     public boolean isOp() {
-        return CorundumServer.getInstance().getConfigurationManager().func_152596_g(this.getEntityMC().getGameProfile());
+        return CorundumServer.getInstance().getConfigurationManager().func_152596_g(this.entityMC.getGameProfile());
     }
 
     @Override
     public String getCommandSenderName() {
-        return getEntityMC().getCommandSenderName();
+        return entityMC.getCommandSenderName();
     }
 
     @Override
     public ChunkCoordinates getCommandSenderPosition() {
-        return getEntityMC().getCommandSenderPosition();
+        return entityMC.getCommandSenderPosition();
     }
 
     @Override
     public net.minecraft.world.World getEntityWorld() {
-        return getEntityMC().getEntityWorld();
+        return entityMC.getEntityWorld();
     }
 
     @Override
     public IChatComponent func_145748_c_() {
-        return getEntityMC().func_145748_c_();
+        return entityMC.func_145748_c_();
     }
 
     // data management overrides
@@ -185,7 +185,7 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof Player && getEntityMC().getUniqueID().equals(((Player) object).getEntityMC().getUniqueID());
+        return object instanceof Player && entityMC.getUniqueID().equals(((Player) object).entityMC.getUniqueID());
     }
 
     @Override

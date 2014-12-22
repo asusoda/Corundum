@@ -13,27 +13,35 @@ import org.corundummc.world.Block.BlockType;
 /** This class represents anything that can be categorized into types with unique integer I.D. and data values.
  * 
  * @author REALDrummer
- *
- * @param <T>
- *            is a self-parameterization; <b><tt>T</b></tt> should be the same type as the type implementing this interface. This parameterization allows certain methods in
- *            this interface to return the appropriate subtype of {@link IDedType}. */
-public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedType<T>> {
-    protected static HashMap<Class<IDedType<?>>, IDedType<?>[]> values = new HashMap<>();
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class. */
+public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
+    protected static HashMap<Class<? extends IDedType>, IDedType[]> values = new HashMap<>();
 
     /** <b><i>DEV NOTES:</b></i><br>
      * This isn't final because I couldn't find a way to initialize it statically in the constructors for {@link IDedTypeWithData} because of the type parameterization and the
      * way values are stored and accessed. */
     private short id;
 
+    static {
+        /* TODO: if in debugging mode, ensure that (outside of this types package),
+         * 
+         * 1) each subclass implements its own getByID(int) and values() methods,
+         * 
+         * 2) all the values of any given subclass has corresponding values with the same name in their parent class,
+         * 
+         * 3) each subclass has class type parameters matching those in this class in order and type */
+    }
+
     // constructors
     protected IDedType(int id) {
         this.id = (short) id;
 
-        addValueAs(getClass());
+        addValueAs((Class<S>) getClass());
     }
 
     // static utilities
-    protected static <R extends IDedType<?>> R getByID(Class<R> clazz, int id) {
+    protected static <R extends IDedType> R getByID(Class<R> clazz, int id) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
@@ -43,7 +51,7 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
     }
 
     @SuppressWarnings("unchecked")
-    protected static <R extends IDedType<?>> R[] values(Class<R> clazz) {
+    protected static <R extends IDedType> R[] values(Class<R> clazz) {
         return (R[]) values.get(clazz);
     }
 
@@ -67,15 +75,14 @@ public abstract class IDedType<T extends IDedType<T>> implements Matchable<IDedT
         return null;
     }
 
-    protected IDedType<T> addValueAs(Class type_class) {
-        T[] type_values = (T[]) values.get(type_class);
+    protected void addValueAs(Class<S> type_class) {
+        IDedType[] type_values = values.get(type_class), new_type_values = new IDedType[type_values.length + 1];
 
-        ArrayList<T> new_type_values = new ArrayList<>(Arrays.asList((T) this));
-        new_type_values.add((T) this);
+        for (int i = 0; i < type_values.length; i++)
+            new_type_values[i] = type_values[i];
+        new_type_values[new_type_values.length - 1] = this;
 
-        values.put((Class<IDedType<?>>) type_class, (IDedType<?>[]) new_type_values.toArray());
-
-        return this;
+        values.put(type_class, new_type_values);
     }
 
     // data management overrides
