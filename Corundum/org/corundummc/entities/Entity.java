@@ -60,7 +60,7 @@ public abstract class Entity implements Physical {
         this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
-    public static class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
+    public static final class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
         // TODO: see if a Player entity has the I.D. 0
 
         public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
