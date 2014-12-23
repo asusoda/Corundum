@@ -41,8 +41,7 @@ public class MultiplePluginLoader {
                     try {
                         new PluginLoader(this.server, potentialPlugin.getName()).loadJar();
                     } catch (IOException | URISyntaxException | ClassNotFoundException e) {
-                        throw new CIE("An error occurred during the loading of a plugin!", "An " + e.getClass().getName()
-                                + " occured in a MultiplePluginLoader's .loadPlugins() method!", e.getStackTrace());
+                        throw new CIE("An error occurred during the loading of a plugin!", e, e.getStackTrace());
                     }
                 }
             }
