@@ -175,14 +175,12 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
             this.enableGUI();
         }
 
-        File pluginsDir = new File("plugins");
-
-        if (!pluginsDir.exists() || !pluginsDir.isDirectory()) {
-            pluginsDir.mkdir();
+        if (!PLUGINS_FOLDER.exists() || !PLUGINS_FOLDER.isDirectory()) {
+            PLUGINS_FOLDER.mkdir();
         }
 
         try {
-            new MultiplePluginLoader(this, pluginsDir).loadPlugins();
+            new MultiplePluginLoader(this, PLUGINS_FOLDER).loadPlugins();
             main(arguments);
         } catch (Exception exception) {
             CIE.err("There was a problem starting this Corundum server!", exception);
