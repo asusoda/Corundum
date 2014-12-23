@@ -32,6 +32,7 @@ import org.corundummc.listeners.CorundumListener;
 import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
+import org.corundummc.plugins.MultiplePluginLoader;
 import org.corundummc.plugins.PluginThread;
 import org.corundummc.types.IDedType;
 import org.corundummc.utils.SettingsManager;
@@ -174,7 +175,14 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
             this.enableGUI();
         }
 
+        File pluginsDir = new File("plugins");
+
+        if (!pluginsDir.exists() || !pluginsDir.isDirectory()) {
+            pluginsDir.mkdir();
+        }
+
         try {
+            new MultiplePluginLoader(this, pluginsDir).loadPlugins();
             main(arguments);
         } catch (Exception exception) {
             CIE.err("There was a problem starting this Corundum server!", exception);
