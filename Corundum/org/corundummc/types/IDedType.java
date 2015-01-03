@@ -1,7 +1,5 @@
 package org.corundummc.types;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
@@ -16,7 +14,7 @@ import org.corundummc.world.Block.BlockType;
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class. */
 public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
-    protected static HashMap<Class<? extends IDedType>, IDedType[]> values = new HashMap<>();
+    protected static HashMap<Class<? extends IDedType<?>>, IDedType<?>[]> values = new HashMap<>();
 
     /** <b><i>DEV NOTES:</b></i><br>
      * This isn't final because I couldn't find a way to initialize it statically in the constructors for {@link IDedTypeWithData} because of the type parameterization and the
@@ -37,11 +35,11 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
     protected IDedType(int id) {
         this.id = (short) id;
 
-        addValueAs((Class<S>) getClass());
+        addValueAs((Class<IDedType<?>>) getClass());
     }
 
     // static utilities
-    protected static <R extends IDedType> R getByID(Class<R> clazz, int id) {
+    protected static <R extends IDedType<R>> R getByID(Class<R> clazz, int id) {
         // TODO: replace this linear search with a binary search algorithm
         if (id >= 0)
             for (R type : values(clazz))
@@ -51,7 +49,7 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <R extends IDedType> R[] values(Class<R> clazz) {
+    protected static <R extends IDedType<R>> R[] values(Class<R> clazz) {
         return (R[]) values.get(clazz);
     }
 
@@ -75,14 +73,15 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
         return null;
     }
 
-    protected void addValueAs(Class<S> type_class) {
-        IDedType[] type_values = values.get(type_class), new_type_values = new IDedType[type_values.length + 1];
+    @SuppressWarnings("unchecked")
+    protected void addValueAs(Class<?> type_class) {
+        IDedType<?>[] type_values = values.get(type_class), new_type_values = new IDedType[type_values.length + 1];
 
         for (int i = 0; i < type_values.length; i++)
             new_type_values[i] = type_values[i];
         new_type_values[new_type_values.length - 1] = this;
 
-        values.put(type_class, new_type_values);
+        values.put((Class<IDedType<?>>) type_class, new_type_values);
     }
 
     // data management overrides

@@ -1,65 +1,59 @@
 package org.corundummc.entities.nonliving.hanging;
 
-import net.minecraft.entity.EntityHanging;
-
+import org.corundummc.entities.Entity;
 import org.corundummc.entities.nonliving.NonLivingEntity;
 
-public abstract class HangingEntity<T extends EntityHanging> extends NonLivingEntity<T> {
+import net.minecraft.entity.EntityHanging;
 
-    protected HangingEntity(EntityHanging entityMC) {
+/** This class represents {@link Entity Entities} that are made to hang on walls, including {@link Painting}s and {@link ItemFrame Item Frame}s.
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class HangingEntity<S extends HangingEntity<S, MC, T>, MC extends EntityHanging, T extends HangingEntity.HangingEntityType<T, MC, S>> extends
+        NonLivingEntity<S, MC, T> {
+    protected HangingEntity(MC entityMC) {
         super(entityMC);
     }
 
-    /** This class is used to represent the different types of {@link HangingEntity}s. <br>
-     * <br>
-     * This list of different types not only includes those types of mobs differentiated by different I.D.s, but also many of those differentiated by different data values;
-     * for example, {@link #object object2} and {@link #object3 object4} are both represented as separate types despite the fact that they both have the same I.D. value.
-     * 
-     * @param <T>
-     *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class HangingEntityType<T extends HangingEntityType<T>> extends NonLivingEntityType<T> {
+    public static interface HangingEntityTypes {
+        public static final PaintingType PAINTING = PaintingType.TYPE;
+        public static final ItemFrameType ITEM_FRAME = ItemFrameType.TYPE;
+    }
 
-        @SuppressWarnings("rawtypes")
-        public static final HangingEntityType<?> PAINTING = new HangingEntityType(9) {
-            @Override
-            public Painting create() {
-                return new Painting();
-            }
-        };
-        @SuppressWarnings("rawtypes")
-        public static final HangingEntityType<?> ITEM_FRAME = new HangingEntityType(18) {
-            @Override
-            public ItemFrame create() {
-                return new ItemFrame();
-            }
-        };
-
+    public abstract static class HangingEntityType<S extends HangingEntityType<S, MC, I>, MC extends EntityHanging, I extends HangingEntity<I, MC, S>> extends
+            NonLivingEntityType<S, MC, I> {
         protected HangingEntityType(int id) {
             super(id);
 
-            addValueAs(HangingEntity.class);
+            addValueAs(HangingEntityType.class);
         }
 
-        @Override
-        public HangingEntity create() {
-            return (HangingEntity) super.create();
-        }
+        // abstract utilities
+
+        // overridden utilities
 
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
-        public static HangingEntityType<?> getByID(int id) {
+        @SuppressWarnings("rawtypes")
+        public static HangingEntityType getByID(int id) {
             return getByID(HangingEntityType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
-        public static HangingEntityType<?> getByID(int id, int data) {
+        @SuppressWarnings("rawtypes")
+        public static HangingEntityType getByID(int id, int data) {
             return getByID(HangingEntityType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
-        public static HangingEntityType<?>[] values() {
+        @SuppressWarnings("rawtypes")
+        public static HangingEntityType[] values() {
             return values(HangingEntityType.class);
         }
     }
 
+    // type utilities
+
+    // instance utilities
 }

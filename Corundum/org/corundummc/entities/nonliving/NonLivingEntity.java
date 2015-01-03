@@ -1,8 +1,11 @@
 package org.corundummc.entities.nonliving;
 
+import io.netty.handler.codec.http.HttpHeaders.Values;
+
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
+import org.corundummc.entities.nonliving.EnderCrystal.EnderCrystalType;
 import org.corundummc.entities.nonliving.blocks.BlockEntity.BlockEntityType;
 import org.corundummc.entities.nonliving.drops.Drop.DropType;
 import org.corundummc.entities.nonliving.hanging.HangingEntity.HangingEntityType;
@@ -26,8 +29,7 @@ public abstract class NonLivingEntity<S extends NonLivingEntity<S, MC, T>, MC ex
         super(entityMC);
     }
 
-    public static class NonLivingEntityType<S extends NonLivingEntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends NonLivingEntity<I, MC, S>> extends
-            EntityType<S, MC, I> {
+    public static interface NonLivingEntityTypes extends ProjectileTypes, VehicleTypes, DropTypes, BlockEntityTypes, HangingEntityTypes {
         // projectiles
         public static final NonLivingEntityType ARROW = ProjectileType.ARROW;
         public static final NonLivingEntityType BOTTLE_O_ENCHANTING = ProjectileType.BOTTLE_O_ENCHANTING;
@@ -64,25 +66,14 @@ public abstract class NonLivingEntity<S extends NonLivingEntity<S, MC, T>, MC ex
         public static final NonLivingEntityType PAINTING = HangingEntityType.PAINTING;
 
         // others
-        @SuppressWarnings("rawtypes")
-        public static final NonLivingEntityType ENDER_CRYSTAL = new NonLivingEntityType(200);
-        @SuppressWarnings("rawtypes")
-        public static final NonLivingEntity.NonLivingEntityType FISH_HOOK = new NonLivingEntityType(-1);
-        @SuppressWarnings("rawtypes")
-        public static final NonLivingEntityType LEAD = new NonLivingEntityType(8) {
-            @Override
-            public Lead create() {
-                return new Lead();
-            }
-        };
-        @SuppressWarnings("rawtypes")
-        public static final NonLivingEntity.NonLivingEntityType LIGHTNING_BOLT = new NonLivingEntityType(-1) {
-            @Override
-            public LightningBolt create() {
-                return new LightningBolt();
-            }
-        };
+        public static final EnderCrystalType ENDER_CRYSTAL = EnderCrystalType.INSTANCE;
+        public static final FishHookType FISH_HOOK = FishHookType.INSTANCE;
+        public static final LeadType LEAD = LeadType.INSTANCE;
+        public static final LightningBoltType LIGHTNING_BOLT = LightningBoltType.INSTANCE;
+    }
 
+    public static class NonLivingEntityType<S extends NonLivingEntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends NonLivingEntity<I, MC, S>> extends
+            EntityType<S, MC, I> {
         @SuppressWarnings("javadoc")
         protected NonLivingEntityType(int id) {
             super(id, -1);

@@ -14,8 +14,12 @@ package org.corundummc.entities;
 
 import net.minecraft.world.WorldServer;
 
+import org.apache.logging.log4j.core.config.plugins.ResolverUtil.Test;
 import org.corundummc.entities.living.LivingEntity.LivingEntityType;
+import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
+import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
+import org.corundummc.entities.nonliving.projectiles.Snowball;
 import org.corundummc.items.Item;
 import org.corundummc.types.CreatableType;
 import org.corundummc.types.Physical;
@@ -35,78 +39,44 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
     }
 
-    public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
-        public static final EntityType PLAYER = LivingEntityType.PLAYER;
-        public static final EntityType DROPPED_ITEM = NonLivingEntityType.DROPPED_ITEM;
-        public static final EntityType XP_ORB = NonLivingEntityType.XP_ORB;
-        public static final EntityType LEAD = NonLivingEntityType.LEAD;
-        public static final EntityType PAINTING = NonLivingEntityType.PAINTING;
-        public static final EntityType ARROW = NonLivingEntityType.ARROW;
-        public static final EntityType SNOWBALL = NonLivingEntityType.SNOWBALL;
-        public static final EntityType LARGE_FIREBALL = NonLivingEntityType.LARGE_FIREBALL;
-        public static final EntityType SMALL_FIREBALL = NonLivingEntityType.SMALL_FIREBALL;
-        public static final EntityType ENDER_PEARL = NonLivingEntityType.ENDER_PEARL;
-        public static final EntityType EYE_OF_ENDER = NonLivingEntityType.EYE_OF_ENDER;
-        public static final EntityType SPLASH_POTION = NonLivingEntityType.SPLASH_POTION;
-        public static final EntityType BOTTLE_O_ENCHANTING = NonLivingEntityType.BOTTLE_O_ENCHANTING;
-        public static final EntityType ITEM_FRAME = NonLivingEntityType.ITEM_FRAME;
-        public static final EntityType WITHER_SKULL = NonLivingEntityType.WITHER_SKULL;
-        public static final EntityType EGG = NonLivingEntityType.EGG;
-        public static final EntityType TNT = NonLivingEntityType.TNT;
-        public static final EntityType FALLING_BLOCK = NonLivingEntityType.FALLING_BLOCK;
-        // public static final EntityType ARMOR_STAND = NonLivingEntityType.ARMOR_STAND;
-        public static final EntityType COMMAND_MINECART = NonLivingEntityType.COMMAND_MINECART;
-        public static final EntityType BOAT = NonLivingEntityType.BOAT;
-        public static final EntityType PASSENGER_MINECART = NonLivingEntityType.PASSENGER_MINECART;
-        public static final EntityType STORAGE_MINECART = NonLivingEntityType.STORAGE_MINECART;
-        public static final EntityType POWERED_MINECART = NonLivingEntityType.POWERED_MINECART;
-        public static final EntityType TNT_MINECART = NonLivingEntityType.TNT_MINECART;
-        public static final EntityType HOPPER_MINECART = NonLivingEntityType.HOPPER_MINECART;
-        public static final EntityType SPAWNER_MINECART = NonLivingEntityType.SPAWNER_MINECART;
-        public static final EntityType CREEPER = LivingEntityType.CREEPER;
-        public static final EntityType SKELETON = LivingEntityType.SKELETON;
-        public static final EntityType WITHER_SKELETON = LivingEntityType.WITHER_SKELETON;
-        public static final EntityType SPIDER = LivingEntityType.SPIDER;
-        public static final EntityType GIANT = LivingEntityType.GIANT;
-        public static final EntityType ZOMBIE = LivingEntityType.ZOMBIE;
-        public static final EntityType ZOMBIFIED = LivingEntityType.ZOMBIFIED;
-        public static final EntityType BABY_ZOMBIE = LivingEntityType.BABY_ZOMBIE;
-        public static final EntityType BABY_ZOMBIFIED = LivingEntityType.BABY_ZOMBIFIED;
-        public static final EntityType SLIME = LivingEntityType.SLIME;
-        public static final EntityType GHAST = LivingEntityType.GHAST;
-        public static final EntityType ZOMBIE_PIGMAN = LivingEntityType.ZOMBIE_PIGMAN;
-        public static final EntityType ENDERMAN = LivingEntityType.ENDERMAN;
-        public static final EntityType CAVE_SPIDER = LivingEntityType.CAVE_SPIDER;
-        public static final EntityType SILVERFISH = LivingEntityType.SILVERFISH;
-        public static final EntityType BLAZE = LivingEntityType.BLAZE;
-        public static final EntityType MAGMA_CUBE = LivingEntityType.MAGMA_CUBE;
-        public static final EntityType ENDER_DRAGON = LivingEntityType.ENDER_DRAGON;
-        public static final EntityType WITHER = LivingEntityType.WITHER;
-        public static final EntityType BAT = LivingEntityType.BAT;
-        public static final EntityType WITCH = LivingEntityType.WITCH;
-        public static final EntityType ENDERMITE = LivingEntityType.ENDERMITE;
-        public static final EntityType GUARDIAN = LivingEntityType.GUARDIAN;
-        public static final EntityType ELDER_GUARDIAN = LivingEntityType.ELDER_GUARDIAN;
-        public static final EntityType PIG = LivingEntityType.PIG;
-        public static final EntityType SHEEP = LivingEntityType.SHEEP;
-        public static final EntityType COW = LivingEntityType.COW;
-        public static final EntityType CHICKEN = LivingEntityType.CHICKEN;
-        public static final EntityType SQUID = LivingEntityType.SQUID;
-        public static final EntityType WOLF = LivingEntityType.WOLF;
-        public static final EntityType MOOSHROOM = LivingEntityType.MOOSHROOM;
-        public static final EntityType SNOW_GOLEM = LivingEntityType.SNOW_GOLEM;
-        public static final EntityType OCELOT = LivingEntityType.OCELOT;
-        public static final EntityType IRON_GOLEM = LivingEntityType.IRON_GOLEM;
-        public static final EntityType HORSE = LivingEntityType.HORSE;
-        public static final EntityType RABBIT = LivingEntityType.RABBIT;
-        public static final EntityType KILLER_RABBIT = LivingEntityType.KILLER_RABBIT;
-        public static final EntityType FARMER = LivingEntityType.FARMER;
-        public static final EntityType LIBRARIAN = LivingEntityType.LIBRARIAN;
-        public static final EntityType PRIEST = LivingEntityType.PRIEST;
-        public static final EntityType BLACKSMITH = LivingEntityType.BLACKSMITH;
-        public static final EntityType BUTCHER = LivingEntityType.BUTCHER;
-        public static final EntityType ENDER_CRYSTAL = NonLivingEntityType.ENDER_CRYSTAL;
+    public static interface EntityTypes extends LivingEntityTypes, NonLivingEntityTypes {
+        /* public static final EntityType PLAYER = LivingEntityTypes.PLAYER; public static final EntityType DROPPED_ITEM = NonLivingEntityTypes.DROPPED_ITEM; public static
+         * final EntityType XP_ORB = NonLivingEntityTypes.XP_ORB; public static final EntityType LEAD = NonLivingEntityTypes.LEAD; public static final EntityType PAINTING =
+         * NonLivingEntityTypes.PAINTING; public static final EntityType ARROW = NonLivingEntityTypes.ARROW; public static final EntityType SNOWBALL =
+         * NonLivingEntityTypes.SNOWBALL; public static final EntityType LARGE_FIREBALL = NonLivingEntityTypes.LARGE_FIREBALL; public static final EntityType SMALL_FIREBALL =
+         * NonLivingEntityTypes.SMALL_FIREBALL; public static final EntityType ENDER_PEARL = NonLivingEntityTypes.ENDER_PEARL; public static final EntityType EYE_OF_ENDER =
+         * NonLivingEntityTypes.EYE_OF_ENDER; public static final EntityType SPLASH_POTION = NonLivingEntityTypes.SPLASH_POTION; public static final EntityType
+         * BOTTLE_O_ENCHANTING = NonLivingEntityTypes.BOTTLE_O_ENCHANTING; public static final EntityType ITEM_FRAME = NonLivingEntityTypes.ITEM_FRAME; public static final
+         * EntityType WITHER_SKULL = NonLivingEntityTypes.WITHER_SKULL; public static final EntityType EGG = NonLivingEntityTypes.EGG; public static final EntityType
+         * PRIMED_TNT = NonLivingEntityTypes.PRIMED_TNT; public static final EntityType FALLING_BLOCK = NonLivingEntityTypes.FALLING_BLOCK; // public static final EntityType
+         * ARMOR_STAND = NonLivingEntityTypes.ARMOR_STAND; public static final EntityType COMMAND_MINECART = NonLivingEntityTypes.COMMAND_MINECART; public static final
+         * EntityType BOAT = NonLivingEntityTypes.BOAT; public static final EntityType PASSENGER_MINECART = NonLivingEntityTypes.PASSENGER_MINECART; public static final
+         * EntityType STORAGE_MINECART = NonLivingEntityTypes.STORAGE_MINECART; public static final EntityType POWERED_MINECART = NonLivingEntityTypes.POWERED_MINECART; public
+         * static final EntityType TNT_MINECART = NonLivingEntityTypes.TNT_MINECART; public static final EntityType HOPPER_MINECART = NonLivingEntityTypes.HOPPER_MINECART;
+         * public static final EntityType SPAWNER_MINECART = NonLivingEntityTypes.SPAWNER_MINECART; public static final EntityType CREEPER = LivingEntityTypes.CREEPER; public
+         * static final EntityType SKELETON = LivingEntityTypes.SKELETON; public static final EntityType WITHER_SKELETON = LivingEntityTypes.WITHER_SKELETON; public static
+         * final EntityType SPIDER = LivingEntityTypes.SPIDER; public static final EntityType GIANT = LivingEntityTypes.GIANT; public static final EntityType ZOMBIE =
+         * LivingEntityTypes.ZOMBIE; public static final EntityType ZOMBIFIED_VILLAGER = LivingEntityTypes.ZOMBIFIED_VILLAGER; public static final EntityType BABY_ZOMBIE =
+         * LivingEntityTypes.BABY_ZOMBIE; public static final EntityType BABY_ZOMBIFIED = LivingEntityTypes.BABY_ZOMBIFIED; public static final EntityType SLIME =
+         * LivingEntityTypes.SLIME; public static final EntityType GHAST = LivingEntityTypes.GHAST; public static final EntityType ZOMBIE_PIGMAN =
+         * LivingEntityTypes.ZOMBIE_PIGMAN; public static final EntityType ENDERMAN = LivingEntityTypes.ENDERMAN; public static final EntityType CAVE_SPIDER =
+         * LivingEntityTypes.CAVE_SPIDER; public static final EntityType SILVERFISH = LivingEntityTypes.SILVERFISH; public static final EntityType BLAZE =
+         * LivingEntityTypes.BLAZE; public static final EntityType MAGMA_CUBE = LivingEntityTypes.MAGMA_CUBE; public static final EntityType ENDER_DRAGON =
+         * LivingEntityTypes.ENDER_DRAGON; public static final EntityType WITHER = LivingEntityTypes.WITHER; public static final EntityType BAT = LivingEntityTypes.BAT; public
+         * static final EntityType WITCH = LivingEntityTypes.WITCH; public static final EntityType ENDERMITE = LivingEntityTypes.ENDERMITE; public static final EntityType
+         * GUARDIAN = LivingEntityTypes.GUARDIAN; public static final EntityType ELDER_GUARDIAN = LivingEntityTypes.ELDER_GUARDIAN; public static final EntityType PIG =
+         * LivingEntityTypes.PIG; public static final EntityType SHEEP = LivingEntityTypes.SHEEP; public static final EntityType COW = LivingEntityTypes.COW; public static
+         * final EntityType CHICKEN = LivingEntityTypes.CHICKEN; public static final EntityType SQUID = LivingEntityTypes.SQUID; public static final EntityType WOLF =
+         * LivingEntityTypes.WOLF; public static final EntityType MOOSHROOM = LivingEntityTypes.MOOSHROOM; public static final EntityType SNOW_GOLEM =
+         * LivingEntityTypes.SNOW_GOLEM; public static final EntityType OCELOT = LivingEntityTypes.OCELOT; public static final EntityType IRON_GOLEM =
+         * LivingEntityTypes.IRON_GOLEM; public static final EntityType HORSE = LivingEntityTypes.HORSE; public static final EntityType RABBIT = LivingEntityTypes.RABBIT;
+         * public static final EntityType KILLER_RABBIT = LivingEntityTypes.KILLER_RABBIT; public static final EntityType FARMER = LivingEntityTypes.FARMER; public static
+         * final EntityType LIBRARIAN = LivingEntityTypes.LIBRARIAN; public static final EntityType PRIEST = LivingEntityTypes.PRIEST; public static final EntityType
+         * BLACKSMITH = LivingEntityTypes.BLACKSMITH; public static final EntityType BUTCHER = LivingEntityTypes.BUTCHER; public static final EntityType ENDER_CRYSTAL =
+         * NonLivingEntityTypes.ENDER_CRYSTAL; */
+    }
 
+    public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
         @SuppressWarnings("javadoc")
@@ -117,6 +87,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         }
 
         // pseudo-enum utils
+        /**  */
         public static EntityType getByID(int id) {
             return getByID(EntityType.class, id);
         }

@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.mobs.Mob.MobType;
+import org.corundummc.entities.living.mobs.Mob.MobTypes;
 
 public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends EntityLivingBase, T extends LivingEntity.LivingEntityType<T, MC, S>> extends Entity<S, MC, T> {
 
@@ -11,51 +12,57 @@ public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends 
         super(entityMC);
     }
 
-    public static class LivingEntityType<S extends LivingEntityType<S, MC, I>, MC extends EntityLivingBase, I extends LivingEntity<I, MC, S>> extends EntityType<S, MC, I> {
+    public static class LivingEntityTypes {
         public static final LivingEntityType PLAYER = new LivingEntityType(-1, -1);
-        public static final LivingEntityType CREEPER = MobType.CREEPER;
-        public static final LivingEntityType SKELETON = MobType.SKELETON;
-        public static final LivingEntityType WITHER_SKELETON = MobType.WITHER_SKELETON;
-        public static final LivingEntityType SPIDER = MobType.SPIDER;
-        public static final LivingEntityType GIANT = MobType.GIANT;
-        public static final LivingEntityType ZOMBIE = MobType.ZOMBIE;
-        public static final LivingEntityType ZOMBIFIED_VILLAGER = MobType.ZOMBIFIED_VILLAGER;
-        public static final LivingEntityType SLIME = MobType.SLIME;
-        public static final LivingEntityType GHAST = MobType.GHAST;
-        public static final LivingEntityType ZOMBIE_PIGMAN = MobType.ZOMBIE_PIGMAN;
-        public static final LivingEntityType ENDERMAN = MobType.ENDERMAN;
-        public static final LivingEntityType CAVE_SPIDER = MobType.CAVE_SPIDER;
-        public static final LivingEntityType SILVERFISH = MobType.SILVERFISH;
-        public static final LivingEntityType BLAZE = MobType.BLAZE;
-        public static final LivingEntityType MAGMA_CUBE = MobType.MAGMA_CUBE;
-        public static final LivingEntityType ENDER_DRAGON = MobType.ENDER_DRAGON;
-        public static final LivingEntityType WITHER = MobType.WITHER;
-        public static final LivingEntityType WITCH = MobType.WITCH;
-        public static final LivingEntityType ENDERMITE = MobType.ENDERMITE;
-        public static final LivingEntityType GUARDIAN = MobType.GUARDIAN;
-        public static final LivingEntityType ELDER_GUARDIAN = MobType.ELDER_GUARDIAN;
-        public static final LivingEntityType KILLER_RABBIT = MobType.KILLER_RABBIT;
-        public static final LivingEntityType BAT = MobType.BAT;
-        public static final LivingEntityType PIG = MobType.PIG;
-        public static final LivingEntityType SHEEP = MobType.SHEEP;
-        public static final LivingEntityType COW = MobType.COW;
-        public static final LivingEntityType CHICKEN = MobType.CHICKEN;
-        public static final LivingEntityType SQUID = MobType.SQUID;
-        public static final LivingEntityType WOLF = MobType.WOLF;
-        public static final LivingEntityType MOOSHROOM = MobType.MOOSHROOM;
-        public static final LivingEntityType SNOW_GOLEM = MobType.SNOW_GOLEM;
-        public static final LivingEntityType OCELOT = MobType.OCELOT;
-        public static final LivingEntityType IRON_GOLEM = MobType.IRON_GOLEM;
-        public static final LivingEntityType HORSE = MobType.HORSE;
-        public static final LivingEntityType RABBIT = MobType.RABBIT;
-        public static final LivingEntityType FARMER = MobType.FARMER;
-        public static final LivingEntityType LIBRARIAN = MobType.LIBRARIAN;
-        public static final LivingEntityType PRIEST = MobType.PRIEST;
-        public static final LivingEntityType BLACKSMITH = MobType.BLACKSMITH;
-        public static final LivingEntityType BUTCHER = MobType.BUTCHER;
 
+        public static final LivingEntityType CREEPER = MobTypes.CREEPER;
+        public static final LivingEntityType SKELETON = MobTypes.SKELETON;
+        public static final LivingEntityType WITHER_SKELETON = MobTypes.WITHER_SKELETON;
+        public static final LivingEntityType SPIDER = MobTypes.SPIDER;
+        public static final LivingEntityType GIANT = MobTypes.GIANT;
+        public static final LivingEntityType ZOMBIE = MobTypes.ZOMBIE;
+        public static final LivingEntityType ZOMBIFIED_VILLAGER = MobTypes.ZOMBIFIED_VILLAGER;
+        public static final LivingEntityType SLIME = MobTypes.SLIME;
+        public static final LivingEntityType GHAST = MobTypes.GHAST;
+        public static final LivingEntityType ZOMBIE_PIGMAN = MobTypes.ZOMBIE_PIGMAN;
+        public static final LivingEntityType ENDERMAN = MobTypes.ENDERMAN;
+        public static final LivingEntityType CAVE_SPIDER = MobTypes.CAVE_SPIDER;
+        public static final LivingEntityType SILVERFISH = MobTypes.SILVERFISH;
+        public static final LivingEntityType BLAZE = MobTypes.BLAZE;
+        public static final LivingEntityType MAGMA_CUBE = MobTypes.MAGMA_CUBE;
+        public static final LivingEntityType ENDER_DRAGON = MobTypes.ENDER_DRAGON;
+        public static final LivingEntityType WITHER = MobTypes.WITHER;
+        public static final LivingEntityType WITCH = MobTypes.WITCH;
+        public static final LivingEntityType ENDERMITE = MobTypes.ENDERMITE;
+        public static final LivingEntityType GUARDIAN = MobTypes.GUARDIAN;
+        public static final LivingEntityType ELDER_GUARDIAN = MobTypes.ELDER_GUARDIAN;
+        public static final LivingEntityType KILLER_RABBIT = MobTypes.KILLER_RABBIT;
+        public static final LivingEntityType BAT = MobTypes.BAT;
+        public static final LivingEntityType PIG = MobTypes.PIG;
+        public static final LivingEntityType SHEEP = MobTypes.SHEEP;
+        public static final LivingEntityType COW = MobTypes.COW;
+        public static final LivingEntityType CHICKEN = MobTypes.CHICKEN;
+        public static final LivingEntityType SQUID = MobTypes.SQUID;
+        public static final LivingEntityType WOLF = MobTypes.WOLF;
+        public static final LivingEntityType MOOSHROOM = MobTypes.MOOSHROOM;
+        public static final LivingEntityType SNOW_GOLEM = MobTypes.SNOW_GOLEM;
+        public static final LivingEntityType OCELOT = MobTypes.OCELOT;
+        public static final LivingEntityType IRON_GOLEM = MobTypes.IRON_GOLEM;
+        public static final LivingEntityType HORSE = MobTypes.HORSE;
+        public static final LivingEntityType RABBIT = MobTypes.RABBIT;
+        public static final LivingEntityType FARMER = MobTypes.FARMER;
+        public static final LivingEntityType LIBRARIAN = MobTypes.LIBRARIAN;
+        public static final LivingEntityType PRIEST = MobTypes.PRIEST;
+        public static final LivingEntityType BLACKSMITH = MobTypes.BLACKSMITH;
+        public static final LivingEntityType BUTCHER = MobTypes.BUTCHER;
+    }
+
+    public static class LivingEntityType<S extends LivingEntityType<S, MC, I>, MC extends EntityLivingBase, I extends LivingEntity<I, MC, S>> extends EntityType<S, MC, I>
+            implements LivingEntityTypes {
         protected LivingEntityType(int id, int data) {
             super(id, data);
+            
+            addValueAs(LivingEntityType.class);
         }
 
         // pseudo-enum utilities

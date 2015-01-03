@@ -1,113 +1,73 @@
 package org.corundummc.entities.nonliving.projectiles;
 
+import org.corundummc.entities.Entity;
+import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.nonliving.NonLivingEntity;
-import org.corundummc.entities.nonliving.projectiles.Fireball.FireballType;
+import org.corundummc.entities.nonliving.projectiles.fireballs.Fireball.FireballTypes;
+import org.corundummc.entities.nonliving.projectiles.Arrow.ArrowType;
+import org.corundummc.entities.nonliving.projectiles.BottleOEnchanting.BottleOEnchantingType;
+import org.corundummc.entities.nonliving.projectiles.EnderPearl.EnderPearlType;
+import org.corundummc.entities.nonliving.projectiles.EyeOfEnder.EyeOfEnderType;
+import org.corundummc.entities.nonliving.projectiles.Snowball.SnowballType;
+import org.corundummc.entities.nonliving.projectiles.SplashPotion.SplashPotionType;
+import org.corundummc.entities.nonliving.projectiles.WitherSkull.WitherSkullType;
 
-/** Base for projectile non-living entities */
-public class Projectile extends NonLivingEntity {
-    protected Projectile(net.minecraft.entity.Entity entityMC) {
+/** This class represents all of the {@link Entity Entities} that result from throwing or shooting something, including {@link ShotArrow}s and {@link ThrownSnowball}s.
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of {@link net.minecraft.entity.Entity Minecraft Entity} that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Projectile<S extends Projectile<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Projectile.ProjectileType<T, MC, S>> extends
+        NonLivingEntity<S, MC, T> {
+    protected Projectile(MC entityMC) {
         super(entityMC);
     }
 
-    /** This class is used to represent the different types of {@link Projectile}s. <br>
-     * <br>
-     * This list of different types not only includes those types of mobs differentiated by different I.D.s, but also many of those differentiated by different data values;
-     * for example, {@link #object object2} and {@link #object3 object4} are both represented as separate types despite the fact that they both have the same I.D. value.
-     * 
-     * @param <T>
-     *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class ProjectileType<T extends NonLivingEntityType<T>> extends NonLivingEntityType<T> {
-
+    public static interface ProjectileTypes extends FireballTypes {
         // throwable projectiles
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> SNOWBALL = new ProjectileType(11) {
-            @Override
-            public Snowball create() {
-                return new Snowball();
-            }
-        };
+        public static final SnowballType SNOWBALL = SnowballType.TYPE;
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> ENDER_PEARL = new ProjectileType(14) {
-            @Override
-            public EnderPearl create() {
-                return new EnderPearl();
-            }
-        };
+        public static final EnderPearlType ENDER_PEARL = EnderPearlType.TYPE;
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> EYE_OF_ENDER = new ProjectileType(15) {
-            @Override
-            public EyeOfEnder create() {
-                return new EyeOfEnder();
-            }
-        };
+        public static final EyeOfEnderType EYE_OF_ENDER = EyeOfEnderType.TYPE;
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> SPLASH_POTION = new ProjectileType(16) {
-            @Override
-            public SplashPotion create() {
-                return new SplashPotion();
-            }
-        };
+        public static final SplashPotionType SPLASH_POTION = SplashPotionType.TYPE;
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> BOTTLE_O_ENCHANTING = new ProjectileType(17) {
-            @Override
-            public BottleOEnchanting create() {
-                return new BottleOEnchanting();
-            }
-        };
+        public static final BottleOEnchantingType BOTTLE_O_ENCHANTING = BottleOEnchantingType.TYPE;
 
         // fired projectiles
+        public static final ArrowType ARROW = ArrowType.TYPE;
         @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> LARGE_FIREBALL = new ProjectileType(12) {
-            @Override
-            public LargeFireball create() {
-                return new LargeFireball();
-            }
-        };
-        @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> SMALL_FIREBALL = new ProjectileType(13) {
-            @Override
-            public SmallFireball create() {
-                return new SmallFireball();
-            }
-        };
-        public static final ProjectileType<?> ARROW = new ProjectileType(10) {
-            @Override
-            public Arrow create() {
-                return new Arrow();
-            }
-        };
-        @SuppressWarnings("rawtypes")
-        public static final ProjectileType<?> WITHER_SKULL = new ProjectileType(19) {
-            @Override
-            public WitherSkull create() {
-                return new WitherSkull();
-            }
-        };
+        public static final WitherSkullType WITHER_SKULL = WitherSkullType.TYPE;
+
+    }
+
+    public static abstract class ProjectileType<S extends ProjectileType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Projectile<I, MC, S>> extends
+            NonLivingEntityType<S, MC, I> {
 
         protected ProjectileType(int id) {
             super(id);
 
-            addValueAs(Projectile.class);
-        }
-
-        @Override
-        public Projectile create() {
-            return (Projectile) super.create();
+            addValueAs(ProjectileType.class);
         }
 
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
-        public static ProjectileType<?> getByID(int id) {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        public static ProjectileType getByID(int id) {
             return getByID(ProjectileType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
-        public static ProjectileType<?> getByID(int id, int data) {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        public static ProjectileType getByID(int id, int data) {
             return getByID(ProjectileType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
-        public static ProjectileType<?>[] values() {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        public static ProjectileType[] values() {
             return values(ProjectileType.class);
         }
     }
