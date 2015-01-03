@@ -1,54 +1,58 @@
 package org.corundummc.entities.nonliving.vehicles;
 
-import org.corundummc.entities.nonliving.NonLivingEntity;
-import org.corundummc.entities.nonliving.vehicles.minecarts.Minecart.MinecartType;
+import net.minecraft.entity.Entity;
 
-public class Vehicle extends NonLivingEntity {
-    @SuppressWarnings("javadoc")
-    protected Vehicle(net.minecraft.entity.Entity entityMC) {
+import org.corundummc.entities.nonliving.NonLivingEntity;
+import org.corundummc.entities.nonliving.vehicles.Boat.BoatType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.Minecart.MinecartType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.Minecart.MinecartTypes;
+
+/** TODO
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Vehicle<S extends Vehicle<S, MC, T>, MC extends Entity, T extends Vehicle.VehicleType<T, MC, S>> extends NonLivingEntity<S, MC, T> {
+    protected Vehicle(MC entityMC) {
         super(entityMC);
     }
 
-    /** This class is used to represent the different types of {@link Vehicle}s.
-     * 
-     * @param <T>
-     *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class VehicleType<T extends NonLivingEntityType<T>> extends NonLivingEntityType<T> {
-        public static final VehicleType<?> BOAT = new VehicleType<>(41);
-        public static final VehicleType<?> COMMAND_MINECART = MinecartType.COMMAND_MINECART;
-        public static final VehicleType<?> HOPPER_MINECART = MinecartType.HOPPER_MINECART;
-        public static final VehicleType<?> PASSENGER_MINECART = MinecartType.PASSENGER_MINECART;
-        public static final VehicleType<?> POWERED_MINECART = MinecartType.POWERED_MINECART;
-        public static final VehicleType<?> SPAWNER_MINECART = MinecartType.SPAWNER_MINECART;
-        public static final VehicleType<?> STORAGE_MINECART = MinecartType.STORAGE_MINECART;
-        public static final VehicleType<?> TNT_MINECART = MinecartType.TNT_MINECART;
+    public static interface VehicleTypes extends MinecartTypes {
+        public static final BoatType BOAT = BoatType.TYPE;
+    }
 
-        @SuppressWarnings("javadoc")
+    public abstract static class VehicleType<S extends VehicleType<S, MC, I>, MC extends Entity, I extends Vehicle<I, MC, S>> extends NonLivingEntityType<S, MC, I> {
         protected VehicleType(int id) {
             super(id);
 
-            addValueAs(Vehicle.class);
+            addValueAs(VehicleType.class);
         }
 
-        @Override
-        public Vehicle create() {
-            return (Vehicle) super.create();
-        }
+        // abstract utilities
+
+        // overridden utilities
 
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
-        public static VehicleType<?> getByID(int id) {
+        @SuppressWarnings("rawtypes")
+        public static VehicleType getByID(int id) {
             return getByID(VehicleType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
-        public static VehicleType<?> getByID(int id, int data) {
+        @SuppressWarnings("rawtypes")
+        public static VehicleType getByID(int id, int data) {
             return getByID(VehicleType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
-        public static VehicleType<?>[] values() {
+        @SuppressWarnings("rawtypes")
+        public static VehicleType[] values() {
             return values(VehicleType.class);
         }
     }
+
+    // type utilities
+
+    // instance utilities
 }

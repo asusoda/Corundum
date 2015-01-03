@@ -2,6 +2,8 @@ package org.corundummc.entities.nonliving.hanging;
 
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.nonliving.NonLivingEntity;
+import org.corundummc.entities.nonliving.hanging.ItemFrame.ItemFrameType;
+import org.corundummc.entities.nonliving.hanging.Painting.PaintingType;
 
 import net.minecraft.entity.EntityHanging;
 

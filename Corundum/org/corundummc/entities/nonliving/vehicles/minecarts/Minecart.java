@@ -1,72 +1,60 @@
 package org.corundummc.entities.nonliving.vehicles.minecarts;
 
-import org.corundummc.entities.nonliving.NonLivingEntity;
-import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
+import net.minecraft.entity.item.EntityMinecart;
 
-/** This class represents all of the different types of {@link Minecart} */
-public class Minecart extends NonLivingEntity {
-    @SuppressWarnings("javadoc")
-    protected Minecart(net.minecraft.entity.Entity entityMC) {
+import org.corundummc.entities.nonliving.NonLivingEntity;
+import org.corundummc.entities.nonliving.vehicles.Vehicle;
+import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.PassengerMinecart.PassengerMinecartType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.containers.ContainerMinecart.ContainerMinecartTypes;
+
+/** TODO
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Minecart<S extends Minecart<S, MC, T>, MC extends EntityMinecart, T extends Minecart.MinecartType<T, MC, S>> extends Vehicle<S, MC, T> {
+    protected Minecart(MC entityMC) {
         super(entityMC);
     }
 
-    public static class MinecartType<T extends NonLivingEntityType<T>> extends VehicleType<T> {
-        public static final MinecartType<?> COMMAND_MINECART = new MinecartType(40) {
-            @Override
-            public CommandMinecart create() {
-                return new CommandMinecart();
-            }
-        };
-        public static final MinecartType<?> HOPPER_MINECART = new MinecartType(46) {
-            public HopperMinecart create() {
-                return new HopperMinecart();
-            }
-        };
-        public static final MinecartType<?> PASSENGER_MINECART = new MinecartType(42) {
-            public PassengerMinecart create() {
-                return new PassengerMinecart();
-            }
-        };
-        public static final MinecartType<?> POWERED_MINECART = new MinecartType(44) {
-            public PoweredMinecart create() {
-                return new PoweredMinecart();
-            }
-        };
-        public static final MinecartType<?> SPAWNER_MINECART = new MinecartType(47) {
-            public SpawnerMinecart create() {
-                return new SpawnerMinecart();
-            }
-        };
-        public static final MinecartType<?> STORAGE_MINECART = new MinecartType(43) {
-            public StorageMinecart create() {
-                return new StorageMinecart();
-            }
-        };
-        public static final MinecartType<?> TNT_MINECART = new MinecartType(45) {
-            public TNTMinecart create() {
-                return new TNTMinecart();
-            }
-        };
+    public static interface MinecartTypes extends ContainerMinecartTypes {
+        public static final PassengerMinecartType PASSENGER_MINECART = PassengerMinecartType.TYPE;
+        // TODO
+    }
 
-        @SuppressWarnings("javadoc")
+    public abstract static class MinecartType<S extends MinecartType<S, MC, I>, MC extends EntityMinecart, I extends Minecart<I, MC, S>> extends VehicleType<S, MC, I> {
         protected MinecartType(int id) {
             super(id);
+
+            addValueAs(MinecartType.class);
         }
 
+        // abstract utilities
+
+        // overridden utilities
+
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
-        public static MinecartType<?> getByID(int id) {
+        @SuppressWarnings("rawtypes")
+        public static MinecartType getByID(int id) {
             return getByID(MinecartType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
-        public static MinecartType<?> getByID(int id, int data) {
+        @SuppressWarnings("rawtypes")
+        public static MinecartType getByID(int id, int data) {
             return getByID(MinecartType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
-        public static MinecartType<?>[] values() {
+        @SuppressWarnings("rawtypes")
+        public static MinecartType[] values() {
             return values(MinecartType.class);
         }
     }
+
+    // type utilities
+
+    // instance utilities
 }

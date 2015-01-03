@@ -6,6 +6,7 @@ import org.corundummc.entities.nonliving.NonLivingEntity;
 import org.corundummc.entities.nonliving.projectiles.fireballs.Fireball.FireballTypes;
 import org.corundummc.entities.nonliving.projectiles.Arrow.ArrowType;
 import org.corundummc.entities.nonliving.projectiles.BottleOEnchanting.BottleOEnchantingType;
+import org.corundummc.entities.nonliving.projectiles.Egg.EggType;
 import org.corundummc.entities.nonliving.projectiles.EnderPearl.EnderPearlType;
 import org.corundummc.entities.nonliving.projectiles.EyeOfEnder.EyeOfEnderType;
 import org.corundummc.entities.nonliving.projectiles.Snowball.SnowballType;
@@ -28,20 +29,16 @@ public abstract class Projectile<S extends Projectile<S, MC, T>, MC extends net.
 
     public static interface ProjectileTypes extends FireballTypes {
         // throwable projectiles
-        @SuppressWarnings("rawtypes")
+        public static final EggType EGG = EggType.TYPE;
         public static final SnowballType SNOWBALL = SnowballType.TYPE;
-        @SuppressWarnings("rawtypes")
         public static final EnderPearlType ENDER_PEARL = EnderPearlType.TYPE;
-        @SuppressWarnings("rawtypes")
         public static final EyeOfEnderType EYE_OF_ENDER = EyeOfEnderType.TYPE;
-        @SuppressWarnings("rawtypes")
         public static final SplashPotionType SPLASH_POTION = SplashPotionType.TYPE;
-        @SuppressWarnings("rawtypes")
         public static final BottleOEnchantingType BOTTLE_O_ENCHANTING = BottleOEnchantingType.TYPE;
 
         // fired projectiles
         public static final ArrowType ARROW = ArrowType.TYPE;
-        @SuppressWarnings("rawtypes")
+
         public static final WitherSkullType WITHER_SKULL = WitherSkullType.TYPE;
 
     }
