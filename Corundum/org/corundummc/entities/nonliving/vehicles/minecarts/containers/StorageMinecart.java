@@ -20,6 +20,10 @@ public class StorageMinecart extends ContainerMinecart<StorageMinecart, EntityMi
         }
 
         // overridden utilities
+        @Override
+        public StorageMinecart create() {
+            return new StorageMinecart();
+        }
     }
 
     // instance utilities

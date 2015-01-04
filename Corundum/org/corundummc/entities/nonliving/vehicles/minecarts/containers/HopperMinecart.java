@@ -20,6 +20,10 @@ public class HopperMinecart extends ContainerMinecart<HopperMinecart, EntityMine
         }
 
         // overridden utilities
+        @Override
+        public HopperMinecart create() {
+            return new HopperMinecart();
+        }
     }
 
     // instance utilities

@@ -28,6 +28,11 @@ public class LargeFireball extends Fireball<LargeFireball, EntityLargeFireball, 
         public boolean canExplode() {
             return true;
         }
+
+        @Override
+        public LargeFireball create() {
+            return new LargeFireball();
+        }
     }
 
     // instance utilities

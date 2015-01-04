@@ -20,6 +20,10 @@ public class SplashPotion extends Projectile<SplashPotion, EntityPotion, SplashP
         }
 
         // overridden utilities
+        @Override
+        public SplashPotion create() {
+            return new SplashPotion();
+        }
     }
 
     // instance utilities

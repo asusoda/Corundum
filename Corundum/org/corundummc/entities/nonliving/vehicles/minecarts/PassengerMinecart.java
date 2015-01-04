@@ -20,6 +20,10 @@ public class PassengerMinecart extends Minecart<PassengerMinecart, EntityMinecar
         }
 
         // overridden utilities
+        @Override
+        public PassengerMinecart create() {
+            return new PassengerMinecart();
+        }
     }
 
     // instance utilities

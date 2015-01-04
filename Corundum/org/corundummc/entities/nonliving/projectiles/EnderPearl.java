@@ -20,6 +20,10 @@ public class EnderPearl extends Projectile<EnderPearl, EntityEnderPearl, EnderPe
         }
 
         // overridden utilities
+        @Override
+        public EnderPearl create() {
+            return new EnderPearl();
+        }
     }
 
     // instance utilities

@@ -38,7 +38,6 @@ public abstract class Projectile<S extends Projectile<S, MC, T>, MC extends net.
 
         // fired projectiles
         public static final ArrowType ARROW = ArrowType.TYPE;
-
         public static final WitherSkullType WITHER_SKULL = WitherSkullType.TYPE;
 
     }

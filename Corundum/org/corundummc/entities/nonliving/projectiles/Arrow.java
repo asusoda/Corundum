@@ -26,6 +26,10 @@ public class Arrow extends Projectile<Arrow, EntityArrow, Arrow.ArrowType> {
         }
 
         // overridden utilities
+        @Override
+        public Arrow create() {
+            return new Arrow();
+        }
     }
 
     // instance utilities

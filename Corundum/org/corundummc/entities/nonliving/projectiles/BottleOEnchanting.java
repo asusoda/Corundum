@@ -20,6 +20,10 @@ public class BottleOEnchanting extends Projectile<BottleOEnchanting, EntityExpBo
         }
 
         // overridden utilities
+        @Override
+        public BottleOEnchanting create() {
+            return new BottleOEnchanting();
+        }
     }
 
     // instance utilities

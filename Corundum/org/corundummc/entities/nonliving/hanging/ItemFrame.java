@@ -21,6 +21,10 @@ public class ItemFrame extends HangingEntity<ItemFrame, EntityItemFrame, ItemFra
         }
 
         // overridden utilities
+        @Override
+        public ItemFrame create() {
+            return new ItemFrame();
+        }
     }
 
     // instance utilities

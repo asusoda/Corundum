@@ -20,6 +20,10 @@ public class Egg extends Projectile<Egg, EntityEgg, Egg.EggType> {
         }
 
         // overridden utilities
+        @Override
+        public Egg create() {
+            return new Egg();
+        }
     }
 
     // instance utilities

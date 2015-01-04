@@ -20,6 +20,10 @@ public class EyeOfEnder extends Projectile<EyeOfEnder, EntityEnderEye, EyeOfEnde
         }
 
         // overridden utilities
+        @Override
+        public EyeOfEnder create() {
+            return new EyeOfEnder();
+        }
     }
 
     // instance utilities

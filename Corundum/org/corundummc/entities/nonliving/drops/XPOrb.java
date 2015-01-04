@@ -20,6 +20,10 @@ public class XPOrb extends Drop<XPOrb, EntityXPOrb, XPOrb.XPOrbType> {
         }
 
         // overridden utilities
+        @Override
+        public XPOrb create() {
+            return new XPOrb();
+        }
     }
 
     // instance utilities

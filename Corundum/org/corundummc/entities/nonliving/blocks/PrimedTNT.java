@@ -20,6 +20,10 @@ public class PrimedTNT extends BlockEntity<PrimedTNT, EntityTNTPrimed, PrimedTNT
         }
 
         // overridden utilities
+        @Override
+        public PrimedTNT create() {
+            return new PrimedTNT();
+        }
     }
 
     // instance utilities

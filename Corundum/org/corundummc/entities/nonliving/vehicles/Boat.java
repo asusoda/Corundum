@@ -20,6 +20,10 @@ public class Boat extends Vehicle<Boat, EntityBoat, Boat.BoatType> {
         }
 
         // overridden utilities
+        @Override
+        public Boat create() {
+            return new Boat();
+        }
     }
 
     // instance utilities

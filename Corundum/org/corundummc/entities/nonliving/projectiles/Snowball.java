@@ -9,9 +9,8 @@ public class Snowball extends Projectile<Snowball, EntitySnowball, Snowball.Snow
         super(new EntitySnowball(null));
     }
 
-    @Override
-    public SnowballType getType() {
-        return SnowballType.TYPE;
+    protected Snowball(EntitySnowball entityMC) {
+        super(entityMC);
     }
 
     protected static class SnowballType extends ProjectileType<SnowballType, EntitySnowball, Snowball> {
@@ -20,5 +19,19 @@ public class Snowball extends Projectile<Snowball, EntitySnowball, Snowball.Snow
         private SnowballType() {
             super(11);
         }
+
+        // overridden utilities
+        @Override
+        public Snowball create() {
+            return new Snowball();
+        }
+    }
+
+    // instance utilities
+
+    // overridden utilities
+    @Override
+    public SnowballType getType() {
+        return SnowballType.TYPE;
     }
 }

@@ -22,6 +22,10 @@ public class EnderCrystal extends NonLivingEntity<EnderCrystal, EntityEnderCryst
         }
 
         // overridden utilities
+        @Override
+        public EnderCrystal create() {
+            return new EnderCrystal();
+        }
     }
 
     // instance utilities

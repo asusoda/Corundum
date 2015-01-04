@@ -20,6 +20,10 @@ public class Painting extends HangingEntity<Painting, EntityPainting, Painting.P
         }
 
         // overridden utilities
+        @Override
+        public Painting create() {
+            return new Painting();
+        }
     }
 
     // instance utilities

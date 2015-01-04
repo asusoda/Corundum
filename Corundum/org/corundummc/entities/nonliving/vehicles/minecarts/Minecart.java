@@ -5,7 +5,11 @@ import net.minecraft.entity.item.EntityMinecart;
 import org.corundummc.entities.nonliving.NonLivingEntity;
 import org.corundummc.entities.nonliving.vehicles.Vehicle;
 import org.corundummc.entities.nonliving.vehicles.Vehicle.VehicleType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.CommandMinecart.CommandMinecartType;
 import org.corundummc.entities.nonliving.vehicles.minecarts.PassengerMinecart.PassengerMinecartType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.PoweredMinecart.PoweredMinecartType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.SpawnerMinecart.SpawnerMinecartType;
+import org.corundummc.entities.nonliving.vehicles.minecarts.TNTMinecart.TNTMinecartType;
 import org.corundummc.entities.nonliving.vehicles.minecarts.containers.ContainerMinecart.ContainerMinecartTypes;
 
 /** TODO
@@ -22,8 +26,11 @@ public abstract class Minecart<S extends Minecart<S, MC, T>, MC extends EntityMi
     }
 
     public static interface MinecartTypes extends ContainerMinecartTypes {
+        public static final CommandMinecartType COMMAND_MINECART = CommandMinecartType.TYPE;
         public static final PassengerMinecartType PASSENGER_MINECART = PassengerMinecartType.TYPE;
-        // TODO
+        public static final PoweredMinecartType POWERED_MINECART = PoweredMinecartType.TYPE;
+        public static final SpawnerMinecartType SPAWNER_MINECART = SpawnerMinecartType.TYPE;
+        public static final TNTMinecartType TNT_MINECART = TNTMinecartType.TYPE;
     }
 
     public abstract static class MinecartType<S extends MinecartType<S, MC, I>, MC extends EntityMinecart, I extends Minecart<I, MC, S>> extends VehicleType<S, MC, I> {

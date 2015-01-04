@@ -20,6 +20,10 @@ public class WitherSkull extends Projectile<WitherSkull, EntityWitherSkull, With
         }
 
         // overridden utilities
+        @Override
+        public WitherSkull create() {
+            return new WitherSkull();
+        }
     }
 
     // instance utilities

@@ -20,6 +20,10 @@ public class FallingBlock extends BlockEntity<FallingBlock, EntityFallingBlock, 
         }
 
         // overridden utilities
+        @Override
+        public FallingBlock create() {
+            return new FallingBlock();
+        }
     }
 
     // instance utilities

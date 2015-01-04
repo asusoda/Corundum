@@ -21,6 +21,10 @@ public class DroppedItem extends Drop<DroppedItem, EntityItem, DroppedItem.Dropp
         }
 
         // overridden utilities
+        @Override
+        public DroppedItem create() {
+            return new DroppedItem();
+        }
     }
 
     // instance utilities

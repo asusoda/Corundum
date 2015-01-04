@@ -5,6 +5,10 @@ import org.corundummc.entities.nonliving.projectiles.fireballs.Fireball.Fireball
 import net.minecraft.entity.projectile.EntitySmallFireball;
 
 public class SmallFireball extends Fireball<SmallFireball, EntitySmallFireball, SmallFireball.SmallFireballType> {
+    public SmallFireball() {
+        super(new EntitySmallFireball(null));
+    }
+
     public SmallFireball(EntitySmallFireball entityMC) {
         super(entityMC);
     }
@@ -20,6 +24,11 @@ public class SmallFireball extends Fireball<SmallFireball, EntitySmallFireball, 
         @Override
         public boolean canExplode() {
             return false;
+        }
+
+        @Override
+        public SmallFireball create() {
+            return new SmallFireball();
         }
     }
 
