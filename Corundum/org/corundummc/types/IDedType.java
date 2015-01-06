@@ -53,6 +53,13 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
         return (R[]) values.get(clazz);
     }
 
+    protected static <R extends IDedType<R>> int nextID(Class<R> clazz) {
+        if (values(clazz) == null)
+            return 0;
+        else
+            return values(clazz)[values(clazz).length].getID() + 1;
+    }
+
     // instance utilities
     /** This method returns the I.D. that represents this {@link IDedType}. In Minecraft, certain things such as {@link Item items} and {@link Block blocks} can be categorized
      * into "types" that are represented by different I.D.s. You can see which I.D.s represent which blocks or items on <a href=http://minecraft-ids.grahamedgecombe.com/>this

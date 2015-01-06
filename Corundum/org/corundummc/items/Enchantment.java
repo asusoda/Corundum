@@ -79,9 +79,10 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
 
         private net.minecraft.enchantment.Enchantment enchantmentMC;
 
-        private EnchantmentType(net.minecraft.enchantment.Enchantment mcEnchant) {
-            
-            this.enchantmentMC = mcEnchant;
+        private EnchantmentType(net.minecraft.enchantment.Enchantment enchantmentMC) {
+            super(enchantmentMC.effectId);
+
+            this.enchantmentMC = enchantmentMC;
         }
 
         public static ItemType[] getApplicableItems() {

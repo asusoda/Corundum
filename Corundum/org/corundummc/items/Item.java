@@ -51,6 +51,10 @@ public class Item {
     }
 
     // type class
+    public static interface ItemTypes {
+        // TODO
+    }
+
     /** This enum is used to represent the different types of {@link Item}s. This list of different types not only includes those types of items differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of dye are listed individually despite the fact that they all
      * have the same I.D. */
@@ -347,31 +351,10 @@ public class Item {
         private final net.minecraft.item.Item itemTypeMC;
 
         // constructors
-        /** This constructor makes a ItemType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
-         * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this ItemType the same I.D.
-         * and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
-         * use of the {@link #ItemType(int)} and {@link #ItemType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block
-         * and declaring one with a data value >= 0 will start a new block. */
-        private ItemType() {
-            super();
+        private ItemType(net.minecraft.item.Item itemtypeMC, int data) {
+            super(net.minecraft.item.Item.getIdFromItem(itemtypeMC), data);
 
-            // find the Item with the given I.D.
-            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
-        }
-
-        /** This constructor makes a ItemType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
-         * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
-         * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #ItemType(int)} and
-         * {@link #ItemType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
-         * >= 0 will start a new block.
-         * 
-         * @param data
-         *            is the data value for this {@link ItemType}. */
-        private ItemType(int data) {
-            super(data);
-
-            // find the Item with the given I.D.
-            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
+            this.itemTypeMC = itemtypeMC;
         }
 
         /** This constructor makes a ItemType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
@@ -382,10 +365,7 @@ public class Item {
          *            is the data value associated with this {@link ItemType}.
          * @see {@link #ItemType(int)} */
         private ItemType(int id, int data) {
-            super(id, data);
-
-            // find the Item with the given I.D.
-            itemTypeMC = net.minecraft.item.Item.getItemById(id);
+            this(net.minecraft.item.Item.getItemById(id), data);
         }
 
         // private utilities
@@ -478,11 +458,6 @@ public class Item {
         @Override
         public byte getMaxStackSize() {
             return (byte) itemTypeMC.getItemStackLimit();
-        }
-
-        @Override
-        public boolean isASiblingOf(ItemType material) {
-            return material.getID() == getID();
         }
 
         // static utilities

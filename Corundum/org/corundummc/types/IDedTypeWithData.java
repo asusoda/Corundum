@@ -95,9 +95,9 @@ public abstract class IDedTypeWithData<S extends IDedTypeWithData<S>> extends ID
      * You can see which I.D.s represent which blocks and which blocks have the same I.D. on <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
      * 
      * @param material
-     *            is the {@link IDedType} to compare to this {@link IDedType} to see if they're "siblings".
+     *            is the {@link IDedTypeWithData} to compare to this {@link IDedTypeWithData} to see if they're "siblings".
      * @return <b>true</b> if this {@link IDedType} has the same I.D. as <b><tt>type</b></tt>; <b>false</b> otherwise. */
-    public boolean isASiblingOf(IDedTypeWithData material) {
+    public boolean isASiblingOf(S material) {
         return material.getID() == getID();
     }
 

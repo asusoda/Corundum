@@ -5,29 +5,35 @@ import org.corundummc.utils.exceptions.UnfinishedException;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public class PlayerEntity extends LivingEntity<PlayerEntity, EntityPlayer, PlayerEntity.PlayerType> {
+public class PlayerEntity extends LivingEntity<PlayerEntity, EntityPlayer, PlayerEntity.PlayerEntityType> {
+    public PlayerEntity() {
+        // TODO
+        super(null);
+    }
 
     protected PlayerEntity(EntityPlayer entityMC) {
         super(entityMC);
     }
 
-    public PlayerEntity() {
-        this(null);
+    protected static class PlayerEntityType extends LivingEntityType<PlayerEntityType, EntityPlayer, PlayerEntity> {
+        public static final PlayerEntityType TYPE = new PlayerEntityType();
 
-        // TODO: figure out how to make a fake Player entity
-        throw new UnfinishedException("create fake Player Entities");
-    }
-
-    @Override
-    public PlayerType getType() {
-        return PlayerType.INSTANCE;
-    }
-
-    static class PlayerType extends LivingEntityType<PlayerType, EntityPlayer, PlayerEntity> {
-        static final PlayerType INSTANCE = new PlayerType();
-
-        protected PlayerType() {
+        private PlayerEntityType() {
             super(-1, -1);
         }
+
+        // overridden utilities
+        @Override
+        public PlayerEntity create() {
+            return new PlayerEntity();
+        }
+    }
+
+    // instance utilities
+
+    // overridden utilities
+    @Override
+    public PlayerEntityType getType() {
+        return PlayerEntityType.TYPE;
     }
 }

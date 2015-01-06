@@ -22,12 +22,14 @@ import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
 import org.corundummc.entities.nonliving.projectiles.Snowball;
 import org.corundummc.items.Item;
 import org.corundummc.types.CreatableType;
+import org.corundummc.types.Nameable;
 import org.corundummc.types.Physical;
 import org.corundummc.types.Typed;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical {
+public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical,
+        Nameable<S> {
     protected final MC entityMC;
 
     protected Location location;
@@ -87,7 +89,6 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         }
 
         // pseudo-enum utils
-        /**  */
         public static EntityType getByID(int id) {
             return getByID(EntityType.class, id);
         }
@@ -105,6 +106,13 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
     public String getCustomName() {
         // TODO
         return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public S setCustomName() {
+        // TODO
+        return (S) this;
     }
 
     public Item[] getDrops() {

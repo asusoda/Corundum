@@ -1,0 +1,55 @@
+package org.corundummc.entities.living.mobs.monsters;
+
+import net.minecraft.entity.EntityLiving;
+
+import org.corundummc.entities.living.mobs.Mob;
+
+/** TODO
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLiving, T extends Monster.MonsterType<T, MC, S>> extends Mob<S, MC, T> {
+    protected Monster(MC entityMC) {
+        super(entityMC);
+    }
+
+    public static interface MonsterTypes {
+        // TODO
+    }
+
+    public abstract static class MonsterType<S extends MonsterType<S, MC, I>, MC extends EntityLiving, I extends Monster<I, MC, S>> extends MobType<S, MC, I> {
+        protected MonsterType(int id, int data) {
+            super(id, data);
+
+            addValueAs(MonsterType.class);
+        }
+
+        // abstract utilities
+
+        // overridden utilities
+
+        // pseudo-enum utilities
+        @SuppressWarnings("rawtypes")
+        public static MonsterType getByID(int id) {
+            return getByID(MonsterType.class, id);
+        }
+
+        @SuppressWarnings("rawtypes")
+        public static MonsterType getByID(int id, int data) {
+            return getByID(MonsterType.class, id, data);
+        }
+
+        @SuppressWarnings("rawtypes")
+        public static MonsterType[] values() {
+            return values(MonsterType.class);
+        }
+    }
+
+    // type utilities
+
+    // instance utilities
+}

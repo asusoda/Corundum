@@ -2,62 +2,58 @@ package org.corundummc.entities.living.mobs.golems;
 
 import org.corundummc.entities.living.mobs.Mob;
 import org.corundummc.entities.living.mobs.Mob.MobType;
+import org.corundummc.entities.living.mobs.golems.IronGolem.IronGolemType;
+import org.corundummc.entities.living.mobs.golems.SnowGolem.SnowGolemType;
 
 import net.minecraft.entity.monster.EntityGolem;
 
-public class Golem<T extends EntityGolem> extends Mob<T> {
-
-    protected Golem(T entityMC) {
+/** TODO
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Golem<S extends Golem<S, MC, T>, MC extends EntityGolem, T extends Golem.GolemType<T, MC, S>> extends Mob<S, MC, T> {
+    protected Golem(MC entityMC) {
         super(entityMC);
     }
 
-    /** This class is used to represent the different types of {@link Golem}s.
-     * 
-     * @param <T>
-     *            is a self-parameterization; <b><tt>T</b></tt> is the same type as the type of this instance. */
-    public static class GolemType<T extends MobType<T>> extends MobType<T> {
+    public static interface GolemTypes {
+        public static final IronGolemType IRON_GOLEM = IronGolemType.TYPE;
+        public static final SnowGolemType SNOW_GOLEM = SnowGolemType.TYPE;
+    }
 
-        @SuppressWarnings("rawtypes")
-        public static final GolemType<?> SNOW_GOLEM = new GolemType(61) {
-            @Override
-            public SnowGolem create() {
-                return new SnowGolem();
-            }
-        };
+    public abstract static class GolemType<S extends GolemType<S, MC, I>, MC extends EntityGolem, I extends Golem<I, MC, S>> extends MobType<S, MC, I> {
+        protected GolemType(int id, int data) {
+            super(id, data);
 
-        @SuppressWarnings("rawtypes")
-        public static final GolemType<?> IRON_GOLEM = new GolemType(63) {
-            @Override
-            public IronGolem create() {
-                return new IronGolem();
-            }
-        };
-
-        protected GolemType(int id) {
-            super(id, -1);
-
-            addValueAs(Golem.class);
+            addValueAs(GolemType.class);
         }
 
-        @Override
-        public Golem create() {
-            return (Golem) super.create();
-        }
+        // abstract utilities
+
+        // overridden utilities
 
         // pseudo-enum utilities
-        @SuppressWarnings("unchecked")
-        public static GolemType<?> getByID(int id) {
+        @SuppressWarnings("rawtypes")
+        public static GolemType getByID(int id) {
             return getByID(GolemType.class, id);
         }
 
-        @SuppressWarnings("unchecked")
-        public static GolemType<?> getByID(int id, int data) {
+        @SuppressWarnings("rawtypes")
+        public static GolemType getByID(int id, int data) {
             return getByID(GolemType.class, id, data);
         }
 
-        @SuppressWarnings("unchecked")
-        public static GolemType<?>[] values() {
+        @SuppressWarnings("rawtypes")
+        public static GolemType[] values() {
             return values(GolemType.class);
         }
     }
+
+    // type utilities
+
+    // instance utilities
 }
