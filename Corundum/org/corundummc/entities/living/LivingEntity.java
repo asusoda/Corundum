@@ -5,6 +5,9 @@ import net.minecraft.entity.EntityLivingBase;
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.entities.living.mobs.Mob.MobTypes;
+import org.corundummc.entities.living.mobs.animals.Animal.AnimalTypes;
+import org.corundummc.entities.living.mobs.golems.Golem.GolemTypes;
+import org.corundummc.types.Nameable;
 
 /** TODO
  * 
@@ -19,7 +22,7 @@ public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends 
         super(entityMC);
     }
 
-    public static interface LivingEntityTypes {
+    public static interface LivingEntityTypes extends MobTypes {
         // TODO
     }
 

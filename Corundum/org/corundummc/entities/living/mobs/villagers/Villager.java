@@ -2,6 +2,7 @@ package org.corundummc.entities.living.mobs.villagers;
 
 import net.minecraft.entity.passive.EntityVillager;
 
+import org.corundummc.entities.living.mobs.Ageable;
 import org.corundummc.entities.living.mobs.Mob;
 import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.entities.living.mobs.villagers.Blacksmith.BlacksmithType;
@@ -21,7 +22,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
  *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
-public abstract class Villager<S extends Villager<S, T>, T extends Villager.VillagerType<T, S>> extends Mob<S, EntityVillager, T> {
+public abstract class Villager<S extends Villager<S, T>, T extends Villager.VillagerType<T, S>> extends Mob<S, EntityVillager, T> implements Ageable {
     protected Villager() {
         this(new EntityVillager(null));
     }
@@ -115,5 +116,10 @@ public abstract class Villager<S extends Villager<S, T>, T extends Villager.Vill
     // instance utilities
     public Profession<T> getProfession() {
         return getType().getProfession();
+    }
+
+    @Override
+    public boolean isABaby() {
+        return entityMC.getGrowingAge() < 0;
     }
 }

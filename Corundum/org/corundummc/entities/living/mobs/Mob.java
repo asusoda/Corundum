@@ -1,21 +1,17 @@
 package org.corundummc.entities.living.mobs;
 
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
-
-import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.LivingEntity;
-import org.corundummc.entities.living.LivingEntity.LivingEntityType;
+import org.corundummc.entities.living.Player;
 import org.corundummc.entities.living.mobs.animals.Animal;
-import org.corundummc.entities.living.mobs.animals.Animal.AnimalType;
-import org.corundummc.entities.living.mobs.golems.Golem.GolemType;
-import org.corundummc.entities.living.mobs.villagers.Villager.VillagerType;
-import org.corundummc.items.Item;
+import org.corundummc.entities.living.mobs.animals.Animal.AnimalTypes;
+import org.corundummc.entities.living.mobs.golems.Golem.GolemTypes;
+import org.corundummc.entities.living.mobs.monsters.Monster.MonsterTypes;
+import org.corundummc.entities.living.mobs.villagers.Villager.VillagerTypes;
+import org.corundummc.types.Nameable;
 
 /** This class represents a "mob", an autonomous A.I.-controlled {@link LivingEntity}. This includes things like {@link Monster monsters}, {@link Animal animals}, and even
- * {@link Boss bosses}.
+ * {@link Boss bosses}, but not {@link Player}s.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.
@@ -23,12 +19,12 @@ import org.corundummc.items.Item;
  *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
-public abstract class Mob<S extends Mob<S, MC, T>, MC extends EntityLiving, T extends Mob.MobType<T, MC, S>> extends LivingEntity<S, MC, T> {
+public abstract class Mob<S extends Mob<S, MC, T>, MC extends EntityLiving, T extends Mob.MobType<T, MC, S>> extends LivingEntity<S, MC, T> implements Nameable<S> {
     protected Mob(MC entityMC) {
         super(entityMC);
     }
 
-    public static interface MobTypes {
+    public static interface MobTypes extends AnimalTypes, GolemTypes, MonsterTypes, VillagerTypes {
         // TODO
     }
 
@@ -63,4 +59,15 @@ public abstract class Mob<S extends Mob<S, MC, T>, MC extends EntityLiving, T ex
     // type utilities
 
     // instance utilities
+    @Override
+    public String getCustomName() {
+        return entityMC.getCustomNameTag();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public S setCustomName(String new_name) {
+        entityMC.setCustomNameTag(new_name);
+        return (S) this;
+    }
 }
