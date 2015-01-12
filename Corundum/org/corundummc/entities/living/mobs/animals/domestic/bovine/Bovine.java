@@ -3,6 +3,8 @@ package org.corundummc.entities.living.mobs.animals.domestic.bovine;
 import net.minecraft.entity.passive.EntityCow;
 
 import org.corundummc.entities.living.mobs.animals.domestic.DomesticAnimal;
+import org.corundummc.entities.living.mobs.animals.domestic.bovine.Cow.CowType;
+import org.corundummc.entities.living.mobs.animals.domestic.bovine.Mooshroom.MooshroomType;
 
 /** This class represents both different types of cows: normal {@link Cow}s and {@link Mooshroom}s.
  * 
@@ -18,7 +20,8 @@ public abstract class Bovine<S extends Bovine<S, MC, T>, MC extends EntityCow, T
     }
 
     public static interface BovineTypes {
-        // TODO
+        public static final CowType COW = CowType.TYPE;
+        public static final MooshroomType MOOSHROOM = MooshroomType.TYPE;
     }
 
     public abstract static class BovineType<S extends BovineType<S, MC, I>, MC extends EntityCow, I extends Bovine<I, MC, S>> extends DomesticAnimalType<S, MC, I> {

@@ -26,7 +26,7 @@ public abstract class DomesticAnimal<S extends DomesticAnimal<S, MC, T>, MC exte
         super(entityMC);
     }
 
-    public static interface DomesticAnimalTypes extends BovineTypes, TameableAnimalTypes {
+    public static interface DomesticAnimalTypes extends BovineTypes, TameableAnimalTypes/* , LapineTypes (a.k.a. rabbits) */{
         public static final ChickenType CHICKEN = ChickenType.TYPE;
         public static final PigType PIG = PigType.TYPE;
         public static final SheepType SHEEP = SheepType.TYPE;

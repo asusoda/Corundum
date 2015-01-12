@@ -1,5 +1,7 @@
 package org.corundummc.entities.nonliving.projectiles.throwable;
 
+import net.minecraft.entity.projectile.EntityThrowable;
+
 import org.corundummc.entities.nonliving.projectiles.Projectile;
 import org.corundummc.entities.nonliving.projectiles.throwable.BottleOEnchanting.BottleOEnchantingType;
 import org.corundummc.entities.nonliving.projectiles.throwable.Egg.EggType;

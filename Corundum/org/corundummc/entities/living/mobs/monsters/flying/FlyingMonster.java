@@ -1,7 +1,10 @@
 package org.corundummc.entities.living.mobs.monsters.flying;
 
 import net.minecraft.entity.EntityLiving;
+
 import org.corundummc.entities.living.mobs.monsters.Monster;
+import org.corundummc.entities.living.mobs.monsters.flying.Blaze.BlazeType;
+import org.corundummc.entities.living.mobs.monsters.flying.Ghast.GhastType;
 
 /** TODO
  * 
@@ -17,7 +20,8 @@ public abstract class FlyingMonster<S extends FlyingMonster<S, MC, T>, MC extend
     }
 
     public static interface FlyingMonsterTypes {
-        // TODO
+        public static final BlazeType BLAZE = BlazeType.TYPE;
+        public static final GhastType GHAST = GhastType.TYPE;
     }
 
     public abstract static class FlyingMonsterType<S extends FlyingMonsterType<S, MC, I>, MC extends EntityLiving, I extends FlyingMonster<I, MC, S>> extends

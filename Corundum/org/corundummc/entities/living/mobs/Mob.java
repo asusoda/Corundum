@@ -26,7 +26,7 @@ public abstract class Mob<S extends Mob<S, MC, T>, MC extends EntityLiving, T ex
     }
 
     public static interface MobTypes extends AnimalTypes, GolemTypes, MonsterTypes, VillagerTypes {
-        // TODO
+        /* no types need to be here; all the MobTypes are available in the interfaces this one implements */
     }
 
     public abstract static class MobType<S extends MobType<S, MC, I>, MC extends EntityLiving, I extends Mob<I, MC, S>> extends LivingEntityType<S, MC, I> {

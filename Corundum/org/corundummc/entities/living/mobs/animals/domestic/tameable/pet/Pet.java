@@ -1,7 +1,10 @@
 package org.corundummc.entities.living.mobs.animals.domestic.tameable.pet;
 
 import net.minecraft.entity.passive.EntityTameable;
+
 import org.corundummc.entities.living.mobs.animals.domestic.tameable.TameableAnimal;
+import org.corundummc.entities.living.mobs.animals.domestic.tameable.pet.Ocelot.OcelotType;
+import org.corundummc.entities.living.mobs.animals.domestic.tameable.pet.Wolf.WolfType;
 
 /** TODO
  * 
@@ -17,7 +20,8 @@ public abstract class Pet<S extends Pet<S, MC, T>, MC extends EntityTameable, T 
     }
 
     public static interface PetTypes {
-        // TODO
+        public static final OcelotType OCELOT = OcelotType.TYPE;
+        public static final WolfType WOLF = WolfType.TYPE;
     }
 
     public abstract static class PetType<S extends PetType<S, MC, I>, MC extends EntityTameable, I extends Pet<I, MC, S>> extends TameableAnimalType<S, MC, I> {
