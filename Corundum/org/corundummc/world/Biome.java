@@ -55,6 +55,10 @@ public class Biome {
         private static final MobType[] defaultNaturalSpawningMobs = new MobType[] { MobTypes.ZOMBIE, MobTypes.BAT, MobTypes.CREEPER, MobTypes.SKELETON, MobTypes.ENDERMAN,
                 MobTypes.CHICKEN, MobTypes.COW, MobTypes.PIG, MobTypes.SHEEP, MobTypes.SQUID, MobTypes.WITCH };
 
+        private BiomeType() {
+            super(nextID(BiomeType.class));
+        }
+
         private BiomeType(int id) {
             super(id);
 

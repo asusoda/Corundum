@@ -1,7 +1,9 @@
 package org.corundummc.entities.living;
 
 import net.minecraft.entity.EntityLivingBase;
+
 import org.corundummc.entities.Entity;
+import org.corundummc.entities.living.PlayerEntity.PlayerEntityType;
 import org.corundummc.entities.living.mobs.Mob.MobTypes;
 
 /** TODO
@@ -18,7 +20,7 @@ public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends 
     }
 
     public static interface LivingEntityTypes extends MobTypes {
-        // TODO
+        public static final PlayerEntityType PLAYER = PlayerEntityType.TYPE;
     }
 
     public abstract static class LivingEntityType<S extends LivingEntityType<S, MC, I>, MC extends EntityLivingBase, I extends LivingEntity<I, MC, S>> extends

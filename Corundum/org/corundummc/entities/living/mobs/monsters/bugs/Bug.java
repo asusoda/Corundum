@@ -21,6 +21,7 @@ public abstract class Bug<S extends Bug<S, MC, T>, MC extends EntityMob, T exten
 
     public static interface BugTypes extends ArachnidTypes {
         public static final SilverfishType SILVERFISH = SilverfishType.TYPE;
+        // 1.8: public static final EndermiteType ENDERMITE = Endermite.TYPE;
     }
 
     public abstract static class BugType<S extends BugType<S, MC, I>, MC extends EntityMob, I extends Bug<I, MC, S>> extends MonsterType<S, MC, I> {

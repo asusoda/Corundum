@@ -1,7 +1,10 @@
 package org.corundummc.entities.living.mobs.monsters.undead;
 
 import net.minecraft.entity.EntityCreature;
+
 import org.corundummc.entities.living.mobs.monsters.Monster;
+import org.corundummc.entities.living.mobs.monsters.undead.skeletal.SkeletalMonster.SkeletalMonsterTypes;
+import org.corundummc.entities.living.mobs.monsters.undead.zombie.ZombifiedMonster.ZombifiedMonsterTypes;
 
 /** TODO
  * 
@@ -17,8 +20,8 @@ public abstract class UndeadMonster<S extends UndeadMonster<S, MC, T>, MC extend
         super(entityMC);
     }
 
-    public static interface UndeadMonsterTypes {
-        // TODO
+    public static interface UndeadMonsterTypes extends ZombifiedMonsterTypes, SkeletalMonsterTypes {
+        // nothing needs to be here; the types in this interface are all implemented in the interfaces this one extends
     }
 
     public abstract static class UndeadMonsterType<S extends UndeadMonsterType<S, MC, I>, MC extends EntityCreature, I extends UndeadMonster<I, MC, S>> extends

@@ -6,6 +6,14 @@ import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.LivingEntity;
 import org.corundummc.entities.living.mobs.HostileMob;
 import org.corundummc.entities.living.mobs.Mob;
+import org.corundummc.entities.living.mobs.monsters.Creeper.CreeperType;
+import org.corundummc.entities.living.mobs.monsters.Enderman.EndermanType;
+import org.corundummc.entities.living.mobs.monsters.Witch.WitchType;
+import org.corundummc.entities.living.mobs.monsters.bosses.Boss.BossTypes;
+import org.corundummc.entities.living.mobs.monsters.bugs.Bug.BugTypes;
+import org.corundummc.entities.living.mobs.monsters.cuboid.CuboidMonster.CuboidMonsterTypes;
+import org.corundummc.entities.living.mobs.monsters.flying.FlyingMonster.FlyingMonsterTypes;
+import org.corundummc.entities.living.mobs.monsters.undead.UndeadMonster.UndeadMonsterTypes;
 
 /** TODO
  * 
@@ -20,8 +28,10 @@ public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLivi
         super(entityMC);
     }
 
-    public static interface MonsterTypes {
-        // TODO
+    public static interface MonsterTypes extends BossTypes, BugTypes, CuboidMonsterTypes, FlyingMonsterTypes, UndeadMonsterTypes {
+        public static final CreeperType CREEPER = CreeperType.TYPE;
+        public static final EndermanType ENDERMAN = EndermanType.TYPE;
+        public static final WitchType WITCH = WitchType.TYPE;
     }
 
     public abstract static class MonsterType<S extends MonsterType<S, MC, I>, MC extends EntityLiving, I extends Monster<I, MC, S>> extends MobType<S, MC, I> {

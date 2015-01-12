@@ -32,7 +32,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
     }
 
     public static interface EntityTypes extends LivingEntityTypes, NonLivingEntityTypes {
-        // TODO
+        // nothing needs to be here; all the types in this interface are implemented in the interfaces this one extends
     }
 
     public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
