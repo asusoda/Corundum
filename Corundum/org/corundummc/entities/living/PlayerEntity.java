@@ -27,6 +27,11 @@ public class PlayerEntity extends LivingEntity<PlayerEntity, EntityPlayer, Playe
         public PlayerEntity create() {
             return new PlayerEntity();
         }
+
+        @Override
+        public PlayerEntity fromMC(EntityPlayer entityMC) {
+            return new PlayerEntity(entityMC);
+        }
     }
 
     // instance utilities

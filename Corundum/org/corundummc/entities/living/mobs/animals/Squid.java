@@ -24,6 +24,11 @@ public class Squid extends Animal<Squid, EntitySquid, Squid.SquidType> {
         public Squid create() {
             return new Squid();
         }
+
+        @Override
+        public Squid fromMC(EntitySquid entityMC) {
+            return new Squid(entityMC);
+        }
     }
 
     // instance utilities

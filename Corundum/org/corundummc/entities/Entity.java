@@ -15,17 +15,12 @@ package org.corundummc.entities;
 import net.minecraft.entity.EntityList;
 import net.minecraft.world.WorldServer;
 
-import org.apache.logging.log4j.core.config.plugins.ResolverUtil.Test;
-import org.corundummc.entities.living.LivingEntity.LivingEntityType;
 import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
-import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityType;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
-import org.corundummc.entities.nonliving.projectiles.Snowball;
 import org.corundummc.items.Item;
 import org.corundummc.types.CreatableType;
-import org.corundummc.types.Nameable;
-import org.corundummc.types.Physical;
 import org.corundummc.types.Typed;
+import org.corundummc.utils.interfaces.Physical;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
@@ -54,16 +49,24 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
             return EntityList.getStringFromID(getID());
         }
 
+        // abstract utilities
+        /** This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link Minecraft net.minecraft.entity.Entity}.
+         *
+         * @param entityMC
+         *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
+         * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
+        public abstract I fromMC(MC entityMC);
+
         // pseudo-enum utils
-        public static EntityType getByID(int id) {
+        public static EntityType<?, ?, ?> getByID(int id) {
             return getByID(EntityType.class, id);
         }
 
-        public static EntityType getByID(int id, int data) {
+        public static EntityType<?, ?, ?> getByID(int id, int data) {
             return getByID(EntityType.class, id, data);
         }
 
-        public static EntityType[] values() {
+        public static EntityType<?, ?, ?>[] values() {
             return values(EntityType.class);
         }
 
@@ -85,6 +88,24 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         public String toString() {
             return getName() + " (" + getID() + (getData() == -1 ? "" : ":" + getData()) + ")";
         }
+    }
+
+    // static utilities
+    /** <b><u>This method may be ignored by plugin developers; it is not likely to be of use to you.</b></u><br>
+     * This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link net.minecraft.entity.Entity Minecraft Entity}.
+     * 
+     * @param entityMC
+     *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
+     * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
+    @SuppressWarnings("rawtypes")
+    public static Entity<?, ?, ?> fromMC(net.minecraft.entity.Entity entityMC) {
+        /* the EntityType<?, ?, ?> from EntityType.getByID here is casted to an EntityType raw type to allow the fromMC() call to work; without that cast, fromMC() demands an
+         * instance of MC for its argument, which we cannot get because MC cannot be used in a static context */
+        return ((EntityType) EntityType.getByID(EntityList.getEntityID(entityMC))).fromMC(entityMC);
+    }
+
+    public MC MC() {
+        return entityMC;
     }
 
     public Item[] getDrops() {

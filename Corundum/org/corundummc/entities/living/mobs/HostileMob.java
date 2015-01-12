@@ -19,10 +19,10 @@ public interface HostileMob {
      * 
      * @param target
      *            is the {@link LivingEntity} that this {@link HostileMob} should attack. */
-    public void attack(LivingEntity target);
+    public void attack(LivingEntity<?, ?, ?> target);
 
     /** This method returns the {@link LivingEntity} that this {@link HostileMob} is currently attacking.
      * 
      * @return the {@link LivingEntity} that this {@link HostileMob} is currently attacking or <b>null</b> if it is not currently attacking anything. */
-    public LivingEntity getTarget();
+    public LivingEntity<?, ?, ?> getTarget();
 }

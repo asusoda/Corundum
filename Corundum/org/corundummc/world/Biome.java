@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.corundummc.entities.living.mobs.Mob.MobType;
+import org.corundummc.entities.living.mobs.Mob.MobTypes;
 import org.corundummc.entities.living.mobs.animals.Animal.AnimalType;
 import org.corundummc.types.IDedType;
 import org.corundummc.world.Block.BlockType;
@@ -51,8 +52,8 @@ public class Biome {
 
         private BiomeGenBase biomeMC;
 
-        private static final MobType[] defaultNaturalSpawningMobs = new MobType[] { MobType.ZOMBIE, MobType.BAT, MobType.CREEPER, MobType.SKELETON, MobType.ENDERMAN,
-                MobType.CHICKEN, MobType.COW, MobType.PIG, MobType.SHEEP, MobType.SQUID, MobType.WITCH };
+        private static final MobType[] defaultNaturalSpawningMobs = new MobType[] { MobTypes.ZOMBIE, MobTypes.BAT, MobTypes.CREEPER, MobTypes.SKELETON, MobTypes.ENDERMAN,
+                MobTypes.CHICKEN, MobTypes.COW, MobTypes.PIG, MobTypes.SHEEP, MobTypes.SQUID, MobTypes.WITCH };
 
         private BiomeType(int id) {
             super(id);

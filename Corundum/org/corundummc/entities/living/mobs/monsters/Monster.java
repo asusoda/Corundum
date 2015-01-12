@@ -2,6 +2,9 @@ package org.corundummc.entities.living.mobs.monsters;
 
 import net.minecraft.entity.EntityLiving;
 
+import org.corundummc.entities.Entity;
+import org.corundummc.entities.living.LivingEntity;
+import org.corundummc.entities.living.mobs.HostileMob;
 import org.corundummc.entities.living.mobs.Mob;
 
 /** TODO
@@ -12,7 +15,7 @@ import org.corundummc.entities.living.mobs.Mob;
  *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
-public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLiving, T extends Monster.MonsterType<T, MC, S>> extends Mob<S, MC, T> {
+public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLiving, T extends Monster.MonsterType<T, MC, S>> extends Mob<S, MC, T> implements HostileMob {
     protected Monster(MC entityMC) {
         super(entityMC);
     }
@@ -52,4 +55,14 @@ public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLivi
     // type utilities
 
     // instance utilities
+    @Override
+    public void attack(LivingEntity<?, ?, ?> target) {
+        // TODO TEST
+        entityMC.setAttackTarget(target.MC());
+    }
+
+    @Override
+    public LivingEntity<?, ?, ?> getTarget() {
+        return (LivingEntity<?, ?, ?>) Entity.fromMC(entityMC.getAttackTarget());
+    }
 }

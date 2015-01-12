@@ -24,6 +24,16 @@ public class Cow extends Bovine<Cow, EntityCow, Cow.CowType> {
         public Cow create() {
             return new Cow();
         }
+
+        /** This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link Minecraft net.minecraft.entity.Entity}.
+         * 
+         * @param entityMC
+         *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
+         * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
+        @Override
+        public Cow fromMC(EntityCow entityMC) {
+            return new Cow(entityMC);
+        }
     }
 
     // instance utilities

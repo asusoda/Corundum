@@ -451,18 +451,20 @@ public class Block {
         private final net.minecraft.block.Block blockMC;
 
         // constructors
+        // TODO TEMP
         /** This constructor makes a BlockType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
          * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this BlockType the same I.D.
          * and the next data value. Essentially, "I.D. blocks" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
          * use of the {@link #BlockType(int)} and {@link #BlockType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a
          * block and declaring one with a data value >= 0 will start a new block. */
         private BlockType() {
-            super();
+            super(nextID(BlockType.class), -1);
 
             // find the Block with the given I.D.
             blockMC = net.minecraft.block.Block.getBlockById(getID());
         }
 
+        // TODO TEMP
         /** This constructor makes a BlockType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
          * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
          * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #BlockType(int)} and
@@ -472,7 +474,7 @@ public class Block {
          * @param data
          *            is the data value for this {@link BlockType}. */
         private BlockType(int data) {
-            super(data);
+            super(nextID(BlockType.class), data);
 
             // find the Block with the given I.D.
             blockMC = net.minecraft.block.Block.getBlockById(getID());
@@ -563,8 +565,8 @@ public class Block {
 
         /** This method determines whether or not a block of this {@link BlockType} is able to be burned until broken. Note that most blocks can be lit on fire, but that does
          * not necessarily make them "burnable"; burnable blocks are the blocks that will burn until they break and often spread fire to other nearby blocks. For example,
-         * {@link BlockType#OAK_LEAVES leaves}, {@link BlockType#OAK_WOOD_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but {@link BlockType#FLOWING_WATER water},
-         * {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
+         * {@link BlockType#OAK_LEAVES leaves}, {@link BlockType#OAK_WOOD_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but
+         * {@link BlockType#FLOWING_WATER water}, {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
          * 
          * @return <b>true</b> if this {@link BlockType} is burnable; <b>false</b> otherwise. */
         public boolean isBurnable() {
@@ -608,8 +610,8 @@ public class Block {
         }
 
         /** This method determines whether or not a block of this {@link BlockType} is "replaceable", meaning a new block can be placed where this block is without breaking
-         * this block first. This would return <b>true</b> for things like {@link BlockType#TALL_GRASS tall grass} and {@link BlockType#FLOWING_WATER water}, but not for things like
-         * {@link BlockType#STONE stone} and {@link BlockType#GRASS grass blocks}.
+         * this block first. This would return <b>true</b> for things like {@link BlockType#TALL_GRASS tall grass} and {@link BlockType#FLOWING_WATER water}, but not for things
+         * like {@link BlockType#STONE stone} and {@link BlockType#GRASS grass blocks}.
          * 
          * @return <b>true</b> if this {@link BlockType} can be replaced without being broken first; <b>false</b> otherwise. */
         public boolean isReplaceable() {

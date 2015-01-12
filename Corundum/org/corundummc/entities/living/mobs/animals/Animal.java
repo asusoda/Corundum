@@ -17,7 +17,7 @@ import org.corundummc.entities.living.mobs.animals.domestic.DomesticAnimal.Domes
  *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
-public abstract class Animal<S extends Animal<S, MC, T>, MC extends EntityLiving, T extends Animal.AnimalType<T, MC, S>> extends LivingEntity<S, MC, T> {
+public abstract class Animal<S extends Animal<S, MC, T>, MC extends EntityLiving, T extends Animal.AnimalType<T, MC, S>> extends Mob<S, MC, T> {
     protected Animal(MC entityMC) {
         super(entityMC);
     }
@@ -27,7 +27,7 @@ public abstract class Animal<S extends Animal<S, MC, T>, MC extends EntityLiving
         public static final SquidType SQUID = SquidType.TYPE;
     }
 
-    public abstract static class AnimalType<S extends AnimalType<S, MC, I>, MC extends EntityLiving, I extends Animal<I, MC, S>> extends LivingEntityType<S, MC, I> {
+    public abstract static class AnimalType<S extends AnimalType<S, MC, I>, MC extends EntityLiving, I extends Animal<I, MC, S>> extends MobType<S, MC, I> {
         protected AnimalType(int id) {
             super(id, -1);
 

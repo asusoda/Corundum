@@ -1,4 +1,4 @@
-package org.corundummc.types;
+package org.corundummc.utils.interfaces;
 
 public interface Nameable<S extends Nameable<S>> {
     public String getCustomName();

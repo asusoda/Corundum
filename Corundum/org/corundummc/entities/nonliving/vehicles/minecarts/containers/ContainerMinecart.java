@@ -15,7 +15,7 @@ import net.minecraft.entity.item.EntityMinecartContainer;
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
 public abstract class ContainerMinecart<S extends ContainerMinecart<S, MC, T>, MC extends EntityMinecartContainer, T extends ContainerMinecart.ContainerMinecartType<T, MC, S>>
-        extends Minecart<S, MC, T> {
+        extends Minecart<S, MC, T> /* TODO implements Container */{
     protected ContainerMinecart(MC entityMC) {
         super(entityMC);
     }

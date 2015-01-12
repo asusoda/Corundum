@@ -4,8 +4,11 @@ import net.minecraft.entity.passive.EntityAnimal;
 
 import org.corundummc.entities.living.mobs.Ageable;
 import org.corundummc.entities.living.mobs.animals.Animal;
+import org.corundummc.entities.living.mobs.animals.domestic.Chicken.ChickenType;
+import org.corundummc.entities.living.mobs.animals.domestic.Pig.PigType;
+import org.corundummc.entities.living.mobs.animals.domestic.Sheep.SheepType;
 import org.corundummc.entities.living.mobs.animals.domestic.bovine.Bovine.BovineTypes;
-import org.corundummc.entities.living.mobs.animals.domestic.tameable.Pet.PetTypes;
+import org.corundummc.entities.living.mobs.animals.domestic.tameable.TameableAnimal.TameableAnimalTypes;
 
 // TODO: import and link Cow, Wolf, Ocelot, and TamedAnimal in the Javadoc below
 /** This class represents {@link Animal}s that can be bred and domesticated like {@link Bovine}s and {@link Wolf Wolves}. Please do not confuse this with {@link TameableAnimal}
@@ -23,8 +26,10 @@ public abstract class DomesticAnimal<S extends DomesticAnimal<S, MC, T>, MC exte
         super(entityMC);
     }
 
-    public static interface DomesticAnimalTypes extends BovineTypes, PetTypes {
-        // TODO
+    public static interface DomesticAnimalTypes extends BovineTypes, TameableAnimalTypes {
+        public static final ChickenType CHICKEN = ChickenType.TYPE;
+        public static final PigType PIG = PigType.TYPE;
+        public static final SheepType SHEEP = SheepType.TYPE;
     }
 
     public abstract static class DomesticAnimalType<S extends DomesticAnimalType<S, MC, I>, MC extends EntityAnimal, I extends DomesticAnimal<I, MC, S>> extends

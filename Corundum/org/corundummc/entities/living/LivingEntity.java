@@ -1,13 +1,8 @@
 package org.corundummc.entities.living;
 
 import net.minecraft.entity.EntityLivingBase;
-
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.entities.living.mobs.Mob.MobTypes;
-import org.corundummc.entities.living.mobs.animals.Animal.AnimalTypes;
-import org.corundummc.entities.living.mobs.golems.Golem.GolemTypes;
-import org.corundummc.types.Nameable;
 
 /** TODO
  * 
@@ -39,18 +34,15 @@ public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends 
         // overridden utilities
 
         // pseudo-enum utilities
-        @SuppressWarnings("rawtypes")
-        public static LivingEntityType getByID(int id) {
+        public static LivingEntityType<?, ?, ?> getByID(int id) {
             return getByID(LivingEntityType.class, id);
         }
 
-        @SuppressWarnings("rawtypes")
-        public static LivingEntityType getByID(int id, int data) {
+        public static LivingEntityType<?, ?, ?> getByID(int id, int data) {
             return getByID(LivingEntityType.class, id, data);
         }
 
-        @SuppressWarnings("rawtypes")
-        public static LivingEntityType[] values() {
+        public static LivingEntityType<?, ?, ?>[] values() {
             return values(LivingEntityType.class);
         }
     }

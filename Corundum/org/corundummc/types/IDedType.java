@@ -34,8 +34,6 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
     // constructors
     protected IDedType(int id) {
         this.id = (short) id;
-
-        addValueAs((Class<IDedType<?>>) getClass());
     }
 
     // static utilities

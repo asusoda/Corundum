@@ -59,6 +59,7 @@ public class Item {
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of dye are listed individually despite the fact that they all
      * have the same I.D. */
     public static class ItemType extends HoldableType<ItemType> {
+
         public static final ItemType IRON_SHOVEL = new ItemType(256, -1),
                 IRON_PICKAXE = new ItemType(),
                 IRON_AXE = new ItemType(),
@@ -351,6 +352,22 @@ public class Item {
         private final net.minecraft.item.Item itemTypeMC;
 
         // constructors
+        // TODO TEMP
+        private ItemType() {
+            super(nextID(ItemType.class), -1);
+
+            // find the Item with the given I.D.
+            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
+        }
+
+        // TODO TEMP
+        private ItemType(int data) {
+            super(nextID(ItemType.class), data);
+
+            // find the Item with the given I.D. + this.itemTypeMC = itemtypeMC;
+            itemTypeMC = net.minecraft.item.Item.getItemById(getID());
+        }
+
         private ItemType(net.minecraft.item.Item itemtypeMC, int data) {
             super(net.minecraft.item.Item.getIdFromItem(itemtypeMC), data);
 
