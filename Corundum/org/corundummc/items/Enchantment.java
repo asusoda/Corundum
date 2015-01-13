@@ -61,7 +61,7 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
         return this.type;
     }
 
-    public static class EnchantmentType extends IDedType<EnchantmentType> {
+    public static final class EnchantmentType extends IDedType<EnchantmentType> {
         public static final EnchantmentType PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.protection), FIRE_PROTECTION = new EnchantmentType(
                 net.minecraft.enchantment.Enchantment.fireProtection), FEATHER_FALLING = new EnchantmentType(net.minecraft.enchantment.Enchantment.featherFalling),
                 BLAST_PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.blastProtection), PROJECTILE_PROTECTION = new EnchantmentType(

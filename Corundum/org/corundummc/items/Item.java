@@ -58,7 +58,7 @@ public class Item {
     /** This enum is used to represent the different types of {@link Item}s. This list of different types not only includes those types of items differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of dye are listed individually despite the fact that they all
      * have the same I.D. */
-    public static class ItemType extends HoldableType<ItemType> {
+    public static final class ItemType extends HoldableType<ItemType> {
 
         public static final ItemType IRON_SHOVEL = new ItemType(256, -1),
                 IRON_PICKAXE = new ItemType(),

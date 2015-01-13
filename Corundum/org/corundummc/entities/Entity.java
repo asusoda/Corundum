@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.world.WorldServer;
 
 import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
+import org.corundummc.exceptions.CorundumException;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
 import org.corundummc.items.Item;
 import org.corundummc.types.CreatableType;
@@ -26,13 +27,25 @@ import org.corundummc.world.World;
 
 public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical {
     protected final MC entityMC;
+    private Rotation rotation;
+    private Location location;
+    private Velocity velocity;
 
     protected Entity(MC entityMC) {
         this.entityMC = entityMC;
+        this.rotation = new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
+        this.location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, new World((WorldServer) entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     public static interface EntityTypes extends LivingEntityTypes, NonLivingEntityTypes {
         // nothing needs to be here; all the types in this interface are implemented in the interfaces this one extends
+        this.rotation = new Rotation(this.entityMC.rotationPitch, this.entityMC.rotationYaw);
+        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
+        this.rotation = rotation;
+        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
+        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
@@ -115,7 +128,10 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
 
     @Override
     public Location getLocation() {
-        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+        this.location.setX(this.entityMC.posX);
+        this.location.setY(this.entityMC.posY);
+        this.location.setZ(this.entityMC.posZ);
+        return this.location;
     }
 
     public Velocity getVelocity() {
@@ -157,16 +173,40 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         entityMC.motionZ = velocity.getZ();
 
         return (S) this;
+            this.spawn(this.getLocation());
+        } else {
+            throw new EntityNotFullyInitialisedException("Location");
+        }
     }
 
     public S spawn(Location location) {
-        // TODO
-        return (S) this;
+        if (this.entityMC != null) {
+            this.entityMC.posX = location.getX();
+            this.entityMC.posY = location.getY();
+            this.entityMC.posZ = location.getZ();
+            this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
+            this.entityMC.rotationPitch = this.rotation.getPitch();
+            this.entityMC.rotationYaw = this.rotation.getYaw();
+        } else {
+            throw new EntityNotFullyInitialisedException("MC Entity");
+        }
     }
 
-    public S teleport(Location location) {
-        setLocation(location);
+    public Rotation getRotation() {
+        this.rotation.setPitch(this.entityMC.rotationPitch);
+        this.rotation.setYaw(this.entityMC.rotationYaw);
+        return this.rotation;
+    }
 
-        return (S) this;
+    public void setRotation(Rotation rotation) {
+        this.entityMC.rotationPitch = rotation.getPitch();
+        this.entityMC.rotationYaw = rotation.getYaw();
+        this.rotation = rotation;
+    }
+
+    public class EntityNotFullyInitialisedException extends CorundumException {
+        public EntityNotFullyInitialisedException(String thingsNotInited, Object... additionalInformation) {
+            super("An entity hasn't been fully initialised!", "The Entity's " + thingsNotInited + " has/have not been fully initialised.", additionalInformation);
+        }
     }
 }

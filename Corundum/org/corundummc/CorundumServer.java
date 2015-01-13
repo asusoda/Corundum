@@ -34,6 +34,7 @@ import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
 import org.corundummc.plugins.PluginThread;
 import org.corundummc.types.IDedType;
+import org.corundummc.utils.SettingsManager;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.utils.versioning.Version;
@@ -79,12 +80,20 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
 
+    public static final String CONFIG_FILE_NAME = "settings.json";
+
+    // config variable names start
+
+    /** This is the variable name for changing the name of the server */
+    public static final String SERVER_NAME_VAR = "name";
+
+    //config variable names end
+
+    private SettingsManager settings = new SettingsManager(new File(CONFIG_FILE_NAME), SERVER_NAME_VAR, "Corundum");
+
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
-     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
-     *
-     * @param file_path
-     *            is the path of the file from which this server should be loaded. */
+     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}. */
     public CorundumServer() {
         // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
         super(new File("."));
@@ -394,8 +403,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
 
     @Override
     public String getName() {
-        // TODO: make "Corundum" the default, but allow the name of the server to be configured
-        return "Corundum";
+        return settings.getString(SERVER_NAME_VAR);
     }
 
     @Override
