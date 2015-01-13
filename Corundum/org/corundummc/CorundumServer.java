@@ -33,10 +33,10 @@ import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
 import org.corundummc.plugins.PluginThread;
-import org.corundummc.types.IDedType;
 import org.corundummc.utils.SettingsManager;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.utils.types.IDedType;
 import org.corundummc.utils.versioning.Version;
 
 /** This class represents the entirety of a Corundum server.

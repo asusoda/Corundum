@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import org.corundummc.entities.living.mobs.Mob.MobType;
 import org.corundummc.entities.living.mobs.Mob.MobTypes;
 import org.corundummc.entities.living.mobs.animals.Animal.AnimalType;
-import org.corundummc.types.IDedType;
+import org.corundummc.utils.types.IDedType;
 import org.corundummc.world.Block.BlockType;
 
 import net.minecraft.world.biome.BiomeGenBase;

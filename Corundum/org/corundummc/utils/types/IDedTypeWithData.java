@@ -1,4 +1,4 @@
-package org.corundummc.types;
+package org.corundummc.utils.types;
 
 import java.util.ArrayList;
 import java.util.Arrays;

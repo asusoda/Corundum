@@ -12,8 +12,8 @@
 
 package org.corundummc.items.recipes;
 
-import org.corundummc.types.IDedType;
 import org.corundummc.utils.ListUtilities;
+import org.corundummc.utils.types.IDedType;
 
 public class ShapedCraftingRecipe extends Recipe {
     public ShapedCraftingRecipe(IDedType[] materials, IDedType resulting_material) {

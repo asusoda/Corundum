@@ -45,7 +45,7 @@ public class Chunk {
     }
 
     public Location getLocation() {
-        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMCWorld((net.minecraft.world.WorldServer) chunkMC.worldObj));
+        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMC((net.minecraft.world.WorldServer) chunkMC.worldObj));
     }
 
     public boolean isLoaded() {

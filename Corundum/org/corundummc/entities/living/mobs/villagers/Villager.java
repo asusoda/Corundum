@@ -10,7 +10,7 @@ import org.corundummc.entities.living.mobs.villagers.Butcher.ButcherType;
 import org.corundummc.entities.living.mobs.villagers.Farmer.FarmerType;
 import org.corundummc.entities.living.mobs.villagers.Librarian.LibrarianType;
 import org.corundummc.entities.living.mobs.villagers.Priest.PriestType;
-import org.corundummc.types.IDedType;
+import org.corundummc.utils.types.IDedType;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 

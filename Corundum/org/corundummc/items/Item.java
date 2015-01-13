@@ -24,8 +24,8 @@ import org.corundummc.CorundumServer;
 import org.corundummc.entities.living.Player;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.items.Enchantment.EnchantmentType;
-import org.corundummc.types.HoldableType;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.utils.types.HoldableType;
 import org.corundummc.world.Block.BlockType;
 
 import java.util.ArrayList;

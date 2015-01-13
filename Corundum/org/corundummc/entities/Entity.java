@@ -21,15 +21,17 @@ import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
 import org.corundummc.items.Item;
-import org.corundummc.types.CreatableType;
-import org.corundummc.types.IDedTypeWithData;
-import org.corundummc.types.MCEquivalentType;
-import org.corundummc.types.Typed;
+import org.corundummc.utils.interfaces.CreatableType;
+import org.corundummc.utils.interfaces.MCEquivalent;
+import org.corundummc.utils.interfaces.MCEquivalentType;
 import org.corundummc.utils.interfaces.Physical;
+import org.corundummc.utils.types.IDedTypeWithData;
+import org.corundummc.utils.types.Typed;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
-public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical {
+public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical,
+        MCEquivalent<MC> {
     protected final MC entityMC;
 
     protected Entity(MC entityMC) {
@@ -116,16 +118,18 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         return getType().getID() == -1;
     }
 
-    // instance utilities
+    // overridden utilities
+    @Override
     public MC MC() {
         return entityMC;
     }
 
     @Override
     public Location getLocation() {
-        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMC((WorldServer) entityMC.worldObj));
     }
 
+    // instance utilities
     public Velocity getVelocity() {
         return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
     }
@@ -151,10 +155,10 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         entityMC.posX = location.getX();
         entityMC.posY = location.getY();
         entityMC.posZ = location.getZ();
-        entityMC.worldObj = location.getWorld().getMCWorld();
+        entityMC.worldObj = location.getWorld().MC();
         /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
          * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
-        entityMC.dimension = location.getWorld().getMCWorld().provider.dimensionId;
+        entityMC.dimension = location.getWorld().MC().provider.dimensionId;
         entityMC.worldObj.spawnEntityInWorld(entityMC);
 
         return (S) this;

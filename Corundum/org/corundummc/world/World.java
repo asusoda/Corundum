@@ -12,18 +12,17 @@
 
 package org.corundummc.world;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.WorldInfo;
+import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
 
-public class World implements Matchable<World> {
+public class World implements Matchable<World>, MCEquivalent<WorldServer> {
     // TODO: public static final World MAIN_WORLD;
-    public static myList<World> worlds = new myList<>();
+    private static myList<World> worlds = new myList<>();
 
     private final WorldServer worldMC;
     private final WorldType type;
@@ -46,31 +45,21 @@ public class World implements Matchable<World> {
             worlds.add(this);
     }
 
-    public World() {
-        this((WorldServer) MinecraftServer.getServer().getEntityWorld());
+    public static World fromMC(WorldServer worldMC) {
+        for (World world : worlds)
+            if (world.MC() == worldMC)
+                return world;
+        return new World(worldMC);
     }
 
-    public World(WorldType type) {
-        this.worldMC = (WorldServer) MinecraftServer.getServer().getEntityWorld();
-        this.type = type;
-
-        if (!worlds.contains(this)) {
-            worlds.add(this);
-        }
+    // static utilities
+    public static myList<World> getWorlds() {
+        return worlds;
     }
 
-    // TODO: get rid of these two "MCWorld" methods
-    public static World fromMCWorld(WorldServer worldMC) {
-        return worlds.findMatch(null, worldMC);
-    }
-
-    public WorldServer getMCWorld() {
-        return worldMC;
-    }
-
+    // instance utilities
     public String getName() {
-        WorldInfo info = worldMC.getWorldInfo();
-        return info.getWorldName();
+        return worldMC.getWorldInfo().getWorldName();
     }
 
     public WorldType getType() {
@@ -93,9 +82,14 @@ public class World implements Matchable<World> {
         OVERWORLD, NETHER, END, CUSTOM;
     }
 
+    // overridden utilities
+    @Override
+    public WorldServer MC() {
+        return worldMC;
+    }
+
     @Override
     public Object[] getSortPriorities() {
         return new Object[] { type.ordinal(), getName() };
     }
-
 }

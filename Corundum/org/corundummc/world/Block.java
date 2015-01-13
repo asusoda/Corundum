@@ -14,7 +14,7 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
-import org.corundummc.types.HoldableType;
+import org.corundummc.utils.types.HoldableType;
 
 public class Block {
     private BlockType type;
@@ -672,7 +672,7 @@ public class Block {
     }
 
     public Chunk getChunk() {
-        net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().getMCWorld().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
+        net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().MC().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
         return new Chunk(mcChunk);
     }
 

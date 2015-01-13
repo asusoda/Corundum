@@ -1,9 +1,7 @@
-package org.corundummc.types;
-
-import net.minecraft.entity.EntityList;
+package org.corundummc.utils.interfaces;
 
 import org.corundummc.entities.Entity;
-import org.corundummc.entities.Entity.EntityType;
+import org.corundummc.utils.types.Typed;
 
 public interface MCEquivalentType<MC, I extends Typed<?>> {
     /** This method is used to create a new instance of {@link Entity Corundum entity} to wrap around the given {@link net.minecraft.entity.Entity Minecraft entity}.

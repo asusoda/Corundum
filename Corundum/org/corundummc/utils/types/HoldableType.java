@@ -1,4 +1,4 @@
-package org.corundummc.types;
+package org.corundummc.utils.types;
 
 public abstract class HoldableType<S extends HoldableType<S>> extends IDedTypeWithData<S> {
     protected HoldableType(int id, int data) {

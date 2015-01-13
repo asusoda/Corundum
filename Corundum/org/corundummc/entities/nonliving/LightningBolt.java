@@ -11,7 +11,7 @@ public class LightningBolt extends NonLivingEntity<LightningBolt, EntityLightnin
     public LightningBolt(Location location) {
         /* we can't have a nullary constructor for LightningBolts without significant reworks because Minecraft's EntityLightningBolt constructors create the lightning bolt in
          * the constructor, unlike other Entities which can be created without spawning them */
-        super(new EntityLightningBolt(location.getWorld().getMCWorld(), location.getX(), location.getY(), location.getZ()));
+        super(new EntityLightningBolt(location.getWorld().MC(), location.getX(), location.getY(), location.getZ()));
     }
 
     protected LightningBolt(EntityLightningBolt entityMC) {

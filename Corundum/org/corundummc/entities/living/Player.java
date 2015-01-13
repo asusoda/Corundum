@@ -15,10 +15,10 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 
-import org.corundummc.types.IDedType;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.utils.types.IDedType;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 
@@ -133,7 +133,7 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
     public Location getLocation() {
         return new Location(entityMC.getCommandSenderPosition().posX, entityMC.getCommandSenderPosition().posY, entityMC.getCommandSenderPosition().posZ, World
-                .fromMCWorld((WorldServer) entityMC.worldObj));
+                .fromMC((WorldServer) entityMC.worldObj));
     }
 
     @Override

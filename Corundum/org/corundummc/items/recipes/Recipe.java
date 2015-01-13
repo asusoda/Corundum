@@ -3,10 +3,10 @@ package org.corundummc.items.recipes;
 import java.util.ArrayList;
 
 import org.corundummc.exceptions.CorundumException;
-import org.corundummc.types.IDedType;
 import org.corundummc.utils.ListUtilities;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.utils.types.IDedType;
 
 public abstract class Recipe implements Matchable<Recipe> {
     public static final myList<Recipe> RECIPES = new myList<>( /* TODO */);
