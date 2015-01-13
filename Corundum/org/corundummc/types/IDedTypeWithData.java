@@ -8,78 +8,14 @@ import org.corundummc.utils.ListUtilities;
 import org.corundummc.world.Block.BlockType;
 import org.corundummc.world.Block;
 
-public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends IDedType<T> {
+public abstract class IDedTypeWithData<S extends IDedTypeWithData<S>> extends IDedType<S> {
     private final short data;
 
     // constructors
-    protected IDedTypeWithData() {
-        super();
-
-        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
-
-        // if there is no previous value, default to I.D. = data = 0
-        if (values.length == 0) {
-            setID((short) 0);
-            data = 0;
-        } // if there was a previous value, infer the I.D. and data values form that type
-        else {
-            IDedTypeWithData<T> previous_value = values[values.length - 1];
-
-            /* if the previous data was -1, we are not in an I.D. block, so increment I.D. and default data to -1 */
-            if (previous_value.data == -1) {
-                setID((short) (previous_value.getID() + 1));
-                data = -1;
-            } /* if the previous data value was not -1, we're in an I.D. block, so use the same I.D. as the previous and increment data */
-            else {
-                setID(previous_value.getID());
-                data = (short) (previous_value.data + 1);
-            }
-        }
-    }
-
-    protected IDedTypeWithData(int data) {
-        super();
-
-        this.data = (short) data;
-
-        IDedTypeWithData<T>[] values = (IDedTypeWithData<T>[]) values(getClass());
-
-        // infer the I.D. using the previous type
-        IDedTypeWithData<?> previous_value = values[values.length - 1];
-
-        // if data <= the previous's data, it indicates the start of a new I.D. block, so increment the I.D. of the previous value
-        if (data <= previous_value.data)
-            setID((short) (previous_value.getID() + 1));
-        // otherwise, this is the continuation of an I.D. block, so use the same I.D.
-        else
-            setID(previous_value.getID());
-    }
-
-    protected IDedTypeWithData(int data, String name) {
-        this(data);
-        this.setName(name);
-    }
-
     protected IDedTypeWithData(int id, int data) {
         super(id);
 
         this.data = (short) data;
-    }
-
-    protected IDedTypeWithData(int id, int data, String name) {
-        this(id, data);
-        this.setName(name);
-    }
-
-    protected IDedTypeWithData(IDedTypeWithData<?> parent) {
-        super(parent);
-
-        this.data = parent.data;
-    }
-
-    protected IDedTypeWithData(IDedTypeWithData<?> parent, String name) {
-        this(parent);
-        this.setName(name);
     }
 
     // static utilities
@@ -126,9 +62,9 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      * 
      * @return all the siblings of this {@link IDedType}. */
     @SuppressWarnings("unchecked")
-    public T[] getSiblings() {
+    public IDedTypeWithData[] getSiblings() {
         // retrieve the values for this type
-        T[] values = (T[]) values(getClass());
+        IDedTypeWithData[] values = (IDedTypeWithData[]) values(getClass());
 
         // find the first index with a value with the same I.D. as this type
         // TODO: replace this linear search with a binary search algorithm
@@ -149,7 +85,7 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
 
         // build an list with the elements from first_index to last_index_plus_1 (not including [last_index_plus_1])
         // NOTE: an ArrayList has to be made and converted to an array because you can't make an array of a generic T in Java
-        return (T[]) new ArrayList<>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
+        return (IDedTypeWithData[]) new ArrayList<>(Arrays.asList(ListUtilities.subArray(values, first_index, last_index_plus_1))).toArray();
     }
 
     /** This method determines whether or not this {@link IDedType} is a "sibling" of the given {@link IDedType}. Corundum considered two {@link IDedType}s "siblings" if the
@@ -159,9 +95,9 @@ public abstract class IDedTypeWithData<T extends IDedTypeWithData<T>> extends ID
      * You can see which I.D.s represent which blocks and which blocks have the same I.D. on <a href=http://minecraft-ids.grahamedgecombe.com/>this site</a>.
      * 
      * @param material
-     *            is the {@link IDedType} to compare to this {@link IDedType} to see if they're "siblings".
+     *            is the {@link IDedTypeWithData} to compare to this {@link IDedTypeWithData} to see if they're "siblings".
      * @return <b>true</b> if this {@link IDedType} has the same I.D. as <b><tt>type</b></tt>; <b>false</b> otherwise. */
-    public boolean isASiblingOf(T material) {
+    public boolean isASiblingOf(S material) {
         return material.getID() == getID();
     }
 

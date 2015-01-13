@@ -59,6 +59,7 @@ public class World implements Matchable<World> {
         }
     }
 
+    // TODO: get rid of these two "MCWorld" methods
     public static World fromMCWorld(WorldServer worldMC) {
         return worlds.findMatch(null, worldMC);
     }

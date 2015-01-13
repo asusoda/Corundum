@@ -1,10 +1,11 @@
 package org.corundummc.types;
 
 import org.corundummc.items.Enchantment;
-import org.corundummc.world.Location;
 
 public interface Holdable {
     public Enchantment[] getEnchantments();
+
+    // TODO: public Inventory getInventory();
 
     public byte getInventorySlot();
 

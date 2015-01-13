@@ -13,175 +13,109 @@
 package org.corundummc.entities;
 
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.world.WorldServer;
 
+import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
 import org.corundummc.exceptions.CorundumException;
-import org.corundummc.types.Physical;
+import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
+import org.corundummc.items.Item;
+import org.corundummc.types.CreatableType;
 import org.corundummc.types.Typed;
-import org.corundummc.types.IDedTypeWithData;
+import org.corundummc.utils.interfaces.Physical;
 import org.corundummc.world.Location;
-import org.corundummc.world.Rotation;
 import org.corundummc.world.World;
 
-public abstract class Entity implements Physical {
-    protected final net.minecraft.entity.Entity entityMC;
+public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical {
+    protected final MC entityMC;
     private Rotation rotation;
     private Location location;
     private Velocity velocity;
 
-    protected Entity(net.minecraft.entity.Entity entityMC) {
+    protected Entity(MC entityMC) {
         this.entityMC = entityMC;
         this.rotation = new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
         this.location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, new World((WorldServer) entityMC.worldObj));
         this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
-    /* TODO: implement the constructors below once we find a good way to make Entities without spawning them in the Minecraft code; I think this should be done one of two
-     * ways:
-     * 
-     * - preferably, we can store the type and location into a Minecraft Entity object, but we need to make sure this can be done without spawning the entity
-     * 
-     * - if the above is not possible, we can make entityMC null and store the request type and location in a map to be retrieved later; the map allows us to save space by
-     * avoiding having EntityType and Location instance variables with every entity when they're only used temporarily and only in optional cases */
-    public Entity(EntityType type, Location location) {
-        // TODO
-        entityMC = null;
-        this.rotation = new Rotation(this.entityMC.rotationPitch, this.entityMC.rotationYaw);
-        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
-        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
+    public static interface EntityTypes extends LivingEntityTypes, NonLivingEntityTypes {
+        // nothing needs to be here; all the types in this interface are implemented in the interfaces this one extends
     }
 
-    public Entity(EntityType type, Location location, Rotation rotation) {
-        // TODO
-        entityMC = null;
-        this.rotation = rotation;
-        this.location = new Location(this.entityMC.posX, this.entityMC.posY, this.entityMC.posZ, new World((WorldServer) this.entityMC.worldObj));
-        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
-    }
-
-    public static final class EntityType<T extends EntityType<T>> extends IDedTypeWithData<EntityType<T>> {
-        // TODO: see if a Player entity has the I.D. 0
-
-        public static final EntityType PLAYER = new EntityType(0, -1), DROPPED_ITEM = new EntityType(), XP_ORB = new EntityType(), LEAD = new EntityType(8, -1),
-                PAINTING = new EntityType(), ARROW = new EntityType(), SNOWBALL = new EntityType(), GHAST_FIREBALL = new EntityType(), BLAZE_FIREBALL = new EntityType(),
-                ENDER_PEARL = new EntityType(), EYE_OF_ENDER = new EntityType(), SPLASH_POTION = new EntityType(), BOTTLE_O_ENCHANTING = new EntityType(),
-                ITEM_FRAME = new EntityType(), WITHER_SKULL = new EntityType(),
-                EGG = new EntityType(),
-                TNT = new EntityType(),
-                FALLING_BLOCK = new EntityType(),
-                ARMOR_STAND = new EntityType(30),
-                COMMAND_MINECART = new EntityType(40),
-                BOAT = new EntityType(),
-                MINECART = new EntityType(),
-                STORAGE_MINECART = new EntityType(),
-                POWERED_MINECART = new EntityType(),
-                TNT_MINECART = new EntityType(),
-                HOPPER_MINECART = new EntityType(),
-                SPAWNER_MINECART = new EntityType(),
-                MOB = new EntityType(),
-                MONSTER = new EntityType(),
-                CREEPER = new EntityType(),
-                // skeletons
-                SKELETON = new EntityType(0),
-                WITHER_SKELETON = new EntityType(),
-                // END skeletons
-                SPIDER = new EntityType(-1),
-                GIANT = new EntityType(),
-                // zombies
-                // TODO: figure out if these data values are correct
-                ZOMBIE = new EntityType(0),
-                ZOMBIFIED_VILLAGER = new EntityType(),
-                BABY_ZOMBIE = new EntityType(),
-                BABY_ZOMBIFIED_VILLAGER = new EntityType(),
-                // END zombies
-                SLIME = new EntityType(-1), GHAST = new EntityType(), ZOMBIE_PIGMAN = new EntityType(), ENDERMAN = new EntityType(), CAVE_SPIDER = new EntityType(),
-                SILVERFISH = new EntityType(), BLAZE = new EntityType(), MAGMA_CUBE = new EntityType(), ENDER_DRAGON = new EntityType(),
-                WITHER = new EntityType(),
-                BAT = new EntityType(),
-                WITCH = new EntityType(),
-                ENDERMITE = new EntityType(),
-                // guardians
-                // TODO: figure out if these data values are correct
-                GUARDIAN = new EntityType(0),
-                ELDER_GUARDIAN = new EntityType(),
-                // END guardians
-                PIG = new EntityType(90, -1), SHEEP = new EntityType(), COW = new EntityType(), CHICKEN = new EntityType(), SQUID = new EntityType(), WOLF = new EntityType(),
-                MOOSHROOM = new EntityType(), SNOW_GOLEM = new EntityType(), OCELOT = new EntityType(), IRON_GOLEM = new EntityType(),
-                HORSE = new EntityType(),
-                // rabbits
-                // TODO: figure out if these data values are correct
-                RABBIT = new EntityType(0),
-                KILLER_RABBIT = new EntityType(),
-                // END rabbits
-                // villagers
-                /* TODO: Figure out if these I.D.s are correct and how "careers" (more specific types within professions, e.g. a "FARMER" can be a farmer, fisherman, shepherd,
-                 * of fletcher) are handled. */
-                FARMER_VILLAGER = new EntityType(120, 0), LIBRARIAN_VILLAGER = new EntityType(), PRIEST_VILLAGER = new EntityType(), BLACKSMITH_VILLAGER = new EntityType(),
-                BUTCHER_VILLAGER = new EntityType(),
-                // END villagers
-                ENDER_CRYSTAL = new EntityType(200, -1);
-
+    public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
-        /** This constructor makes a EntityType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
-         * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this EntityType the same
-         * I.D. and the next data value. Essentially, "I.D. items" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by
-         * the use of the {@link #EntityType(int)} and {@link #EntityType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end
-         * a block and declaring one with a data value >= 0 will start a new block. */
-        protected EntityType() {
-            super();
-        }
-
-        /** This constructor makes a EntityType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
-         * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
-         * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #EntityType(int)} and
-         * {@link #EntityType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
-         * >= 0 will start a new block.
-         * 
-         * @param data
-         *            is the data value for this {@link EntityType}. */
-        protected EntityType(int data) {
-            super(data);
-        }
-
-        /** This constructor makes a EntityType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
-         * 
-         * @param id
-         *            is the item I.D. that this {@link EntityType} is associated with.
-         * @param data
-         *            is the data value associated with this {@link EntityType}.
-         * @see {@link #EntityType(int)} */
+        @SuppressWarnings("javadoc")
         protected EntityType(int id, int data) {
             super(id, data);
+
+            addValueAs(EntityType.class);
         }
 
-        protected EntityType(EntityType<?> parent) {
-            super(parent);
+        public String getName() {
+            return EntityList.getStringFromID(getID());
         }
 
-        // instance utils
-        public boolean isLiving() {
-            // TODO: return LivingType.getByID(getID()) != null; (once LivingType is implemented)
-            return false;
-        }
+        // abstract utilities
+        /** This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link Minecraft net.minecraft.entity.Entity}.
+         *
+         * @param entityMC
+         *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
+         * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
+        public abstract I fromMC(MC entityMC);
 
         // pseudo-enum utils
-        public static EntityType getByID(int id) {
+        public static EntityType<?, ?, ?> getByID(int id) {
             return getByID(EntityType.class, id);
         }
 
-        public static EntityType getByID(int id, int data) {
+        public static EntityType<?, ?, ?> getByID(int id, int data) {
             return getByID(EntityType.class, id, data);
         }
 
-        public static EntityType[] values() {
+        public static EntityType<?, ?, ?>[] values() {
             return values(EntityType.class);
+        }
+
+        /** This method returns the name, I.D., and data value of this {@link EntityType} in a message-friendly <tt>String</tt> in one of two formats shown below:<br>
+         * If the data value for this {@link EntityType} is irrelevant to its identity as this type (indicated by a data value of -1), the data value is not included with the
+         * name and I.D. as shown below:
+         * 
+         * <pre>
+         * [name] ([I.D.])
+         * </pre>
+         * 
+         * If the data value is relevant to the identity of this {@link EntityType}, i.e. changing the data value can change the {@link EntityType}, then the data value is
+         * included with the name and I.D. separated by a colon as shown below:
+         * 
+         * <pre>
+         * [name] ([I.D.]:[data])
+         * </pre> */
+        @Override
+        public String toString() {
+            return getName() + " (" + getID() + (getData() == -1 ? "" : ":" + getData()) + ")";
         }
     }
 
-    @Override
-    public String getCustomName() {
+    // static utilities
+    /** <b><u>This method may be ignored by plugin developers; it is not likely to be of use to you.</b></u><br>
+     * This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link net.minecraft.entity.Entity Minecraft Entity}.
+     * 
+     * @param entityMC
+     *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
+     * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
+    @SuppressWarnings("rawtypes")
+    public static Entity<?, ?, ?> fromMC(net.minecraft.entity.Entity entityMC) {
+        /* the EntityType<?, ?, ?> from EntityType.getByID here is casted to an EntityType raw type to allow the fromMC() call to work; without that cast, fromMC() demands an
+         * instance of MC for its argument, which we cannot get because MC cannot be used in a static context */
+        return ((EntityType) EntityType.getByID(EntityList.getEntityID(entityMC))).fromMC(entityMC);
+    }
+
+    public MC MC() {
+        return entityMC;
+    }
+
+    public Item[] getDrops() {
         // TODO
         return null;
     }
@@ -194,72 +128,61 @@ public abstract class Entity implements Physical {
         return this.location;
     }
 
-    @Override
-    public EntityType getType() {
-        /* because Minecraft decided to not use regular data values for different types of sibling entities, like skeletons and Wither skeletons, the data values will have to
-         * be found based on different methods for different types of entities here */
-        if (entityMC instanceof EntitySkeleton)
-            if (((EntitySkeleton) entityMC).getSkeletonType() == 1)
-                return EntityType.WITHER_SKELETON;
-            else
-                return EntityType.SKELETON;
-        // TODO: add special cases for zombies/zombified villagers, (elder) guardians, (killer) rabbits, an villager professions and/or careers
-        else
-            /* NOTE: Entity.entityID is not the I.D. representing the Entity's type! It's actually the I.D. that helps track that specific Entity instance. */
-            return EntityType.getByID(EntityList.getEntityID(entityMC), -1);
-    }
-
     public Velocity getVelocity() {
-        // TODO TEST
-        this.velocity.setX(this.entityMC.motionX);
-        this.velocity.setY(this.entityMC.motionY);
-        this.velocity.setZ(this.entityMC.motionZ);
-        return this.velocity;
+        return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
     }
 
-    public void setVelocity(Velocity velocity) {
+    /** This method determines whether or not this {@link Entity} is one of the "unsaved {@link Entity Entities}". Unsaved {@link Entity Entities} differ from other
+     * {@link Entity Entities} in that they have no I.D. or data value associated with them and they are not saved when the server is stopped. Examples include
+     * {@link EntityType#PLAYER player Entities}, {@link EntityType#EGG thrown eggs}, and {@link EntityType#LIGHTNING_BOLT lightning bolts}.
+     * 
+     * @return <b>true</b> if this {@link Entity} is an "unsaved {@link Entity}"; <b>false</b> otherwise. */
+    public boolean isUnsaved() {
+        return getType().getID() == -1;
+    }
+
+    public S setLocation(Location location) {
+        entityMC.posX = location.getX();
+        entityMC.posY = location.getY();
+        entityMC.posZ = location.getZ();
+        entityMC.worldObj = location.getWorld().getMCWorld();
+        /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
+         * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
+        entityMC.dimension = location.getWorld().getMCWorld().provider.dimensionId;
+
+        return (S) this;
+    }
+
+    public S setRotation(Rotation rotation) {
+        entityMC.rotationPitch = rotation.getPitch();
+        entityMC.rotationYaw = rotation.getYaw();
+
+        return (S) this;
+    }
+
+    public S setVelocity(Velocity velocity) {
         // TODO TEST
         entityMC.motionX = velocity.getX();
         entityMC.motionY = velocity.getY();
         entityMC.motionZ = velocity.getZ();
+
+        return (S) this;
     }
 
-    public void spawn() {
-        if (this.getLocation() != null) {
-            this.spawn(this.getLocation());
-        } else {
-            throw new EntityNotFullyInitialisedException("Location");
-        }
-    }
+    public S spawn(Location location) {
+        this.entityMC.posX = location.getX();
+        this.entityMC.posY = location.getY();
+        this.entityMC.posZ = location.getZ();
+        this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
+        this.entityMC.rotationPitch = this.rotation.getPitch();
+        this.entityMC.rotationYaw = this.rotation.getYaw();
 
-    public void spawn(Location location) {
-        if (this.entityMC != null) {
-            this.entityMC.posX = location.getX();
-            this.entityMC.posY = location.getY();
-            this.entityMC.posZ = location.getZ();
-            this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
-            this.entityMC.rotationPitch = this.rotation.getPitch();
-            this.entityMC.rotationYaw = this.rotation.getYaw();
-        } else {
-            throw new EntityNotFullyInitialisedException("MC Entity");
-        }
+        return (S) this;
     }
 
     public Rotation getRotation() {
         this.rotation.setPitch(this.entityMC.rotationPitch);
         this.rotation.setYaw(this.entityMC.rotationYaw);
         return this.rotation;
-    }
-
-    public void setRotation(Rotation rotation) {
-        this.entityMC.rotationPitch = rotation.getPitch();
-        this.entityMC.rotationYaw = rotation.getYaw();
-        this.rotation = rotation;
-    }
-
-    public class EntityNotFullyInitialisedException extends CorundumException {
-        public EntityNotFullyInitialisedException(String thingsNotInited, Object... additionalInformation) {
-            super("An entity hasn't been fully initialised!", "The Entity's " + thingsNotInited + " has/have not been fully initialised.", additionalInformation);
-        }
     }
 }

@@ -21,7 +21,7 @@ import org.corundummc.world.Location;
 
 import static org.corundummc.utils.StringUtilities.*;
 
-public class Enchantment implements Typed {
+public class Enchantment extends Typed<Enchantment.EnchantmentType> {
     private int level;
     private EnchantmentType type;
 
@@ -79,8 +79,10 @@ public class Enchantment implements Typed {
 
         private net.minecraft.enchantment.Enchantment enchantmentMC;
 
-        private EnchantmentType(net.minecraft.enchantment.Enchantment mcEnchant) {
-            this.enchantmentMC = mcEnchant;
+        private EnchantmentType(net.minecraft.enchantment.Enchantment enchantmentMC) {
+            super(enchantmentMC.effectId);
+
+            this.enchantmentMC = enchantmentMC;
         }
 
         public static ItemType[] getApplicableItems() {

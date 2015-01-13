@@ -1,6 +1,6 @@
 package org.corundummc.listeners;
 
-import org.corundummc.entities.Player;
+import org.corundummc.entities.living.Player;
 import org.corundummc.listeners.results.EventResult;
 import org.corundummc.utils.interfaces.Commander;
 

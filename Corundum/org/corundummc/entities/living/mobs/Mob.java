@@ -1,83 +1,74 @@
-/** This code is property of the Corundum project managed under the Software Developers' Association of Arizona State University.
- *
- * Copying and use of this open-source code is permitted provided that the following requirements are met:
- *
- * - This code may not be used or distributed for private enterprise, including but not limited to personal or corporate profit. - Any products resulting from the copying,
- * use, or modification of this code may not claim endorsement by the Corundum project or any of its members or associates without written formal permission from the endorsing
- * party or parties. - This code may not be copied or used under any circumstances without the inclusion of this notice and mention of the contribution of the code by the
- * Corundum project. In source code form, this notice must be included as a comment as it is here; in binary form, proper documentation must be included with the final product
- * that includes this statement verbatim.
- * 
- * @author REALDrummer */
-
 package org.corundummc.entities.living.mobs;
 
-import net.minecraft.entity.monster.EntityMob;
-import org.corundummc.entities.Entity;
-import org.corundummc.items.Item;
+import net.minecraft.entity.EntityLiving;
 
-public class Mob extends Entity {
+import org.corundummc.entities.living.LivingEntity;
+import org.corundummc.entities.living.Player;
+import org.corundummc.entities.living.mobs.animals.Animal;
+import org.corundummc.entities.living.mobs.animals.Animal.AnimalTypes;
+import org.corundummc.entities.living.mobs.golems.Golem.GolemTypes;
+import org.corundummc.entities.living.mobs.monsters.Monster.MonsterTypes;
+import org.corundummc.entities.living.mobs.villagers.Villager.VillagerTypes;
+import org.corundummc.utils.interfaces.Nameable;
 
-    public Mob(EntityMob mobMC) {
-        super(mobMC);
+/** This class represents a "mob", an autonomous A.I.-controlled {@link LivingEntity}. This includes things like {@link Monster monsters}, {@link Animal animals}, and even
+ * {@link Boss bosses}, but not {@link Player}s.
+ * 
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
+ * @param <T>
+ *            determines the type of {@link EntityType} that represents the type of this class. */
+public abstract class Mob<S extends Mob<S, MC, T>, MC extends EntityLiving, T extends Mob.MobType<T, MC, S>> extends LivingEntity<S, MC, T> implements Nameable<S> {
+    protected Mob(MC entityMC) {
+        super(entityMC);
     }
 
-    public Item[] getDrops() {
-        // TODO
-        return null;
+    public static interface MobTypes extends AnimalTypes, GolemTypes, MonsterTypes, VillagerTypes {
+        /* no types need to be here; all the MobTypes are available in the interfaces this one implements */
     }
 
-    public MobType getMobType() {
-        // TODO
-        return null;
-    }
+    public abstract static class MobType<S extends MobType<S, MC, I>, MC extends EntityLiving, I extends Mob<I, MC, S>> extends LivingEntityType<S, MC, I> {
+        protected MobType(int id, int data) {
+            super(id, data);
 
-    /** This enum is used to represent the different types of {@link Mob}s. This list of different types not only includes those types of mobs differentiated by different
-     * I.D.s, but also many of those differentiated by different data values; for example, {@link #ZOMBIE zombies} and {@link #ZOMBIFIED_VILLAGER zombified villagers} are both
-     * represented as separate types despite the fact that they both have the same I.D. value. */
-    public enum MobType {
-        PLAYER(EntityType.PLAYER, false, true),
-        PIG(EntityType.PIG, false, false),
-        SKELETON(EntityType.SKELETON, true, false),
-        ZOMBIE(EntityType.ZOMBIE, true, false),
-        ZOMBIFIED_VILLAGER(EntityType.ZOMBIFIED_VILLAGER, true, false),
-        ZOMBIE_PIGMAN(EntityType.ZOMBIE_PIGMAN, false, false),
-        COW(EntityType.COW, false, false),
-        CHICKEN(EntityType.CHICKEN, false, false),
-        HORSE(EntityType.HORSE, false, false),
-        SHEEP(EntityType.SHEEP, false, false),
-        MOOSHROOM(EntityType.MOOSHROOM, false, false),
-        FARMER_VILLAGER(EntityType.FARMER_VILLAGER, false, false),
-        LIBRARIAN_VILLAGER(EntityType.LIBRARIAN_VILLAGER, false, false),
-        PRIEST_VILLAGER(EntityType.PRIEST_VILLAGER, false, false),
-        BLACKSMITH_VILLAGER(EntityType.BLACKSMITH_VILLAGER, false, false),
-        BUTCHER_VILLAGER(EntityType.BUTCHER_VILLAGER, false, false),
-        WOLF(EntityType.WOLF, false, false),
-        OCELOT(EntityType.OCELOT, false, false),
-        SQUID(EntityType.SQUID, false, false),
-        BAT(EntityType.BAT, false, true),
-        CREEPER(EntityType.CREEPER, false, false),
-        SPIDER(EntityType.SPIDER, false, false),
-        CAVE_SPIDER(EntityType.CAVE_SPIDER, false, false),
-        ENDERMAN(EntityType.ENDERMAN, false, false),
-        WITCH(EntityType.WITCH, false, false),
-        BLAZE(EntityType.BLAZE, false, true),
-        SLIME(EntityType.SLIME, false, false),
-        MAGMA_CUBE(EntityType.MAGMA_CUBE, false, false),
-        GHAST(EntityType.GHAST, false, true),
-        ENDER_DRAGON(EntityType.ENDER_DRAGON, false, true),
-        WITHER(EntityType.WITHER, false, true);
-
-        // Used to get basic data about the mob, mainly used because I don't want to redo all of EntityType again.
-        private final EntityType entityType;
-
-        private MobType(EntityType entityType, boolean burnsInSunlight, boolean canFly) {
-            this.entityType = entityType;
+            addValueAs(MobType.class);
         }
 
-        public EntityType getEntityType() {
-            return this.entityType;
+        // abstract utilities
+
+        // overridden utilities
+
+        // pseudo-enum utilities
+        @SuppressWarnings("rawtypes")
+        public static MobType getByID(int id) {
+            return getByID(MobType.class, id);
         }
 
+        @SuppressWarnings("rawtypes")
+        public static MobType getByID(int id, int data) {
+            return getByID(MobType.class, id, data);
+        }
+
+        @SuppressWarnings("rawtypes")
+        public static MobType[] values() {
+            return values(MobType.class);
+        }
+    }
+
+    // type utilities
+
+    // instance utilities
+    @Override
+    public String getCustomName() {
+        return entityMC.getCustomNameTag();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public S setCustomName(String new_name) {
+        entityMC.setCustomNameTag(new_name);
+        return (S) this;
     }
 }

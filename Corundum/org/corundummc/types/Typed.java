@@ -1,7 +1,5 @@
 package org.corundummc.types;
 
-import org.corundummc.world.Location;
-
-public interface Typed {
-    public abstract IDedType getType();
+public abstract class Typed<T extends IDedType> {
+    public abstract T getType();
 }

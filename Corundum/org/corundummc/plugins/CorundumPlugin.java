@@ -10,7 +10,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.corundummc.CorundumServer;
-import org.corundummc.entities.Player;
+import org.corundummc.entities.living.Player;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.listeners.CorundumListener;
