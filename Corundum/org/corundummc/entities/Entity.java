@@ -13,6 +13,8 @@
 package org.corundummc.entities;
 
 import net.minecraft.entity.EntityList;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 
 import org.corundummc.entities.living.LivingEntity.LivingEntityTypes;
@@ -20,6 +22,8 @@ import org.corundummc.exceptions.CorundumException;
 import org.corundummc.entities.nonliving.NonLivingEntity.NonLivingEntityTypes;
 import org.corundummc.items.Item;
 import org.corundummc.types.CreatableType;
+import org.corundummc.types.IDedTypeWithData;
+import org.corundummc.types.MCEquivalentType;
 import org.corundummc.types.Typed;
 import org.corundummc.utils.interfaces.Physical;
 import org.corundummc.world.Location;
@@ -27,22 +31,17 @@ import org.corundummc.world.World;
 
 public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraft.entity.Entity, T extends Entity.EntityType<T, MC, S>> extends Typed<T> implements Physical {
     protected final MC entityMC;
-    private Rotation rotation;
-    private Location location;
-    private Velocity velocity;
 
     protected Entity(MC entityMC) {
         this.entityMC = entityMC;
-        this.rotation = new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
-        this.location = new Location(entityMC.posX, entityMC.posY, entityMC.posZ, new World((WorldServer) entityMC.worldObj));
-        this.velocity = new Velocity(this.entityMC.motionX, this.entityMC.motionY, this.entityMC.motionZ);
     }
 
     public static interface EntityTypes extends LivingEntityTypes, NonLivingEntityTypes {
         // nothing needs to be here; all the types in this interface are implemented in the interfaces this one extends
     }
 
-    public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends CreatableType<S, I> {
+    public static abstract class EntityType<S extends EntityType<S, MC, I>, MC extends net.minecraft.entity.Entity, I extends Entity<I, MC, S>> extends IDedTypeWithData<S>
+            implements CreatableType<I>, MCEquivalentType<MC, I> {
         // TODO: Minecraft has no EntityType equivalent object, so we need to find a way to retrieve type info; EntityList will probably help
 
         @SuppressWarnings("javadoc")
@@ -52,17 +51,13 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
             addValueAs(EntityType.class);
         }
 
+        // abstract utilities
+
+        // overridden utilities
+        @Override
         public String getName() {
             return EntityList.getStringFromID(getID());
         }
-
-        // abstract utilities
-        /** This method is used to create a new instance of {@link Entity Corundum Entity} to wrap around the given {@link Minecraft net.minecraft.entity.Entity}.
-         *
-         * @param entityMC
-         *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
-         * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
-        public abstract I fromMC(MC entityMC);
 
         // pseudo-enum utils
         public static EntityType<?, ?, ?> getByID(int id) {
@@ -104,53 +99,35 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
      * @param entityMC
      *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
      * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
-    @SuppressWarnings("rawtypes")
-    public static Entity<?, ?, ?> fromMC(net.minecraft.entity.Entity entityMC) {
+    @SuppressWarnings("unchecked")
+    public static <MC extends net.minecraft.entity.Entity> Entity<?, MC, ?> fromMC(MC entityMC) {
         /* the EntityType<?, ?, ?> from EntityType.getByID here is casted to an EntityType raw type to allow the fromMC() call to work; without that cast, fromMC() demands an
          * instance of MC for its argument, which we cannot get because MC cannot be used in a static context */
-        return ((EntityType) EntityType.getByID(EntityList.getEntityID(entityMC))).fromMC(entityMC);
+        return ((EntityType<?, MC, ?>) EntityType.getByID(EntityList.getEntityID(entityMC))).fromMC(entityMC);
     }
 
-    public MC MC() {
-        return entityMC;
-    }
-
-    public Item[] getDrops() {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public Location getLocation() {
-        this.location.setX(this.entityMC.posX);
-        this.location.setY(this.entityMC.posY);
-        this.location.setZ(this.entityMC.posZ);
-        return this.location;
-    }
-
-    public Velocity getVelocity() {
-        return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
-    }
-
-    /** This method determines whether or not this {@link Entity} is one of the "unsaved {@link Entity Entities}". Unsaved {@link Entity Entities} differ from other
-     * {@link Entity Entities} in that they have no I.D. or data value associated with them and they are not saved when the server is stopped. Examples include
-     * {@link EntityType#PLAYER player Entities}, {@link EntityType#EGG thrown eggs}, and {@link EntityType#LIGHTNING_BOLT lightning bolts}.
+    // type utilities
+    /** This method determines whether or not this {@link Entity} is one of the "unsaved {@link Entity entities}". Unsaved {@link Entity entities} differ from other
+     * {@link Entity entities} in that they have no I.D. or data value associated with them and they are not saved when the server is stopped. Examples include
+     * {@link EntityType#PLAYER player entities}, {@link EntityType#EGG thrown eggs}, and {@link EntityType#LIGHTNING_BOLT lightning bolts}.
      * 
      * @return <b>true</b> if this {@link Entity} is an "unsaved {@link Entity}"; <b>false</b> otherwise. */
     public boolean isUnsaved() {
         return getType().getID() == -1;
     }
 
-    public S setLocation(Location location) {
-        entityMC.posX = location.getX();
-        entityMC.posY = location.getY();
-        entityMC.posZ = location.getZ();
-        entityMC.worldObj = location.getWorld().getMCWorld();
-        /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
-         * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
-        entityMC.dimension = location.getWorld().getMCWorld().provider.dimensionId;
+    // instance utilities
+    public MC MC() {
+        return entityMC;
+    }
 
-        return (S) this;
+    @Override
+    public Location getLocation() {
+        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMCWorld((WorldServer) entityMC.worldObj));
+    }
+
+    public Velocity getVelocity() {
+        return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
     }
 
     public S setRotation(Rotation rotation) {
@@ -170,19 +147,20 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
     }
 
     public S spawn(Location location) {
-        this.entityMC.posX = location.getX();
-        this.entityMC.posY = location.getY();
-        this.entityMC.posZ = location.getZ();
-        this.entityMC.worldObj.spawnEntityInWorld(this.entityMC);
-        this.entityMC.rotationPitch = this.rotation.getPitch();
-        this.entityMC.rotationYaw = this.rotation.getYaw();
+        // TODO TEST: make sure that setting the location works this way
+        entityMC.posX = location.getX();
+        entityMC.posY = location.getY();
+        entityMC.posZ = location.getZ();
+        entityMC.worldObj = location.getWorld().getMCWorld();
+        /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
+         * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
+        entityMC.dimension = location.getWorld().getMCWorld().provider.dimensionId;
+        entityMC.worldObj.spawnEntityInWorld(entityMC);
 
         return (S) this;
     }
 
     public Rotation getRotation() {
-        this.rotation.setPitch(this.entityMC.rotationPitch);
-        this.rotation.setYaw(this.entityMC.rotationYaw);
-        return this.rotation;
+        return new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
     }
 }

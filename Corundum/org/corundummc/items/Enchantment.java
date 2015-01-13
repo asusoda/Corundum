@@ -94,6 +94,12 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
             return (byte) enchantmentMC.getMaxLevel();
         }
 
+        @Override
+        public String getName() {
+            // the `substring()` call removes the level from the end of the name
+            return enchantmentMC.getName().substring(0, enchantmentMC.getName().lastIndexOf(" "));
+        }
+
         public static EnchantmentType getByID(int id) {
             return IDedType.getByID(EnchantmentType.class, id);
         }

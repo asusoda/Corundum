@@ -73,6 +73,12 @@ public class Biome {
             return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.fillerBlock));
         }
 
+        @Override
+        public String getName() {
+            // the `replaceAll()` adds spaces between camel-cased words
+            return biomeMC.biomeName.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
+        }
+
         public BlockType getSurfaceBlockType() {
             return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(biomeMC.topBlock));
         }

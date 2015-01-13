@@ -4,7 +4,7 @@ import org.corundummc.items.Item;
 import org.corundummc.world.Location;
 
 public interface Physical {
-    public Item[] getDrops();
+    // public Item[] getDrops();
 
     public Location getLocation();
 }

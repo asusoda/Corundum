@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.StatCollector;
 
 import org.corundummc.CorundumServer;
 import org.corundummc.entities.living.Player;
@@ -475,6 +476,13 @@ public class Item {
         @Override
         public byte getMaxStackSize() {
             return (byte) itemTypeMC.getItemStackLimit();
+        }
+
+        @Override
+        public String getName() {
+            /* TODO: this only works for items that do not change names based on their data! ItemTypes with the same name but different data values will have the same name with
+             * this method, so we need to figure out how to use the version of this method that takes in an ItemStack to our advantage. */
+            return StatCollector.translateToLocal(itemTypeMC.getUnlocalizedName());
         }
 
         // static utilities

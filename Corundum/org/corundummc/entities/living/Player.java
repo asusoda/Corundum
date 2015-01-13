@@ -7,12 +7,14 @@ import org.corundummc.CorundumServer;
 import org.corundummc.listeners.CommandListener;
 import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.results.EventResult;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
+
 import org.corundummc.types.IDedType;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.interfaces.Matchable;
@@ -38,10 +40,21 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
      * 
      * @author REALDrummer */
     public static class GameMode extends IDedType<GameMode> {
-        public static final GameMode SURVIVAL = new GameMode(), CREATIVE = new GameMode(), ADVENTURE = new GameMode(), SPECTATOR = new GameMode(), HARDCORE = new GameMode();
+        public static final GameMode SURVIVAL = new GameMode("Survival"), CREATIVE = new GameMode("Creative"), ADVENTURE = new GameMode("Adventure"),
+                SPECTATOR = new GameMode("Spectator"), HARDCORE = new GameMode("Hardcore");
 
-        private GameMode() {
+        private final String name;
+
+        private GameMode(String name) {
             super(values() == null ? 0 : values().length);
+
+            this.name = name;
+        }
+
+        // overridden utilities
+        @Override
+        public String getName() {
+            return name;
         }
 
         // pseudo-enum utilities

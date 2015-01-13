@@ -18,8 +18,6 @@ import com.google.common.eventbus.AllowConcurrentEvents;
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.
- * @param <EntityVillager>
- *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
 public abstract class Villager<S extends Villager<S, T>, T extends Villager.VillagerType<T, S>> extends Mob<S, EntityVillager, T> implements Ageable {
@@ -76,18 +74,28 @@ public abstract class Villager<S extends Villager<S, T>, T extends Villager.Vill
     }
 
     public static interface Professions {
-        public static final Profession<FarmerType> FARMER = new Profession<>();
-        public static final Profession<LibrarianType> LIBRARIAN = new Profession<>();
-        public static final Profession<PriestType> PRIEST = new Profession<>();
-        public static final Profession<BlacksmithType> BLACKSMITH = new Profession<>();
-        public static final Profession<ButcherType> BUTCHER = new Profession<>();
+        public static final Profession<FarmerType> FARMER = new Profession<>("farmer");
+        public static final Profession<LibrarianType> LIBRARIAN = new Profession<>("librarian");
+        public static final Profession<PriestType> PRIEST = new Profession<>("priest");
+        public static final Profession<BlacksmithType> BLACKSMITH = new Profession<>("blacksmith");
+        public static final Profession<ButcherType> BUTCHER = new Profession<>("butcher");
     }
 
     public static class Profession<V extends VillagerType<V, ?>> extends IDedType<Profession<V>> {
-        private Profession() {
+        private final String name;
+
+        private Profession(String name) {
             super(nextID(Profession.class));
 
             addValueAs(Profession.class);
+
+            this.name = name;
+        }
+
+        // overridden utilities
+        @Override
+        public String getName() {
+            return name;
         }
 
         // instance utilities

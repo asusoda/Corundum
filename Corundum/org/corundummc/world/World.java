@@ -78,11 +78,11 @@ public class World implements Matchable<World> {
     }
 
     public void setBlock(Block.BlockType blockType, Location location) {
-        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.getBlockMC());
+        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.MC());
     }
 
     public void setBlockWithMetadata(Block.BlockType blockType, Location location, byte data) {
-        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.getBlockMC(), data, 3);
+        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.MC(), data, 3);
     }
 
     public void setBlockData(Location blockLocation, byte newData) {

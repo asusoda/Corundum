@@ -73,10 +73,7 @@ public abstract class IDedType<S extends IDedType<S>> implements Matchable<S> {
         return id;
     }
 
-    public String getName() {
-        // TODO
-        return null;
-    }
+    public abstract String getName();
 
     @SuppressWarnings("unchecked")
     protected void addValueAs(Class<?> type_class) {

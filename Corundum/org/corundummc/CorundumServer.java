@@ -87,7 +87,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     /** This is the variable name for changing the name of the server */
     public static final String SERVER_NAME_VAR = "name";
 
-    //config variable names end
+    // config variable names end
 
     private SettingsManager settings = new SettingsManager(new File(CONFIG_FILE_NAME), SERVER_NAME_VAR, "Corundum");
 
@@ -137,12 +137,23 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     }
 
     public static class Difficulty extends IDedType<Difficulty> {
-        public static final Difficulty PEACEFUL = new Difficulty(), EASY = new Difficulty(), NORMAL = new Difficulty(), HARD = new Difficulty();
+        public static final Difficulty PEACEFUL = new Difficulty("Peaceful"), EASY = new Difficulty("Easy"), NORMAL = new Difficulty("Normal"), HARD = new Difficulty("Hard");
 
-        protected Difficulty() {
+        private final String name;
+
+        protected Difficulty(String name) {
             super(values() == null ? 0 : values().length);
+
+            this.name = name;
         }
 
+        // overridden utilities
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        // pseudo-enum utilities
         public static Difficulty getByID(int id) {
             return getByID(Difficulty.class, id);
         }

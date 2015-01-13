@@ -494,8 +494,8 @@ public class Block {
             blockMC = net.minecraft.block.Block.getBlockById(id);
         }
 
-        // internal utilities
-        net.minecraft.block.Block getBlockMC() {
+        // overridden utilities
+        net.minecraft.block.Block MC() {
             return blockMC;
         }
 
@@ -537,6 +537,10 @@ public class Block {
              * representing red, green, and blue values; this splits the int into three RGB values and puts it into a standard Color object */
             int color_value = blockMC.getMaterial().getMaterialMapColor().colorValue;
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
+        }
+
+        public String getName() {
+            return blockMC.getLocalizedName();
         }
 
         /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is
