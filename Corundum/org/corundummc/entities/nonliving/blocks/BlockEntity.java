@@ -1,12 +1,15 @@
 package org.corundummc.entities.nonliving.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 
 import org.corundummc.entities.nonliving.NonLivingEntity;
 import org.corundummc.entities.nonliving.blocks.FallingBlock.FallingBlockType;
 import org.corundummc.entities.nonliving.blocks.PrimedTNT.PrimedTNTType;
 
-/** TODO
+// TODO: when available, link "sand" in the Javadoc below
+/** This class represents an {@link Entity} that represents some type of {@link Block} such as a {@link PrimedTNT primed T.N.T.} or a {@link FallingBlock falling block} like
+ * sand.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

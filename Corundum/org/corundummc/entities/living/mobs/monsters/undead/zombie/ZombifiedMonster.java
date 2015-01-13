@@ -1,10 +1,10 @@
 package org.corundummc.entities.living.mobs.monsters.undead.zombie;
 
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityMob;
 
 import org.corundummc.entities.living.mobs.monsters.undead.UndeadMonster;
-import org.corundummc.entities.living.mobs.monsters.undead.zombie.ZombiePigman.ZombiePigmanType;
-import org.corundummc.entities.living.mobs.monsters.undead.zombie.human.HumanZombie.HumanZombieTypes;
+import org.corundummc.entities.living.mobs.monsters.undead.zombie.Giant.GiantType;
+import org.corundummc.entities.living.mobs.monsters.undead.zombie.natural.NaturalZombifiedMonster.NaturalZombifiedMonsterTypes;
 
 /** TODO
  * 
@@ -14,17 +14,17 @@ import org.corundummc.entities.living.mobs.monsters.undead.zombie.human.HumanZom
  *            determines the type of Minecraft Entity <tt>Object</tt> that this class represents.
  * @param <T>
  *            determines the type of {@link EntityType} that represents the type of this class. */
-public abstract class ZombifiedMonster<S extends ZombifiedMonster<S, MC, T>, MC extends EntityZombie, T extends ZombifiedMonster.ZombifiedMonsterType<T, MC, S>> extends
+public abstract class ZombifiedMonster<S extends ZombifiedMonster<S, MC, T>, MC extends EntityMob, T extends ZombifiedMonster.ZombifiedMonsterType<T, MC, S>> extends
         UndeadMonster<S, MC, T> {
     protected ZombifiedMonster(MC entityMC) {
         super(entityMC);
     }
 
-    public static interface ZombifiedMonsterTypes extends HumanZombieTypes {
-        public static final ZombiePigmanType ZOMBIE_PIGMAN = ZombiePigmanType.TYPE;
+    public static interface ZombifiedMonsterTypes extends NaturalZombifiedMonsterTypes {
+        public static final GiantType GIANT = GiantType.TYPE;
     }
 
-    public abstract static class ZombifiedMonsterType<S extends ZombifiedMonsterType<S, MC, I>, MC extends EntityZombie, I extends ZombifiedMonster<I, MC, S>> extends
+    public abstract static class ZombifiedMonsterType<S extends ZombifiedMonsterType<S, MC, I>, MC extends EntityMob, I extends ZombifiedMonster<I, MC, S>> extends
             UndeadMonsterType<S, MC, I> {
         protected ZombifiedMonsterType(int id, int data) {
             super(id, data);

@@ -16,7 +16,7 @@ public class Creeper extends Monster<Creeper, EntityCreeper, Creeper.CreeperType
         public static final CreeperType TYPE = new CreeperType();
 
         private CreeperType() {
-            super(/* TODO */0, -1);
+            super(50, -1);
         }
 
         // overridden utilities

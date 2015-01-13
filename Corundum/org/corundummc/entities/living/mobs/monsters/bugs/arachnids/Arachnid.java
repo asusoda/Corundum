@@ -2,11 +2,13 @@ package org.corundummc.entities.living.mobs.monsters.bugs.arachnids;
 
 import net.minecraft.entity.monster.EntitySpider;
 
+import org.corundummc.entities.living.mobs.monsters.Monster;
 import org.corundummc.entities.living.mobs.monsters.bugs.Bug;
 import org.corundummc.entities.living.mobs.monsters.bugs.arachnids.CaveSpider.CaveSpiderType;
 import org.corundummc.entities.living.mobs.monsters.bugs.arachnids.Spider.SpiderType;
 
-/** TODO
+/** This class represents all {@link Monster}s that are based on members of the <i>Arachnia</i> family, i.e. the different kinds of spiders, including {@link Spider}s and
+ * {@link CaveSpider Cave Spider}s.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

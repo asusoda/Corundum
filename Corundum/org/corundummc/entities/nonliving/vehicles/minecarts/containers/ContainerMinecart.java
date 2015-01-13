@@ -3,10 +3,12 @@ package org.corundummc.entities.nonliving.vehicles.minecarts.containers;
 import org.corundummc.entities.nonliving.vehicles.minecarts.Minecart;
 import org.corundummc.entities.nonliving.vehicles.minecarts.containers.HopperMinecart.HopperMinecartType;
 import org.corundummc.entities.nonliving.vehicles.minecarts.containers.StorageMinecart.StorageMinecartType;
+import org.corundummc.items.Item;
 
 import net.minecraft.entity.item.EntityMinecartContainer;
 
-/** TODO
+/** This class represents a {@link Minecart minecart} that is able to contain {@link Item item}s inside it like a {@link HopperMinecart hopper minecart} or a
+ * {@link StorageMinecart storage minecart}.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

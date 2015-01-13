@@ -4,8 +4,11 @@ import net.minecraft.entity.EntityLiving;
 
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.LivingEntity;
+import org.corundummc.entities.living.Player;
 import org.corundummc.entities.living.mobs.HostileMob;
 import org.corundummc.entities.living.mobs.Mob;
+import org.corundummc.entities.living.mobs.animals.Animal;
+import org.corundummc.entities.living.mobs.animals.domestic.tameable.pet.Wolf;
 import org.corundummc.entities.living.mobs.monsters.Creeper.CreeperType;
 import org.corundummc.entities.living.mobs.monsters.Enderman.EndermanType;
 import org.corundummc.entities.living.mobs.monsters.Witch.WitchType;
@@ -15,7 +18,11 @@ import org.corundummc.entities.living.mobs.monsters.cuboid.CuboidMonster.CuboidM
 import org.corundummc.entities.living.mobs.monsters.flying.FlyingMonster.FlyingMonsterTypes;
 import org.corundummc.entities.living.mobs.monsters.undead.UndeadMonster.UndeadMonsterTypes;
 
-/** TODO
+import com.google.common.eventbus.AllowConcurrentEvents;
+
+/** This class represents a {@link Mob mob} that is meant to be a natural enemy to a {@link Player player}.<br>
+ * NOTE: {@link Wolf Wolves} are actually considered {@link Animal animals}, not {@link Monster monsters}, despite the fact that they may attack {@link Player players}. Any
+ * {@link Mob mob} that may potentially attack something else is, however, considered a {@link HostileMob hostile mob}, including {@link Wolf wolves}.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.
@@ -28,7 +35,7 @@ public abstract class Monster<S extends Monster<S, MC, T>, MC extends EntityLivi
         super(entityMC);
     }
 
-    public static interface MonsterTypes extends BossTypes, BugTypes, CuboidMonsterTypes, FlyingMonsterTypes, UndeadMonsterTypes {
+    public static interface MonsterTypes extends BossTypes, BugTypes, CuboidMonsterTypes, FlyingMonsterTypes, UndeadMonsterTypes/* 1.8:, GuardianTypes */{
         public static final CreeperType CREEPER = CreeperType.TYPE;
         public static final EndermanType ENDERMAN = EndermanType.TYPE;
         public static final WitchType WITCH = WitchType.TYPE;

@@ -1,9 +1,10 @@
-package org.corundummc.entities.living.mobs.monsters.undead.zombie;
+package org.corundummc.entities.living.mobs.monsters.undead.zombie.natural;
 
 import net.minecraft.entity.monster.EntityZombie;
-import org.corundummc.entities.living.mobs.monsters.undead.zombie.ZombifiedMonster.ZombifiedMonsterType;
 
-public class ZombiePigman extends ZombifiedMonster<ZombiePigman, EntityZombie, ZombiePigman.ZombiePigmanType> {
+import org.corundummc.entities.living.mobs.monsters.undead.zombie.natural.NaturalZombifiedMonster.NaturalZombifiedMonsterType;
+
+public class ZombiePigman extends NaturalZombifiedMonster<ZombiePigman, EntityZombie, ZombiePigman.ZombiePigmanType> {
     public ZombiePigman() {
         super(new EntityZombie(null));
     }
@@ -12,7 +13,7 @@ public class ZombiePigman extends ZombifiedMonster<ZombiePigman, EntityZombie, Z
         super(entityMC);
     }
 
-    protected static class ZombiePigmanType extends ZombifiedMonsterType<ZombiePigmanType, EntityZombie, ZombiePigman> {
+    protected static class ZombiePigmanType extends NaturalZombifiedMonsterType<ZombiePigmanType, EntityZombie, ZombiePigman> {
         public static final ZombiePigmanType TYPE = new ZombiePigmanType();
 
         private ZombiePigmanType() {

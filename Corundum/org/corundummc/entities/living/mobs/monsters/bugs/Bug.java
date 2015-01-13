@@ -5,8 +5,10 @@ import net.minecraft.entity.monster.EntityMob;
 import org.corundummc.entities.living.mobs.monsters.Monster;
 import org.corundummc.entities.living.mobs.monsters.bugs.Silverfish.SilverfishType;
 import org.corundummc.entities.living.mobs.monsters.bugs.arachnids.Arachnid.ArachnidTypes;
+import org.corundummc.entities.living.mobs.monsters.bugs.arachnids.Spider;
 
-/** TODO
+/** This class represents a {@link Monster} that is analogous to a bug such as a {@link Spider} or a {@link Silverfish}.<br>
+ * NOTE: Spiders <i>are</i> bugs! They are not <i>insects</i>; there is a difference.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

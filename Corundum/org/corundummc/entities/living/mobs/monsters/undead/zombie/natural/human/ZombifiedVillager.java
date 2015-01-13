@@ -1,7 +1,8 @@
-package org.corundummc.entities.living.mobs.monsters.undead.zombie.human;
+package org.corundummc.entities.living.mobs.monsters.undead.zombie.natural.human;
 
 import net.minecraft.entity.monster.EntityZombie;
-import org.corundummc.entities.living.mobs.monsters.undead.zombie.human.HumanZombie.HumanZombieType;
+
+import org.corundummc.entities.living.mobs.monsters.undead.zombie.natural.human.HumanZombie.HumanZombieType;
 
 public class ZombifiedVillager extends HumanZombie<ZombifiedVillager, ZombifiedVillager.ZombifiedVillagerType> {
     public ZombifiedVillager() {

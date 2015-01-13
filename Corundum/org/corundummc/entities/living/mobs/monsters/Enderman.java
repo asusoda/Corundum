@@ -16,7 +16,7 @@ public class Enderman extends Monster<Enderman, EntityEnderman, Enderman.Enderma
         public static final EndermanType TYPE = new EndermanType();
 
         private EndermanType() {
-            super(/* TODO */0, -1);
+            super(58, -1);
         }
 
         // overridden utilities

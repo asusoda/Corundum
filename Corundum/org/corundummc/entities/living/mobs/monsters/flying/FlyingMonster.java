@@ -3,10 +3,13 @@ package org.corundummc.entities.living.mobs.monsters.flying;
 import net.minecraft.entity.EntityLiving;
 
 import org.corundummc.entities.living.mobs.monsters.Monster;
+import org.corundummc.entities.living.mobs.monsters.bosses.EnderDragon;
 import org.corundummc.entities.living.mobs.monsters.flying.Blaze.BlazeType;
 import org.corundummc.entities.living.mobs.monsters.flying.Ghast.GhastType;
+import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
-/** TODO
+/** This represents a monster that can float, hover, or fly like a {@link Ghast} or a {@link Blaze}.<br>
+ * NOTE: {@link EnderDragon The Ender Dragon} is <i>not</i> considered a {@link FlyingMonster} even though it does fly.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

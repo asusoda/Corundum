@@ -6,7 +6,8 @@ import org.corundummc.entities.living.mobs.monsters.Monster;
 import org.corundummc.entities.living.mobs.monsters.cuboid.MagmaCube.MagmaCubeType;
 import org.corundummc.entities.living.mobs.monsters.cuboid.Slime.SlimeType;
 
-/** TODO
+/** This class represents a {@link Monster monster} that is cube-shaped like a {@link Slime} or a {@link MagmaCube}. These kinds of monsters generally hop to get around and can
+ * split into smaller versions of themselves.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.

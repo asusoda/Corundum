@@ -16,7 +16,7 @@ public class Witch extends Monster<Witch, EntityWitch, Witch.WitchType> {
         public static final WitchType TYPE = new WitchType();
 
         private WitchType() {
-            super(/* TODO */0, -1);
+            super(66, -1);
         }
 
         // overridden utilities

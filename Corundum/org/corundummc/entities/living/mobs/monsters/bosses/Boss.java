@@ -6,7 +6,7 @@ import org.corundummc.entities.living.mobs.monsters.Monster;
 import org.corundummc.entities.living.mobs.monsters.bosses.EnderDragon.EnderDragonType;
 import org.corundummc.entities.living.mobs.monsters.bosses.Wither.WitherType;
 
-/** TODO
+/** This class represents a Minecraft boss {@link Monster} such as {@link EnderDragon The Ender Dragon} or {@link Wither The Wither}.
  * 
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.
