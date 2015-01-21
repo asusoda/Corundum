@@ -22,6 +22,24 @@ import org.corundummc.exceptions.CorundumException;
 public class ListUtilities {
 
     // contents
+    /** This method adds the given element to the end of the given array.
+     * 
+     * @param array
+     *            is the original array to which <b><tt>new_element</b></tt> will be added.
+     * @param new_element
+     *            is the new element which will be added to <b><tt>array</b></tt>.
+     * @return a new array containing the elements of the old array in the same order and <b><tt>new_element</b></tt> appended to the end. */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] add(T[] array, T new_element) {
+        Object[] new_array = new Object[array.length + 1];
+
+        for (int i = 0; i < array.length; i++)
+            new_array[i] = array[i];
+        new_array[new_array.length - 1] = new_element;
+
+        return (T[]) new_array;
+    }
+
     public static <T> ArrayList<T> arrayToArrayList(T[] array) {
         return (ArrayList<T>) Arrays.asList(array);
     }
@@ -110,26 +128,23 @@ public class ListUtilities {
      * @param arrays
      *            is the list of <tt>Object[]</tt>s to be concatenated into one large array.
      * @return one large <tt>Object[]</tt> containing all the elements of the given <b><tt>arrays</b></tt> in the order given. */
+    @SuppressWarnings("unchecked")
     public static <T> T[] concatenate(@SuppressWarnings("unchecked") T[]... arrays) {
-        // find the sum of the lengths of all the arrays
-        int new_length = 0;
+        /* this method takes advantage of the fact that objects or arrays put in as arguments using Java's "..." argument trickery are put into an array themselves! */
+        int amount = 0;
         for (T[] array : arrays)
-            new_length += array.length;
+            amount += array.length;
 
-        // create the new array
-        /* NOTE: I had to make an ArrayList and convert it to an array because you can't make arrays of a generic type */
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new ArrayList<T>(new_length).toArray();
+        Object[] new_array = new Object[amount];
 
-        // copy all the Objects from the arrays into the new array
-        int counter = 0;  // counter is necessary because each array is not necessarily the same size
+        int new_array_counter = 0;
         for (int i = 0; i < arrays.length; i++)
             for (int j = 0; j < arrays[i].length; j++) {
-                result[counter] = arrays[i][j];
-                counter++;
+                new_array[new_array_counter] = arrays[i][j];
+                new_array_counter++;
             }
 
-        return result;
+        return (T[]) new_array;
     }
 
     // TODO: figure out if this method is necessary with the newly parameterized contains(T[], T)

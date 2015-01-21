@@ -1,8 +1,10 @@
 package org.corundummc.listeners.plugins;
 
-import org.corundummc.listeners.CommandListener;
+import org.corundummc.CorundumServer;
 import org.corundummc.listeners.CorundumListener;
-import org.corundummc.listeners.results.EventResult;
+import org.corundummc.listeners.Event;
+import org.corundummc.listeners.ListenerCaller;
+import org.corundummc.listeners.plugins.PluginListener.PluginEvent;
 import org.corundummc.plugins.CorundumPlugin;
 
 public interface PluginLoadListener extends CorundumListener {
@@ -10,10 +12,25 @@ public interface PluginLoadListener extends CorundumListener {
      * its code accessible and giving it space in static memory; it does <i>not</i> mean that the plugin will be enabled, and it does not mean that its commands or listeners
      * will work.
      * 
-     * @param plugin
-     *            is the {@link CorundumPlugin} being loaded from its jar file to the server.
-     * @param result
-     *            is the {@link EventResult} from calling this method in other {@link CommandListener}s.
-     * @return the {@link EventResult} describing any changes to this event's properties. */
-    public EventResult onPluginLoad(CorundumPlugin plugin, EventResult result);
+     * @param event
+     *            is an {@link Event} representing the loading of this {@link CorundumPlugin}. */
+    public void onPluginLoad(PluginLoadEvent event);
+
+    public static class PluginLoadEvent extends PluginEvent<PluginLoadEvent> {
+        public PluginLoadEvent(CorundumPlugin plugin) {
+            super(plugin);
+        }
+
+        @Override
+        public PluginLoadEvent runOn(CorundumServer server) {
+            super.runOn(server);
+
+            return runAs(server, PluginLoadEvent.class, new ListenerCaller<PluginLoadEvent>() {
+                @Override
+                public void callListener(CorundumListener listener, PluginLoadEvent event) {
+                    ((PluginLoadListener) listener).onPluginLoad(event);
+                }
+            });
+        }
+    }
 }

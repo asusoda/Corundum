@@ -15,5 +15,5 @@ import org.corundummc.plugins.CorundumPlugin;
  * 
  * @author REALDrummer */
 public interface CorundumListener {
-    // nothing goes in here
+    public CorundumPlugin getPlugin();
 }

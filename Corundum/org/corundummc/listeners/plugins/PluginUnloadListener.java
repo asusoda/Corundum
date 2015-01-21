@@ -1,15 +1,33 @@
 package org.corundummc.listeners.plugins;
 
-import org.corundummc.listeners.results.EventResult;
+import org.corundummc.CorundumServer;
+import org.corundummc.listeners.CorundumListener;
+import org.corundummc.listeners.ListenerCaller;
+import org.corundummc.listeners.plugins.PluginListener.PluginEvent;
 import org.corundummc.plugins.CorundumPlugin;
 
-public interface PluginUnloadListener {
-    /** This listener method is called whenever a {@link CorundumPlugin} is unloaded. When a plugin is unloaded, it is first {@link PluginDisableListener#onPluginDisable(CorundumPlugin) disabled}
-     * (if it had not been disabled already) and its data is removed from the RAM, freeing the jar file for modification or deletion, but making the plugin's code inaccessible
-     * to Corundum and its plugins.
+public interface PluginUnloadListener extends CorundumListener {
+    /** This listener method is called whenever TODO
      * 
-     * @param plugin
-     *            is the plugin that is currently being unloaded.
-     * @return @return the {@link EventResult} describing any changes to this event's properties. */
-    public EventResult onPluginUnload(CorundumPlugin plugin);
+     * @param event
+     *            is an {@link Event} representing TODO */
+    public void onPluginUnload(PluginUnloadEvent event);
+
+    public static class PluginUnloadEvent extends PluginEvent<PluginUnloadEvent> {
+        public PluginUnloadEvent(CorundumPlugin plugin) {
+            super(plugin);
+        }
+
+        @Override
+        public PluginUnloadEvent runOn(CorundumServer server) {
+            super.runOn(server);
+
+            return runAs(server, PluginUnloadEvent.class, new ListenerCaller<PluginUnloadEvent>() {
+                @Override
+                public void callListener(CorundumListener listener, PluginUnloadEvent event) {
+                    ((PluginUnloadListener) listener).onPluginUnload(event);
+                }
+            });
+        }
+    }
 }

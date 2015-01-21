@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.corundummc.CorundumServer;
-import org.corundummc.listeners.CommandListener;
-import org.corundummc.listeners.ListenerCaller;
-import org.corundummc.listeners.results.EventResult;
+import org.corundummc.hub.CorundumThread;
+import org.corundummc.listeners.CommandListener.CommandEvent;
+import org.corundummc.plugins.PluginThread;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -109,18 +109,11 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
     // instance utilities
     @Override
-    public void command(final String command) {
-        final Player _this = this;
+    public void command(String command) {
+        CommandEvent event = new CommandEvent(this, command).runOn(CorundumServer.getInstance());
 
-        EventResult eventResult = CorundumServer.getInstance().generateEvent(new ListenerCaller<CommandListener, EventResult>() {
-            @Override
-            public EventResult generateEvent(CommandListener listener, EventResult result) {
-                return listener.onCommand(_this, command, result);
-            }
-        });
-
-        if (!eventResult.isCancelled()
-                && this.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
+        if (!event.isCancelled()
+                && canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
                         .getRequiredPermissionLevel(), command)) {
             CommandBase
                     .func_147176_a(this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I
@@ -152,7 +145,14 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
     @Override
     public void message(String message) {
-        this.addChatMessage(new ChatComponentText(message));
+        // if applicable, add the plugin's prefix to this message
+        if (Thread.currentThread() instanceof PluginThread)
+            message = ((PluginThread) Thread.currentThread()).getPlugin().getPrefix() + message;
+        // otherwise, if applicable, add the server's prefix to this message
+        else if (Thread.currentThread() instanceof CorundumThread)
+            message = ((CorundumThread) Thread.currentThread()).getServer().getPrefix() + message;
+
+        addChatMessage(new ChatComponentText(message));
     }
 
     // overridden properties
