@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.corundummc.exceptions.CIE;
+import org.corundummc.exceptions.CorundumException;
 
 public class CorundumThread extends Thread {
     private final File jar_file;
@@ -155,11 +156,22 @@ public class CorundumThread extends Thread {
     }
 
     public static CorundumThread currentThread() {
-        return (CorundumThread) Thread.currentThread();
+        if (Thread.currentThread() instanceof CorundumThread)
+            return (CorundumThread) Thread.currentThread();
+        else if (CorundumHub.isMainThread())
+            throw new CIE("The Corundum Hub attempted to retrieve the current CorundumThread from the main thread!",
+                    "attempt by the main thread to get the current CorundumThread");
+        else
+            throw new CorundumException("A plugin tried to retrieve the current CorundumThread in a non-Corundum Thread!",
+                    "attempt to get a non-existant current CorundumThread");
     }
 
     public String getActor() {
         return server.toString();
+    }
+
+    public String getPrefix() {
+        return server.getPrefix();
     }
 
     public Server getServer() {

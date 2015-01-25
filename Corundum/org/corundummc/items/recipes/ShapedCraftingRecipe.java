@@ -23,7 +23,7 @@ public class ShapedCraftingRecipe extends Recipe {
     public ShapedCraftingRecipe(IDedType[] materials, IDedType resulting_material, int number_of_resulting_items) {
         super(materials, resulting_material, number_of_resulting_items);
 
-        if (materials.length != 9 && materials.length != 4) {
+        if (materials.length != 9 && materials.length != 4 && materials.length != 1) {
             materials = null;
             throw new IncompleteCraftingRecipeMaterialsException("The materials for this crafting recipe are not in a 2x2 or 3x3 formation!", materials, "which makes "
                     + resulting_material);
@@ -34,18 +34,17 @@ public class ShapedCraftingRecipe extends Recipe {
         this(material11, material21, material12, material22, resulting_material, 1);
     }
 
-    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material12, IDedType material22, IDedType resulting_material,
-            int number_of_resulting_items) {
+    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material12, IDedType material22, IDedType resulting_material, int number_of_resulting_items) {
         super(new IDedType[] { material11, material21, material12, material22 }, resulting_material, number_of_resulting_items);
     }
 
-    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material31, IDedType material12, IDedType material22,
-            IDedType material32, IDedType material13, IDedType material23, IDedType material33, IDedType resulting_material) {
+    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material31, IDedType material12, IDedType material22, IDedType material32,
+            IDedType material13, IDedType material23, IDedType material33, IDedType resulting_material) {
         this(material11, material21, material31, material12, material22, material32, material13, material23, material33, resulting_material, 1);
     }
 
-    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material31, IDedType material12, IDedType material22,
-            IDedType material32, IDedType material13, IDedType material23, IDedType material33, IDedType resulting_material, int number_of_resulting_items) {
+    public ShapedCraftingRecipe(IDedType material11, IDedType material21, IDedType material31, IDedType material12, IDedType material22, IDedType material32,
+            IDedType material13, IDedType material23, IDedType material33, IDedType resulting_material, int number_of_resulting_items) {
         super(new IDedType[] { material11, material21, material31, material12, material22, material32, material13, material23, material33 }, resulting_material,
                 number_of_resulting_items);
     }

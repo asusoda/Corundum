@@ -12,6 +12,8 @@
 
 package org.corundummc.items;
 
+import net.minecraft.util.StatCollector;
+
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.items.Item.ItemType;
@@ -44,13 +46,8 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
     private static final ItemType[] allHoeTypes = new ItemType[] { ItemType.WOODEN_HOE, ItemType.STONE_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.DIAMOND_HOE };
 
     public Enchantment(int level, EnchantmentType type) {
-        if (!(level > type.getMaxLevel())) {
-            this.level = level;
-            this.type = type;
-        } else {
-            throw new EnchantmentLevelException(capitalize(CorundumThread.currentThread().getActor())
-                    + " attempted to create an enchantment with a level higher than the maximum possible for it's enchantment type!", type, level);
-        }
+        this.level = level;
+        this.type = type;
     }
 
     public int getLevel() {
@@ -96,60 +93,11 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
 
         @Override
         public String getName() {
-            // the `substring()` call removes the level from the end of the name
-            return enchantmentMC.getName().substring(0, enchantmentMC.getName().lastIndexOf(" "));
+            return StatCollector.translateToLocal(enchantmentMC.getName());
         }
 
         public static EnchantmentType getByID(int id) {
             return IDedType.getByID(EnchantmentType.class, id);
         }
     }
-
-    public static class EnchantmentException extends CorundumException {
-        private static final long serialVersionUID = 3077901265588091216L;
-
-        public EnchantmentException(String message, String issue, Object... additional_information) {
-            super(message, issue, additional_information);
-        }
-    }
-
-    public static class EnchantmentLevelException extends EnchantmentException {
-        private static final long serialVersionUID = -6386265180756091076L;
-
-        private final EnchantmentType enchantment_type;
-        private final byte level_attempted;
-
-        public EnchantmentLevelException(String message, EnchantmentType enchantment_type, int level_attempted, Object... additional_information) {
-            super(message, "attempt to set " + aOrAn(enchantment_type.toString()) + " to level " + level_attempted, "Enchantment type=" + enchantment_type.toString(),
-                    "level=" + level_attempted, additional_information);
-
-            this.enchantment_type = enchantment_type;
-            this.level_attempted = (byte) level_attempted;
-        }
-
-    }
-
-    public static class EnchantmentIncompatibleItemException extends EnchantmentException {
-        private static final long serialVersionUID = 799394753562709707L;
-
-        private final EnchantmentType enchantment_type;
-        private final Item item;
-
-        public EnchantmentIncompatibleItemException(String message, EnchantmentType enchantment_type, Item item, Object[] additional_information) {
-            super(message, "attempt to place an incompatible enchantment (" + enchantment_type.toString() + ") onto " + aOrAn(item.getType().toString()), "Enchantment type="
-                    + enchantment_type.toString(), "item=" + item.toString(), additional_information);
-
-            this.enchantment_type = enchantment_type;
-            this.item = item;
-        }
-
-        public EnchantmentType getEnchantmentType() {
-            return enchantment_type;
-        }
-
-        public Item getItem() {
-            return item;
-        }
-    }
-
 }

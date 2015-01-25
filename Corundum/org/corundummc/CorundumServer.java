@@ -46,8 +46,10 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
 
-    private final Version VERSION = new Version("pre-α"), MCVERSION = new Version("1.7.10");
+    private final Version VERSION = new Version("pre-α"), MC_VERSION = new Version("1.7.10");
     private final File PLUGINS_FOLDER = new File("plugins");
+
+    private String name, prefix;
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
@@ -80,23 +82,23 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
 
-    public static final String CONFIG_FILE_NAME = "settings.json";
+    // config variable names
+    private String config_file_name = "settings.json";
 
-    // config variable names start
-
-    /** This is the variable name for changing the name of the server */
-    public static final String SERVER_NAME_VAR = "name";
-
-    // config variable names end
-
-    private SettingsManager settings = new SettingsManager(new File(CONFIG_FILE_NAME), SERVER_NAME_VAR, "Corundum");
+    private SettingsManager settings = new SettingsManager(new File(config_file_name), name, "Corundum");
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
-     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}. */
-    public CorundumServer() {
+     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
+     * 
+     * @param name
+     *            is the name of this {@link CorundumServer}. */
+    public CorundumServer(String name) {
         // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
         super(new File("."));
+
+        this.name = name;
+        prefix = "[" + name + "] ";
     }
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
@@ -285,11 +287,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     }
 
     public void enableGUI() {
-        setGuiEnabled();
-    }
-
-    @Override
-    public void setGuiEnabled() {
         if (this.argInfo.hasArg("--mc-gui", "-mc-g") || !corundum_GUI_enabled) {
             if (!corundum_GUI_enabled) {
                 System.out
@@ -306,14 +303,8 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         }
     }
 
-    @Override
-    public boolean getGuiEnabled() {
-        return this.corundum_GUI_enabled ? true : super.getGuiEnabled();
-    }
-
-    public boolean getUsingGui() {
-        // Necessary as getGuiEnabled will be obfuscated.
-        return this.getGuiEnabled();
+    public boolean isUsingGUI() {
+        return getGuiEnabled() || corundum_GUI_enabled;
     }
 
     public GameMode getDefaultGameMode() {
@@ -336,12 +327,12 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         return super.getAllowNether();
     }
 
-    public boolean getIsHardcore() {
+    public boolean isInHardcoreMode() {
         // This method is necessary because super.isHardcore() will be obfuscated!
         return super.isHardcore();
     }
 
-    public boolean isRunningGUI() {
+    public boolean isUsingMCGUI() {
         return getGuiEnabled();
     }
 
@@ -349,7 +340,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         return super.isSnooperEnabled();
     }
 
-    public boolean isUsingCommandBlocks() {
+    public boolean canUseCommandBlocks() {
         return isCommandBlockEnabled();
     }
 
@@ -409,12 +400,17 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
 
     @Override
     public Version getMCVersion() {
-        return MCVERSION;
+        return MC_VERSION;
     }
 
     @Override
     public String getName() {
-        return settings.getString(SERVER_NAME_VAR);
+        return settings.getString(name);
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
     }
 
     @Override

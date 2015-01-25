@@ -9,7 +9,7 @@ public class CorundumGui {
     private CorundumServer corundumServer;
 
     public CorundumGui(CorundumServer server) {
-        if (server.isRunningGUI()) {
+        if (server.isUsingMCGUI()) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {

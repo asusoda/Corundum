@@ -87,4 +87,8 @@ public class PluginThread extends CorundumThread {
     public CorundumPlugin getPlugin() {
         return this.plugin;
     }
+
+    public final String getPrefix() {
+        return plugin.getPrefix();
+    }
 }

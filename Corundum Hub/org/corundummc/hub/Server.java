@@ -9,6 +9,8 @@ public interface Server {
 
     public String getName();
 
+    public String getPrefix();
+
     public Version getVersion();
 
     public void start(String[] arguments);
