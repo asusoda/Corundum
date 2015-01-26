@@ -12,15 +12,16 @@
 
 package org.corundummc.world;
 
+import org.corundummc.biomes.Biome.BiomeType;
+import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.myList.myList;
-import org.corundummc.world.Biome.BiomeType;
 
-public class Chunk {
+public class Chunk implements MCEquivalent<net.minecraft.world.chunk.Chunk> {
     private static myList<Chunk> loaded_chunks = new myList<>();
 
     private final net.minecraft.world.chunk.Chunk chunkMC;
 
-    public Chunk(net.minecraft.world.chunk.Chunk chunkMC) {
+    Chunk(net.minecraft.world.chunk.Chunk chunkMC) {
         this.chunkMC = chunkMC;
     }
 
@@ -34,14 +35,18 @@ public class Chunk {
     public BiomeType[][] getBiomeMap() {
         BiomeType[][] results = new BiomeType[16][16];  // all chunks are 16x16 (along x and z axes); the biome map reflects that
 
-        for (int i = 0; i < 16; i++)
-            for (int j = 0; j < 16; j++)
+        for (int x = 0; x < 16; x++)
+            for (int z = 0; z < 16; z++)
                 /* Minecraft's "biomeArray" is a byte[256] in which each byte represents the I.D. of the biome at that column of blocks (since biomes are the same at any y)
                  * and each index represents (x*16 + z) where x and z are the x- and z-coordinates of the 1x1 vertical column of blocks */
                 // TODO TEST: make sure it's x*16 + z and not z*16 + x
-                results[i][j] = BiomeType.values()[chunkMC.getBiomeArray()[i * 16 + j]];
+                results[x][z] = BiomeType.getByID(chunkMC.getBiomeArray()[x * 16 + z]);
 
         return results;
+    }
+
+    public net.minecraft.world.chunk.Chunk MC() {
+        return chunkMC;
     }
 
     public Location getLocation() {

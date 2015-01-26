@@ -14,6 +14,7 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
+import org.corundummc.biomes.Biome;
 import org.corundummc.utils.types.HoldableType;
 
 public class Block {
@@ -666,9 +667,7 @@ public class Block {
      * 
      * @return the {@link Biome} that this block is in. */
     public Biome getBiome() {
-        int posXInChunk = this.location.getBlockX() % 16;
-        int posZInChunk = this.location.getBlockZ() % 16;
-        return new Biome(getChunk().getBiomeMap()[posXInChunk][posZInChunk]);
+        return getLocation().getBiome();
     }
 
     public Chunk getChunk() {

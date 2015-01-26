@@ -103,8 +103,6 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
      * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
     @SuppressWarnings("unchecked")
     public static <MC extends net.minecraft.entity.Entity> Entity<?, MC, ?> fromMC(MC entityMC) {
-        /* the EntityType<?, ?, ?> from EntityType.getByID here is casted to an EntityType raw type to allow the fromMC() call to work; without that cast, fromMC() demands an
-         * instance of MC for its argument, which we cannot get because MC cannot be used in a static context */
         return ((EntityType<?, MC, ?>) EntityType.getByID(EntityList.getEntityID(entityMC))).fromMC(entityMC);
     }
 
@@ -129,7 +127,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMC((WorldServer) entityMC.worldObj));
     }
 
-    // instance utilities
+    // instance utilities (TODO: add more)
     public Velocity getVelocity() {
         return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
     }

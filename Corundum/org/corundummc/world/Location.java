@@ -12,6 +12,8 @@
 
 package org.corundummc.world;
 
+import org.corundummc.biomes.Biome;
+
 public class Location {
     private double x, y, z;
     private World world;
@@ -21,6 +23,10 @@ public class Location {
         this.y = y;
         this.z = z;
         this.world = world;
+    }
+
+    public Biome<?, ?, ?> getBiome() {
+        return Biome.fromLocation(this);
     }
 
     public int getBlockX() {
@@ -33,6 +39,10 @@ public class Location {
 
     public int getBlockZ() {
         return (int) z;
+    }
+
+    public Chunk getChunk() {
+        return new Chunk(world.MC().getChunkFromBlockCoords(getBlockX(), getBlockZ()));
     }
 
     public double getX() {
