@@ -35,7 +35,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, T extends Biome.BiomeType<T, MC, S>> extends Typed<T> {
     /** Minecraft has no Biome object; the best way I thought to represent a Biome without using lots of C.P.U. and memory is to just store the location of one block in the
      * biome; this could allow us to calculate whether or not other points are in this same biome and other properties will likely come from the biome's type */
-    private Location location;
+    private final Location location;
 
     protected Biome(Location location) {
         this.location = location;
@@ -45,10 +45,13 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
         // TODO
     }
 
-    public abstract static class BiomeType<S extends BiomeType<S, MC, I>, MC extends BiomeGenBase, I extends Biome<I, MC, S>> extends IDedType<S> implements
-            MCEquivalentType<MC, I> {
-        protected BiomeType(int id) {
-            super(id);
+    public abstract static class BiomeType<S extends BiomeType<S, MC, I>, MC extends BiomeGenBase, I extends Biome<I, MC, S>> extends IDedType<S> {
+        protected MC biomeMC;
+
+        protected BiomeType(MC biomeMC) {
+            super(biomeMC.biomeID);
+
+            this.biomeMC = biomeMC;
 
             addValueAs(BiomeType.class);
         }
@@ -57,6 +60,10 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
         public abstract I fromLocation(Location location);
 
         // overridden utilities
+        @Override
+        public String getName() {
+            return biomeMC.biomeName.replaceAll("(?<[a-z])(?=[A-Z])", " ");
+        }
 
         // static utilities
         /** <b><u>This method may be ignored by plugin developers; it is not likely to be of use to you.</b></u><br>
@@ -66,8 +73,8 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
          *            is the Minecraft Entity that will wrapped with a new {@link Entity Corundum Entity} <tt>Object</tt>.
          * @return a new Entity created using the given {@link net.minecraft.entity.Entity Minecraft Entity}. */
         @SuppressWarnings("unchecked")
-        public static <MC extends BiomeGenBase> Biome<?, MC, ?> fromMC(MC biomeMC) {
-            return ((BiomeType<?, MC, ?>) BiomeType.getByID(biomeMC.biomeID)).fromMC(biomeMC);
+        public static <MC extends BiomeGenBase> BiomeType<?, MC, ?> fromMC(MC biomeMC) {
+            return (BiomeType<?, MC, ?>) BiomeType.getByID(biomeMC.biomeID);
         }
 
         // pseudo-enum utilities
