@@ -13,6 +13,7 @@
 package org.corundummc.world;
 
 import org.corundummc.biomes.Biome;
+import org.corundummc.biomes.Biome.BiomeType;
 
 public class Location {
     private double x, y, z;
@@ -26,8 +27,10 @@ public class Location {
     }
 
     public Biome<?, ?, ?> getBiome() {
-        return Biome.fromLocation(this);
+        return BiomeType.getByID(getChunk().MC().getBiomeArray()[getBlockX() * 16 + getBlockZ()]).fromLocation(this);
     }
+
+    /* public Block getBlock() { return Block.fromLocation(this); } */
 
     public int getBlockX() {
         return (int) x;
@@ -44,6 +47,8 @@ public class Location {
     public Chunk getChunk() {
         return new Chunk(world.MC().getChunkFromBlockCoords(getBlockX(), getBlockZ()));
     }
+
+    /* TODO: public Block getHighestBlock(BlockFilter... filters) */
 
     public double getX() {
         return x;

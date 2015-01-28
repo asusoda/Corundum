@@ -11,6 +11,8 @@ public class NetherBiome extends Biome<NetherBiome, BiomeGenHell, NetherBiome.Ne
         super(location);
     }
 
+    /** This class represents one single {@link BiomeType}; classes like this are used instead of simple instances of their parent types because of the self-parameterization
+     * <tt>S</tt>. */
     static class NetherBiomeType extends BiomeType<NetherBiomeType, BiomeGenHell, NetherBiome> {
         public static final NetherBiomeType TYPE = new NetherBiomeType();
 
@@ -26,7 +28,6 @@ public class NetherBiome extends Biome<NetherBiome, BiomeGenHell, NetherBiome.Ne
 
     @Override
     public NetherBiomeType getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return NetherBiomeType.TYPE;
     }
 }

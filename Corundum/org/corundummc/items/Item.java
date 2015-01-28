@@ -410,12 +410,10 @@ public class Item {
                     return ItemType.DIAMOND;
                 case IRON:
                     return ItemType.IRON_INGOT;
-                case STONE:
-                    return BlockType.COBBLESTONE;
+                    /* TODO TEMP CMT case STONE: return BlockType.COBBLESTONE; */
                 case GOLD:
                     return ItemType.GOLD_INGOT;
-                case WOOD:
-                    return BlockType.OAK_WOOD_PLANKS;
+                    /* TODO TEMP CMT case WOOD: return BlockType.OAK_WOOD_PLANKS; */
                 default:
                     throw new CIE("This tool is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
                             + CorundumServer.getInstance().getMCVersion() + "?", "unidentified tool material", "material=" + material.toString());
@@ -480,8 +478,8 @@ public class Item {
 
         @Override
         public String getName() {
-            /* TODO: this only works for items that do not change names based on their data! ItemTypes with the same name but different data values will have the same name with
-             * this method, so we need to figure out how to use the version of this method that takes in an ItemStack to our advantage. */
+            /* TODO: this only works for items that do not change names based on their data! ItemTypes with the same name but different data values will have the same name
+             * with this method, so we need to figure out how to use the version of this method that takes in an ItemStack to our advantage. */
             return StatCollector.translateToLocal(itemTypeMC.getUnlocalizedName());
         }
 

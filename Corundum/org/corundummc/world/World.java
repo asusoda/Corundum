@@ -75,7 +75,8 @@ public class World implements Matchable<World>, MCEquivalent<WorldServer> {
     }
 
     public void setBlockData(Location blockLocation, byte newData) {
-        this.worldMC.setBlockMetadata(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ(), newData, 3);
+        worldMC.setBlockMetadata(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ(), newData, 3 /* 3 = 1 & 2 = update block and send update
+                                                                                                                                   * info to client */);
     }
 
     public enum WorldType {

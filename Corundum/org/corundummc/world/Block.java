@@ -14,413 +14,124 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
+import net.minecraft.world.WorldServer;
+
+import org.apache.commons.lang3.reflect.Typed;
 import org.corundummc.biomes.Biome;
+import org.corundummc.entities.Entity.EntityType;
+import org.corundummc.exceptions.CorundumException;
+import org.corundummc.hub.CorundumThread;
+import org.corundummc.plugins.PluginThread;
+import org.corundummc.utils.interfaces.MCEquivalent;
+import org.corundummc.utils.interfaces.MCEquivalentType;
 import org.corundummc.utils.types.HoldableType;
 
-public class Block {
-    private BlockType type;
-    private byte data;
+public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> implements Typed<T> {
     private Location location;
+
+    protected Block(Location location) {
+        this.location = location;
+
+        /* TODO: if the Block at this location isn't the same type as this block, make it so */
+    }
 
     /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that
-     * they all have the same I.D. */
-    public static final class BlockType extends HoldableType<BlockType> {
-        public static final BlockType AIR = new BlockType(0, -1),
-                // stone types
-                STONE = new BlockType(0),
-                GRANITE = new BlockType(),
-                POLISHED_GRANITE = new BlockType(),
-                DIORITE = new BlockType(),
-                POLISHED_DIORITE = new BlockType(),
-                ANDESITE = new BlockType(),
-                POLISHED_ANDESITE = new BlockType(),
-                // END stone types
-                GRASS = new BlockType(-1),
-                // dirt types
-                DIRT = new BlockType(0),
-                COARSE_DIRT = new BlockType(),
-                PODZOL = new BlockType(),
-                // END dirt types
-                COBBLESTONE = new BlockType(-1),
-                // planks
-                OAK_WOOD_PLANKS = new BlockType(0),
-                SPRUCE_WOOD_PLANKS = new BlockType(),
-                BIRCH_WOOD_PLANKS = new BlockType(),
-                JUNGLE_WOOD_PLANKS = new BlockType(),
-                ACACIA_WOOD_PLANKS = new BlockType(),
-                DARK_OAK_WOOD_PLANKS = new BlockType(),
-                // END planks
-                // saplings
-                OAK_SAPLING = new BlockType(0),
-                SPRUCE_SAPLING = new BlockType(),
-                BIRCH_SAPLING = new BlockType(),
-                JUNGLE_SAPLING = new BlockType(),
-                ACACIA_SAPLING = new BlockType(),
-                DARK_OAK_SAPLING = new BlockType(),
-                // END saplings
-                BEDROCK = new BlockType(-1),
-                FLOWING_WATER = new BlockType(),
-                STILL_WATER = new BlockType(),
-                FLOWING_LAVA = new BlockType(),
-                STILL_LAVA = new BlockType(),
-                // sand types
-                SAND = new BlockType(0),
-                RED_SAND = new BlockType(12),
-                // END sand types
-                GRAVEL = new BlockType(-1),
-                GOLD_ORE = new BlockType(),
-                IRON_ORE = new BlockType(),
-                COAL_ORE = new BlockType(),
-                // logs
-                OAK_LOG = new BlockType(0),
-                SPRUCE_LOG = new BlockType(),
-                BIRCH_LOG = new BlockType(),
-                JUNGLE_LOG = new BlockType(),
-                // END logs
-                // leaves
-                OAK_LEAVES = new BlockType(0),
-                SPRUCE_LEAVES = new BlockType(),
-                BIRCH_LEAVES = new BlockType(),
-                JUNGLE_LEAVES = new BlockType(),
-                // END leaves
-                // sponges
-                SPONGE = new BlockType(0),
-                WET_SPONGE = new BlockType(19),
-                // END sponges
-                GLASS = new BlockType(-1),
-                LAPIS_LAZULI_ORE = new BlockType(),
-                LAPIS_LAZULI_BLOCK = new BlockType(),
-                DISPENSER = new BlockType(),
-                // sandstone types
-                SANDSTONE = new BlockType(0),
-                CHISELED_SANDSTONE = new BlockType(),
-                SMOOTH_SANDSTONE = new BlockType(),
-                // END sandstone types
-                NOTE_BLOCK = new BlockType(-1),
-                BED = new BlockType(),
-                POWEREED_RAIL = new BlockType(),
-                DETECTOR_RAIL = new BlockType(),
-                STICKY_PISTON = new BlockType(),
-                COBWEB = new BlockType(),
-                // shrubbery
-                DEAD_SHRUB = new BlockType(0),
-                TALL_GRASS = new BlockType(),
-                FERN = new BlockType(),
-                // END shrubbery
-                // TODO: is there a difference between this DEAD_BUSH (I.D. 31) and the DEAD_SHRUB (I.D. 31:0)?
-                DEAD_BUSH = new BlockType(-1),
-                PISTON = new BlockType(),
-                PISTON_ARM = new BlockType(),
-                // wool colors
-                WHITE_WOOL = new BlockType(0),
-                ORANGE_WOOL = new BlockType(),
-                MAGENTA_WOOL = new BlockType(),
-                LIGHT_BLUE_WOOL = new BlockType(),
-                YELLOW_WOOL = new BlockType(),
-                LIGHT_GREEN_WOOL = new BlockType(),
-                PINK_WOOL = new BlockType(),
-                DARK_GRAY_WOOL = new BlockType(),
-                LIGHT_GRAY_WOOL = new BlockType(),
-                CYAN_WOOL = new BlockType(),
-                PURPLE_WOOL = new BlockType(),
-                DARK_BLUE_WOOL = new BlockType(),
-                BROWN_WOOL = new BlockType(),
-                DARK_GREEN_WOOL = new BlockType(),
-                RED_WOOL = new BlockType(),
-                BLACK_WOOL = new BlockType(),
-                // END wool colors
-                DANDELION = new BlockType(37, 0),  // yes, Minecraft I.D.s skip 36; I don't know why
-                // small flowers
-                POPPY = new BlockType(0),
-                BLUE_ORCHID = new BlockType(),
-                ALLIUM = new BlockType(),
-                AZURE_BLUET = new BlockType(),
-                RED_TULIP = new BlockType(),
-                ORANGE_TULIP = new BlockType(),
-                WHITE_TULIP = new BlockType(),
-                PINK_TULIP = new BlockType(),
-                OXEYE_DAISY = new BlockType(),
-                // END small flowers
-                BROWN_MUSHROOM = new BlockType(-1),
-                RED_MUSHROOM = new BlockType(),
-                GOLD_BLOCK = new BlockType(),
-                IRON_BLOCK = new BlockType(),
-                // double slabs
-                DOUBLE_STONE_SLAB = new BlockType(0),
-                DOUBLE_SANDSTONE_SLAB = new BlockType(),
-                DOUBLE_OAK_SLAB = new BlockType(),
-                DOUBLE_COBBLESTONE_SLAB = new BlockType(),
-                DOUBLE_BRICK_SLAB = new BlockType(),
-                DOUBLE_STONE_BRICK_SLAB = new BlockType(),
-                DOUBLE_NETHER_BRICK_SLAB = new BlockType(),
-                DOUBLE_SQUARTZ_SLAB = new BlockType(),
-                // END double slabs
-                // slabs
-                STONE_SLAB = new BlockType(0),
-                SANDSTONE_SLAB = new BlockType(),
-                OAK_SLAB = new BlockType(),
-                COBBLESTONE_SLAB = new BlockType(),
-                BRICK_SLAB = new BlockType(),
-                STONE_BRICK_SLAB = new BlockType(),
-                NETHER_BRICK_SLAB = new BlockType(),
-                QUARTZ_SLAB = new BlockType(),
-                // END slabs
-                BRICKS = new BlockType(-1),
-                TNT = new BlockType(),
-                BOOKSHELF = new BlockType(),
-                MOSS_STONE = new BlockType(),
-                OBSIDIAN = new BlockType(),
-                TORCH = new BlockType(),
-                FIRE = new BlockType(),
-                MONSTER_SPAWNER = new BlockType(),
-                OAK_STAIRS = new BlockType(),
-                CHEST = new BlockType(),
-                REDSTONE_WIRE = new BlockType(),
-                DIAMOND_ORE = new BlockType(),
-                DIAMOND_BLOCK = new BlockType(),
-                CRAFTING_TABLE = new BlockType(),
-                WHEAT = new BlockType(),
-                FARMLAND = new BlockType(),
-                FURNACE = new BlockType(),
-                BURNING_FURNACE = new BlockType(),
-                SIGN_POST = new BlockType(),
-                OAK_DOOR = new BlockType(),
-                LADDER = new BlockType(),
-                RAIL = new BlockType(),
-                COBBLESTONE_STAIRS = new BlockType(),
-                WALL_SIGN = new BlockType(),
-                LEVER = new BlockType(),
-                STONE_PRESSURE_PLATE = new BlockType(),
-                IRON_DOOR = new BlockType(),
-                WOODEN_PRESSURE_PLATE = new BlockType(),
-                REDSTONE_ORE = new BlockType(),
-                GLOWING_REDSTONE_ORE = new BlockType(),
-                UNPOWERED_REDSTONE_TORCH = new BlockType(),
-                POWERED_REDSTONE_TORCH = new BlockType(),
-                STONE_BUTTON = new BlockType(),
-                SNOW = new BlockType(),
-                ICE = new BlockType(),
-                SNOW_BLOCK = new BlockType(),
-                CACTUS = new BlockType(),
-                CLAY = new BlockType(),
-                SUGAR_CANES = new BlockType(),
-                JUKEBOX = new BlockType(),
-                OAK_FENCE = new BlockType(),
-                PUMPKIN = new BlockType(),
-                NETHERRACK = new BlockType(),
-                SOUL_SAND = new BlockType(),
-                GLOWSTONE = new BlockType(),
-                NETHER_PORTAL = new BlockType(),
-                JACK_O_LANTERN = new BlockType(),
-                CAKE = new BlockType(),
-                UNPOWERED_REDSTONE_REPEATER = new BlockType(),
-                POWERED_REDSTONE_REPEATER = new BlockType(),
-                // stained glass
-                WHITE_STAINED_GLASS = new BlockType(0),
-                ORANGE_STAINED_GLASS = new BlockType(),
-                MAGENTA_STAINED_GLASS = new BlockType(),
-                LIGHT_BLUE_STAINED_GLASS = new BlockType(),
-                YELLOW_STAINED_GLASS = new BlockType(),
-                LIGHT_GREEN_STAINED_GLASS = new BlockType(),
-                PINK_STAINED_GLASS = new BlockType(),
-                DARK_GRAY_STAINED_GLASS = new BlockType(),
-                LIGHT_GRAY_STAINED_GLASS = new BlockType(),
-                CYAN_STAINED_GLASS = new BlockType(),
-                PURPLE_STAINED_GLASS = new BlockType(),
-                DARK_BLUE_STAINED_GLASS = new BlockType(),
-                BROWN_STAINED_GLASS = new BlockType(),
-                DARK_GREEN_STAINED_GLASS = new BlockType(),
-                RED_STAINED_GLASS = new BlockType(),
-                BLACK_STAINED_GLASS = new BlockType(),
-                // END stained glass
-                WOODEN_TRAPDOOR = new BlockType(-1),
-                // monster eggs
-                STONE_MONSTER_EGG = new BlockType(0),
-                COBBLESTONE_MONSTER_EGG = new BlockType(),
-                STONE_BRICK_MONSTER_EGG = new BlockType(),
-                MOSSY_STONE_BRICK_MONSTER_EGG = new BlockType(),
-                CRACKED_STONE_BRICK_MONSTER_EGG = new BlockType(),
-                CHISELED_STONE_BRICK_MONSTER_EGG = new BlockType(),
-                // END monster eggs
-                // stone bricks
-                STONE_BRICKS = new BlockType(0),
-                MOSSY_STONE_BRICKS = new BlockType(),
-                CRACKED_STONE_BRICKS = new BlockType(),
-                CHISELED_STONE_BRICKS = new BlockType(),
-                // END stone bricks
-                GIANT_RED_MUSHROOM = new BlockType(-1),
-                GIANT_BROWN_MUSHROOM = new BlockType(),
-                IRON_BARS = new BlockType(),
-                GLASS_PANE = new BlockType(),
-                MELON = new BlockType(),
-                PUMPKIN_STEM = new BlockType(),
-                MELON_STEM = new BlockType(),
-                VINES = new BlockType(),
-                OAK_FENCE_GATE = new BlockType(),
-                BRICK_STAIRS = new BlockType(),
-                STONE_BRICK_STAIRS = new BlockType(),
-                MYCELIUM = new BlockType(),
-                LILY_PAD = new BlockType(),
-                NETHER_BRICK = new BlockType(),
-                NETHER_BRICK_FENCE = new BlockType(),
-                NETHER_BRICK_STAIRS = new BlockType(),
-                NETHER_WARTS = new BlockType(),
-                ENCHANTMENT_TABLE = new BlockType(),
-                BREWING_STAND = new BlockType(),
-                CAULDRON = new BlockType(),
-                END_PORTAL = new BlockType(),
-                END_PORTAL_FRAME = new BlockType(),
-                END_STONE = new BlockType(),
-                DRAGON_EGG = new BlockType(),
-                UNPOWERED_REDSTONE_LAMP = new BlockType(),
-                POWERED_REDSTONE_LAMP = new BlockType(),
-                // double wood slabs
-                DOUBLE_OAK_WOOD_SLAB = new BlockType(0),
-                DOUBLE_SPRUCE_WOOD_SLAB = new BlockType(),
-                DOUBLE_BIRCH_WOOD_SLAB = new BlockType(),
-                DOUBLE_JUNGLE_WOOD_SLAB = new BlockType(),
-                DOUBLE_ACACIA_WOOD_SLAB = new BlockType(),
-                DOUBLE_DARK_OAK_WOOD_SLAB = new BlockType(),
-                // END double wood slabs
-                // wood slabs
-                OAK_WOOD_SLAB = new BlockType(0),
-                SPRUCE_WOOD_SLAB = new BlockType(),
-                BIRCH_WOOD_SLAB = new BlockType(),
-                JUNGLE_WOOD_SLAB = new BlockType(),
-                ACACIA_WOOD_SLAB = new BlockType(),
-                DARK_OAK_WOOD_SLAB = new BlockType(),
-                // END wood slabs
-                COCOA = new BlockType(-1),
-                SANDSTONE_STAIRS = new BlockType(),
-                EMERALD_ORE = new BlockType(),
-                ENDER_CHEST = new BlockType(),
-                TRIPWIRE_HOOK = new BlockType(),
-                TRIPWIRE = new BlockType(),
-                EMERALD_BLOCK = new BlockType(),
-                SPRUCE_WOOD_STAIRS = new BlockType(),
-                BIRCH_WOOD_STAIRS = new BlockType(),
-                JUNGLE_WOOD_STAIRS = new BlockType(),
-                COMMAND_BLOCK = new BlockType(),
-                BEACON = new BlockType(),
-                // cobblestone walls
-                COBBLESTONE_WALL = new BlockType(0),
-                MOSSY_COBBLESTONE_WALLS = new BlockType(1),
-                // END cobblestone walls
-                FLOWER_POT = new BlockType(-1),
-                CARROTS = new BlockType(),
-                POTATOES = new BlockType(),
-                WOODEN_BUTTON = new BlockType(),
-                MOB_HEAD = new BlockType(),
-                ANVIL = new BlockType(),
-                TRAPPED_CHEST = new BlockType(),
-                GOLD_PRESSURE_PLATE = new BlockType(),
-                IRON_PRESSURE_PLATE = new BlockType(),
-                UNPOWERED_REDSTONE_COMPARATOR = new BlockType(),
-                POWERED_REDSTONE_COMPARATOR = new BlockType(),
-                DAYLIGHT_SENSOR = new BlockType(),
-                REDSTONE_BLOCK = new BlockType(),
-                QUARTZ_ORE = new BlockType(),
-                HOPPER = new BlockType(),
-                // quartz
-                QUARTZ_BLOCK = new BlockType(0),
-                CHISELED_QUARTZ_BLOCK = new BlockType(),
-                PILLAR_QUARTZ_BLOCK = new BlockType(),
-                // END quartz
-                QUARTZ_STAIRS = new BlockType(-1),
-                ACTIVATOR_RAIL = new BlockType(),
-                DROPPER = new BlockType(),
-                // stained clay
-                WHITE_STAINED_CLAY = new BlockType(0),
-                ORANGE_STAINED_CLAY = new BlockType(),
-                MAGENTA_STAINED_CLAY = new BlockType(),
-                LIGHT_BLUE_STAINED_CLAY = new BlockType(),
-                YELLOW_STAINED_CLAY = new BlockType(),
-                LIGHT_GREEN_STAINED_CLAY = new BlockType(),
-                PINK_STAINED_CLAY = new BlockType(),
-                DARK_GRAY_STAINED_CLAY = new BlockType(),
-                LIGHT_GRAY_STAINED_CLAY = new BlockType(),
-                CYAN_STAINED_CLAY = new BlockType(),
-                PURPLE_STAINED_CLAY = new BlockType(),
-                DARK_BLUE_STAINED_CLAY = new BlockType(),
-                BROWN_STAINED_CLAY = new BlockType(),
-                DARK_GREEN_STAINED_CLAY = new BlockType(),
-                RED_STAINED_CLAY = new BlockType(),
-                BLACK_STAINED_CLAY = new BlockType(),
-                // END stained clay
-                // stained glass panes
-                WHITE_STAINED_GLASS_PANE = new BlockType(0),
-                ORANGE_STAINED_GLASS_PANE = new BlockType(),
-                MAGENTA_STAINED_GLASS_PANE = new BlockType(),
-                LIGHT_BLUE_STAINED_GLASS_PANE = new BlockType(),
-                YELLOW_STAINED_GLASS_PANE = new BlockType(),
-                LIGHT_GREEN_STAINED_GLASS_PANE = new BlockType(),
-                PINK_STAINED_GLASS_PANE = new BlockType(),
-                DARK_GRAY_STAINED_GLASS_PANE = new BlockType(),
-                LIGHT_GRAY_STAINED_GLASS_PANE = new BlockType(),
-                CYAN_STAINED_GLASS_PANE = new BlockType(),
-                PURPLE_STAINED_GLASS_PANE = new BlockType(),
-                DARK_BLUE_STAINED_GLASS_PANE = new BlockType(),
-                BROWN_STAINED_GLASS_PANE = new BlockType(),
-                GREEN_STAINED_GLASS_PANE = new BlockType(),
-                RED_STAINED_GLASS_PANE = new BlockType(),
-                BLACK_STAINED_GLASS_PANE = new BlockType(),
-                // END stained glass panes
-                // more leaves
-                ACACIA_LEAVES = new BlockType(0),
-                DARK_OAK_LEAVES = new BlockType(),
-                // END more leaves
-                // more logs
-                ACACIA_LOG = new BlockType(0),
-                DARK_OAK_LOG = new BlockType(),
-                // END more logs
-                SLIME_BLOCK = new BlockType(-1),
-                BARRIER = new BlockType(),
-                IRON_TRAPDOOR = new BlockType(),
-                // prismarine types
-                PRISMARINE = new BlockType(0),
-                PRISMARINE_BRICKS = new BlockType(),
-                DARK_PRISMARINE = new BlockType(),
-                // END prismarine types
-                SEA_LENTERN = new BlockType(-1),
-                HAY_BALE = new BlockType(),
-                // carpet
-                WHITE_CARPET = new BlockType(0), ORANGE_CARPET = new BlockType(), MAGENTA_CARPET = new BlockType(), LIGHT_BLUE_CARPET = new BlockType(),
-                YELLOW_CARPET = new BlockType(), LIGHT_GREEN_CARPET = new BlockType(), PINK_CARPET = new BlockType(),
-                DARK_GRAY_CARPET = new BlockType(),
-                LIGHT_GRAY_CARPET = new BlockType(),
-                CYAN_CARPET = new BlockType(),
-                PURPLE_CARPET = new BlockType(),
-                DARK_BLUE_CARPET = new BlockType(),
-                BROWN_CARPET = new BlockType(),
-                DARK_GREEN_CARPET = new BlockType(),
-                RED_CARPET = new BlockType(),
-                BLACK_CARPET = new BlockType(),
-                // END carpet
-                HARDENED_CLAY = new BlockType(-1),
-                COAL_BLOCK = new BlockType(),
-                PACKED_ICE = new BlockType(),
-                // large plants
-                SUNFLOWER = new BlockType(0),
-                LILAC = new BlockType(),
-                DOUBLE_TALL_GRASS = new BlockType(),
-                LARGE_FERN = new BlockType(),
-                ROSE_BUSH = new BlockType(),
-                PEONY = new BlockType(),
-                // END large plants
-                BANNER_POST = new BlockType(-1),
-                WALL_BANNER = new BlockType(),
-                INVERTED_DAYLIGHT_SENSOR = new BlockType(),
-                // red sandstone
-                RED_SANDSTONE = new BlockType(0),
-                SMOOTH_RED_SANDSTONE = new BlockType(),
-                CHISELED_RED_SANDSTONE = new BlockType(),
-                // END red sandstone
-                RED_SANDSTONE_STAIRS = new BlockType(), DOUBLE_RED_SANDSTONE_SLAB = new BlockType(), RED_SANDSTONE_SLAB = new BlockType(),
-                SPRUCE_FENCE_GATE = new BlockType(), BIRCH_FENCE_GATE = new BlockType(), JUNGLE_FENCE_GATE = new BlockType(), DARK_OAK_FENCE_GATE = new BlockType(),
-                ACACIA_FENCE_GATE = new BlockType(), SPRUCE_FENCE = new BlockType(), BIRCH_FENCE = new BlockType(), JUNGLE_FENCE = new BlockType(),
-                DARK_OAK_FENCE = new BlockType(), ACACIA_FENCE = new BlockType(), SPRUCE_DOOR = new BlockType(), BIRCH_DOOR = new BlockType(), JUNGLE_DOOR = new BlockType(),
-                ACACIA_DOOR = new BlockType(), DARK_OAK_DOOR = new BlockType();
+     * they all have the same I.D.
+     * 
+     * @param <S>
+     *            is a self-parameterization; this type should be the same type as this class.
+     * @param <MC>
+     *            determines the type of Minecraft Block <tt>Object</tt> that this class represents.
+     * @param <I>
+     *            determines the type of {@link Block} that represents the type of this class. */
+    public abstract static class BlockType<S extends BlockType<S, MC, I>, MC extends net.minecraft.block.Block, I extends Block<I, MC, S>> extends HoldableType<S> implements
+            MCEquivalent<MC> {
+
+        /* public static final BlockType AIR = new BlockType(0, -1), // stone types STONE = new BlockType(0), GRANITE = new BlockType(), POLISHED_GRANITE = new BlockType(),
+         * DIORITE = new BlockType(), POLISHED_DIORITE = new BlockType(), ANDESITE = new BlockType(), POLISHED_ANDESITE = new BlockType(), // END stone types GRASS = new
+         * BlockType(-1), // dirt types DIRT = new BlockType(0), COARSE_DIRT = new BlockType(), PODZOL = new BlockType(), // END dirt types COBBLESTONE = new BlockType(-1), //
+         * planks OAK_WOOD_PLANKS = new BlockType(0), SPRUCE_WOOD_PLANKS = new BlockType(), BIRCH_WOOD_PLANKS = new BlockType(), JUNGLE_WOOD_PLANKS = new BlockType(),
+         * ACACIA_WOOD_PLANKS = new BlockType(), DARK_OAK_WOOD_PLANKS = new BlockType(), // END planks // saplings OAK_SAPLING = new BlockType(0), SPRUCE_SAPLING = new
+         * BlockType(), BIRCH_SAPLING = new BlockType(), JUNGLE_SAPLING = new BlockType(), ACACIA_SAPLING = new BlockType(), DARK_OAK_SAPLING = new BlockType(), // END
+         * saplings BEDROCK = new BlockType(-1), FLOWING_WATER = new BlockType(), STILL_WATER = new BlockType(), FLOWING_LAVA = new BlockType(), STILL_LAVA = new BlockType(),
+         * // sand types SAND = new BlockType(0), RED_SAND = new BlockType(12), // END sand types GRAVEL = new BlockType(-1), GOLD_ORE = new BlockType(), IRON_ORE = new
+         * BlockType(), COAL_ORE = new BlockType(), // logs OAK_LOG = new BlockType(0), SPRUCE_LOG = new BlockType(), BIRCH_LOG = new BlockType(), JUNGLE_LOG = new
+         * BlockType(), // END logs // leaves OAK_LEAVES = new BlockType(0), SPRUCE_LEAVES = new BlockType(), BIRCH_LEAVES = new BlockType(), JUNGLE_LEAVES = new BlockType(),
+         * // END leaves // sponges SPONGE = new BlockType(0), WET_SPONGE = new BlockType(19), // END sponges GLASS = new BlockType(-1), LAPIS_LAZULI_ORE = new BlockType(),
+         * LAPIS_LAZULI_BLOCK = new BlockType(), DISPENSER = new BlockType(), // sandstone types SANDSTONE = new BlockType(0), CHISELED_SANDSTONE = new BlockType(),
+         * SMOOTH_SANDSTONE = new BlockType(), // END sandstone types NOTE_BLOCK = new BlockType(-1), BED = new BlockType(), POWEREED_RAIL = new BlockType(), DETECTOR_RAIL =
+         * new BlockType(), STICKY_PISTON = new BlockType(), COBWEB = new BlockType(), // shrubbery DEAD_SHRUB = new BlockType(0), TALL_GRASS = new BlockType(), FERN = new
+         * BlockType(), // END shrubbery // TODO: is there a difference between this DEAD_BUSH (I.D. 31) and the DEAD_SHRUB (I.D. 31:0)? DEAD_BUSH = new BlockType(-1), PISTON
+         * = new BlockType(), PISTON_ARM = new BlockType(), // wool colors WHITE_WOOL = new BlockType(0), ORANGE_WOOL = new BlockType(), MAGENTA_WOOL = new BlockType(),
+         * LIGHT_BLUE_WOOL = new BlockType(), YELLOW_WOOL = new BlockType(), LIGHT_GREEN_WOOL = new BlockType(), PINK_WOOL = new BlockType(), DARK_GRAY_WOOL = new BlockType(),
+         * LIGHT_GRAY_WOOL = new BlockType(), CYAN_WOOL = new BlockType(), PURPLE_WOOL = new BlockType(), DARK_BLUE_WOOL = new BlockType(), BROWN_WOOL = new BlockType(),
+         * DARK_GREEN_WOOL = new BlockType(), RED_WOOL = new BlockType(), BLACK_WOOL = new BlockType(), // END wool colors DANDELION = new BlockType(37, 0), // yes, Minecraft
+         * I.D.s skip 36; I don't know why // small flowers POPPY = new BlockType(0), BLUE_ORCHID = new BlockType(), ALLIUM = new BlockType(), AZURE_BLUET = new BlockType(),
+         * RED_TULIP = new BlockType(), ORANGE_TULIP = new BlockType(), WHITE_TULIP = new BlockType(), PINK_TULIP = new BlockType(), OXEYE_DAISY = new BlockType(), // END
+         * small flowers BROWN_MUSHROOM = new BlockType(-1), RED_MUSHROOM = new BlockType(), GOLD_BLOCK = new BlockType(), IRON_BLOCK = new BlockType(), // double slabs
+         * DOUBLE_STONE_SLAB = new BlockType(0), DOUBLE_SANDSTONE_SLAB = new BlockType(), DOUBLE_OAK_SLAB = new BlockType(), DOUBLE_COBBLESTONE_SLAB = new BlockType(),
+         * DOUBLE_BRICK_SLAB = new BlockType(), DOUBLE_STONE_BRICK_SLAB = new BlockType(), DOUBLE_NETHER_BRICK_SLAB = new BlockType(), DOUBLE_SQUARTZ_SLAB = new BlockType(),
+         * // END double slabs // slabs STONE_SLAB = new BlockType(0), SANDSTONE_SLAB = new BlockType(), OAK_SLAB = new BlockType(), COBBLESTONE_SLAB = new BlockType(),
+         * BRICK_SLAB = new BlockType(), STONE_BRICK_SLAB = new BlockType(), NETHER_BRICK_SLAB = new BlockType(), QUARTZ_SLAB = new BlockType(), // END slabs BRICKS = new
+         * BlockType(-1), TNT = new BlockType(), BOOKSHELF = new BlockType(), MOSS_STONE = new BlockType(), OBSIDIAN = new BlockType(), TORCH = new BlockType(), FIRE = new
+         * BlockType(), MONSTER_SPAWNER = new BlockType(), OAK_STAIRS = new BlockType(), CHEST = new BlockType(), REDSTONE_WIRE = new BlockType(), DIAMOND_ORE = new
+         * BlockType(), DIAMOND_BLOCK = new BlockType(), CRAFTING_TABLE = new BlockType(), WHEAT = new BlockType(), FARMLAND = new BlockType(), FURNACE = new BlockType(),
+         * BURNING_FURNACE = new BlockType(), SIGN_POST = new BlockType(), OAK_DOOR = new BlockType(), LADDER = new BlockType(), RAIL = new BlockType(), COBBLESTONE_STAIRS =
+         * new BlockType(), WALL_SIGN = new BlockType(), LEVER = new BlockType(), STONE_PRESSURE_PLATE = new BlockType(), IRON_DOOR = new BlockType(), WOODEN_PRESSURE_PLATE =
+         * new BlockType(), REDSTONE_ORE = new BlockType(), GLOWING_REDSTONE_ORE = new BlockType(), UNPOWERED_REDSTONE_TORCH = new BlockType(), POWERED_REDSTONE_TORCH = new
+         * BlockType(), STONE_BUTTON = new BlockType(), SNOW = new BlockType(), ICE = new BlockType(), SNOW_BLOCK = new BlockType(), CACTUS = new BlockType(), CLAY = new
+         * BlockType(), SUGAR_CANES = new BlockType(), JUKEBOX = new BlockType(), OAK_FENCE = new BlockType(), PUMPKIN = new BlockType(), NETHERRACK = new BlockType(),
+         * SOUL_SAND = new BlockType(), GLOWSTONE = new BlockType(), NETHER_PORTAL = new BlockType(), JACK_O_LANTERN = new BlockType(), CAKE = new BlockType(),
+         * UNPOWERED_REDSTONE_REPEATER = new BlockType(), POWERED_REDSTONE_REPEATER = new BlockType(), // stained glass WHITE_STAINED_GLASS = new BlockType(0),
+         * ORANGE_STAINED_GLASS = new BlockType(), MAGENTA_STAINED_GLASS = new BlockType(), LIGHT_BLUE_STAINED_GLASS = new BlockType(), YELLOW_STAINED_GLASS = new BlockType(),
+         * LIGHT_GREEN_STAINED_GLASS = new BlockType(), PINK_STAINED_GLASS = new BlockType(), DARK_GRAY_STAINED_GLASS = new BlockType(), LIGHT_GRAY_STAINED_GLASS = new
+         * BlockType(), CYAN_STAINED_GLASS = new BlockType(), PURPLE_STAINED_GLASS = new BlockType(), DARK_BLUE_STAINED_GLASS = new BlockType(), BROWN_STAINED_GLASS = new
+         * BlockType(), DARK_GREEN_STAINED_GLASS = new BlockType(), RED_STAINED_GLASS = new BlockType(), BLACK_STAINED_GLASS = new BlockType(), // END stained glass
+         * WOODEN_TRAPDOOR = new BlockType(-1), // monster eggs STONE_MONSTER_EGG = new BlockType(0), COBBLESTONE_MONSTER_EGG = new BlockType(), STONE_BRICK_MONSTER_EGG = new
+         * BlockType(), MOSSY_STONE_BRICK_MONSTER_EGG = new BlockType(), CRACKED_STONE_BRICK_MONSTER_EGG = new BlockType(), CHISELED_STONE_BRICK_MONSTER_EGG = new BlockType(),
+         * // END monster eggs // stone bricks STONE_BRICKS = new BlockType(0), MOSSY_STONE_BRICKS = new BlockType(), CRACKED_STONE_BRICKS = new BlockType(),
+         * CHISELED_STONE_BRICKS = new BlockType(), // END stone bricks GIANT_RED_MUSHROOM = new BlockType(-1), GIANT_BROWN_MUSHROOM = new BlockType(), IRON_BARS = new
+         * BlockType(), GLASS_PANE = new BlockType(), MELON = new BlockType(), PUMPKIN_STEM = new BlockType(), MELON_STEM = new BlockType(), VINES = new BlockType(),
+         * OAK_FENCE_GATE = new BlockType(), BRICK_STAIRS = new BlockType(), STONE_BRICK_STAIRS = new BlockType(), MYCELIUM = new BlockType(), LILY_PAD = new BlockType(),
+         * NETHER_BRICK = new BlockType(), NETHER_BRICK_FENCE = new BlockType(), NETHER_BRICK_STAIRS = new BlockType(), NETHER_WARTS = new BlockType(), ENCHANTMENT_TABLE = new
+         * BlockType(), BREWING_STAND = new BlockType(), CAULDRON = new BlockType(), END_PORTAL = new BlockType(), END_PORTAL_FRAME = new BlockType(), END_STONE = new
+         * BlockType(), DRAGON_EGG = new BlockType(), UNPOWERED_REDSTONE_LAMP = new BlockType(), POWERED_REDSTONE_LAMP = new BlockType(), // double wood slabs
+         * DOUBLE_OAK_WOOD_SLAB = new BlockType(0), DOUBLE_SPRUCE_WOOD_SLAB = new BlockType(), DOUBLE_BIRCH_WOOD_SLAB = new BlockType(), DOUBLE_JUNGLE_WOOD_SLAB = new
+         * BlockType(), DOUBLE_ACACIA_WOOD_SLAB = new BlockType(), DOUBLE_DARK_OAK_WOOD_SLAB = new BlockType(), // END double wood slabs // wood slabs OAK_WOOD_SLAB = new
+         * BlockType(0), SPRUCE_WOOD_SLAB = new BlockType(), BIRCH_WOOD_SLAB = new BlockType(), JUNGLE_WOOD_SLAB = new BlockType(), ACACIA_WOOD_SLAB = new BlockType(),
+         * DARK_OAK_WOOD_SLAB = new BlockType(), // END wood slabs COCOA = new BlockType(-1), SANDSTONE_STAIRS = new BlockType(), EMERALD_ORE = new BlockType(), ENDER_CHEST =
+         * new BlockType(), TRIPWIRE_HOOK = new BlockType(), TRIPWIRE = new BlockType(), EMERALD_BLOCK = new BlockType(), SPRUCE_WOOD_STAIRS = new BlockType(),
+         * BIRCH_WOOD_STAIRS = new BlockType(), JUNGLE_WOOD_STAIRS = new BlockType(), COMMAND_BLOCK = new BlockType(), BEACON = new BlockType(), // cobblestone walls
+         * COBBLESTONE_WALL = new BlockType(0), MOSSY_COBBLESTONE_WALLS = new BlockType(1), // END cobblestone walls FLOWER_POT = new BlockType(-1), CARROTS = new BlockType(),
+         * POTATOES = new BlockType(), WOODEN_BUTTON = new BlockType(), MOB_HEAD = new BlockType(), ANVIL = new BlockType(), TRAPPED_CHEST = new BlockType(),
+         * GOLD_PRESSURE_PLATE = new BlockType(), IRON_PRESSURE_PLATE = new BlockType(), UNPOWERED_REDSTONE_COMPARATOR = new BlockType(), POWERED_REDSTONE_COMPARATOR = new
+         * BlockType(), DAYLIGHT_SENSOR = new BlockType(), REDSTONE_BLOCK = new BlockType(), QUARTZ_ORE = new BlockType(), HOPPER = new BlockType(), // quartz QUARTZ_BLOCK =
+         * new BlockType(0), CHISELED_QUARTZ_BLOCK = new BlockType(), PILLAR_QUARTZ_BLOCK = new BlockType(), // END quartz QUARTZ_STAIRS = new BlockType(-1), ACTIVATOR_RAIL =
+         * new BlockType(), DROPPER = new BlockType(), // stained clay WHITE_STAINED_CLAY = new BlockType(0), ORANGE_STAINED_CLAY = new BlockType(), MAGENTA_STAINED_CLAY = new
+         * BlockType(), LIGHT_BLUE_STAINED_CLAY = new BlockType(), YELLOW_STAINED_CLAY = new BlockType(), LIGHT_GREEN_STAINED_CLAY = new BlockType(), PINK_STAINED_CLAY = new
+         * BlockType(), DARK_GRAY_STAINED_CLAY = new BlockType(), LIGHT_GRAY_STAINED_CLAY = new BlockType(), CYAN_STAINED_CLAY = new BlockType(), PURPLE_STAINED_CLAY = new
+         * BlockType(), DARK_BLUE_STAINED_CLAY = new BlockType(), BROWN_STAINED_CLAY = new BlockType(), DARK_GREEN_STAINED_CLAY = new BlockType(), RED_STAINED_CLAY = new
+         * BlockType(), BLACK_STAINED_CLAY = new BlockType(), // END stained clay // stained glass panes WHITE_STAINED_GLASS_PANE = new BlockType(0), ORANGE_STAINED_GLASS_PANE
+         * = new BlockType(), MAGENTA_STAINED_GLASS_PANE = new BlockType(), LIGHT_BLUE_STAINED_GLASS_PANE = new BlockType(), YELLOW_STAINED_GLASS_PANE = new BlockType(),
+         * LIGHT_GREEN_STAINED_GLASS_PANE = new BlockType(), PINK_STAINED_GLASS_PANE = new BlockType(), DARK_GRAY_STAINED_GLASS_PANE = new BlockType(),
+         * LIGHT_GRAY_STAINED_GLASS_PANE = new BlockType(), CYAN_STAINED_GLASS_PANE = new BlockType(), PURPLE_STAINED_GLASS_PANE = new BlockType(),
+         * DARK_BLUE_STAINED_GLASS_PANE = new BlockType(), BROWN_STAINED_GLASS_PANE = new BlockType(), GREEN_STAINED_GLASS_PANE = new BlockType(), RED_STAINED_GLASS_PANE = new
+         * BlockType(), BLACK_STAINED_GLASS_PANE = new BlockType(), // END stained glass panes // more leaves ACACIA_LEAVES = new BlockType(0), DARK_OAK_LEAVES = new
+         * BlockType(), // END more leaves // more logs ACACIA_LOG = new BlockType(0), DARK_OAK_LOG = new BlockType(), // END more logs SLIME_BLOCK = new BlockType(-1),
+         * BARRIER = new BlockType(), IRON_TRAPDOOR = new BlockType(), // prismarine types PRISMARINE = new BlockType(0), PRISMARINE_BRICKS = new BlockType(), DARK_PRISMARINE
+         * = new BlockType(), // END prismarine types SEA_LENTERN = new BlockType(-1), HAY_BALE = new BlockType(), // carpet WHITE_CARPET = new BlockType(0), ORANGE_CARPET =
+         * new BlockType(), MAGENTA_CARPET = new BlockType(), LIGHT_BLUE_CARPET = new BlockType(), YELLOW_CARPET = new BlockType(), LIGHT_GREEN_CARPET = new BlockType(),
+         * PINK_CARPET = new BlockType(), DARK_GRAY_CARPET = new BlockType(), LIGHT_GRAY_CARPET = new BlockType(), CYAN_CARPET = new BlockType(), PURPLE_CARPET = new
+         * BlockType(), DARK_BLUE_CARPET = new BlockType(), BROWN_CARPET = new BlockType(), DARK_GREEN_CARPET = new BlockType(), RED_CARPET = new BlockType(), BLACK_CARPET =
+         * new BlockType(), // END carpet HARDENED_CLAY = new BlockType(-1), COAL_BLOCK = new BlockType(), PACKED_ICE = new BlockType(), // large plants SUNFLOWER = new
+         * BlockType(0), LILAC = new BlockType(), DOUBLE_TALL_GRASS = new BlockType(), LARGE_FERN = new BlockType(), ROSE_BUSH = new BlockType(), PEONY = new BlockType(), //
+         * END large plants BANNER_POST = new BlockType(-1), WALL_BANNER = new BlockType(), INVERTED_DAYLIGHT_SENSOR = new BlockType(), // red sandstone RED_SANDSTONE = new
+         * BlockType(0), SMOOTH_RED_SANDSTONE = new BlockType(), CHISELED_RED_SANDSTONE = new BlockType(), // END red sandstone RED_SANDSTONE_STAIRS = new BlockType(),
+         * DOUBLE_RED_SANDSTONE_SLAB = new BlockType(), RED_SANDSTONE_SLAB = new BlockType(), SPRUCE_FENCE_GATE = new BlockType(), BIRCH_FENCE_GATE = new BlockType(),
+         * JUNGLE_FENCE_GATE = new BlockType(), DARK_OAK_FENCE_GATE = new BlockType(), ACACIA_FENCE_GATE = new BlockType(), SPRUCE_FENCE = new BlockType(), BIRCH_FENCE = new
+         * BlockType(), JUNGLE_FENCE = new BlockType(), DARK_OAK_FENCE = new BlockType(), ACACIA_FENCE = new BlockType(), SPRUCE_DOOR = new BlockType(), BIRCH_DOOR = new
+         * BlockType(), JUNGLE_DOOR = new BlockType(), ACACIA_DOOR = new BlockType(), DARK_OAK_DOOR = new BlockType(); */
 
         /** <b><i>DEV NOTES:</b></i><br>
          * property-getting methods of <b><tt>blockMC</b></tt>:<br>
@@ -449,7 +160,7 @@ public class Block {
          * - <tt>Block.isOpaqueCube</tt>: returns true only if the block takes the entire space of a block and it's opaque; I believe this to be redundant<br>
          * other <tt>Object</tt>s: <br>
          * - <tt>MapColor Material.getMaterialMapColor</tt></tt>: the color that is represented for this block on the map */
-        private final net.minecraft.block.Block blockMC;
+        private final MC blockMC;
 
         // constructors
         // TODO TEMP
@@ -462,7 +173,7 @@ public class Block {
             super(nextID(BlockType.class), -1);
 
             // find the Block with the given I.D.
-            blockMC = net.minecraft.block.Block.getBlockById(getID());
+            blockMC = (MC) net.minecraft.block.Block.getBlockById(getID());
         }
 
         // TODO TEMP
@@ -478,7 +189,7 @@ public class Block {
             super(nextID(BlockType.class), data);
 
             // find the Block with the given I.D.
-            blockMC = net.minecraft.block.Block.getBlockById(getID());
+            blockMC = (MC) net.minecraft.block.Block.getBlockById(getID());
         }
 
         /** This constructor makes a BlockType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
@@ -492,11 +203,21 @@ public class Block {
             super(id, data);
 
             // find the Block with the given I.D.
-            blockMC = net.minecraft.block.Block.getBlockById(id);
+            blockMC = (MC) net.minecraft.block.Block.getBlockById(id);
         }
 
         // overridden utilities
-        net.minecraft.block.Block MC() {
+        @Override
+        public byte getMaxStackSize() {
+            // ALL blocks stack to 64; it's items that can vary
+            return (byte) 64;
+        }
+
+        public String getName() {
+            return blockMC.getLocalizedName();
+        }
+
+        public MC MC() {
             return blockMC;
         }
 
@@ -538,10 +259,6 @@ public class Block {
              * representing red, green, and blue values; this splits the int into three RGB values and puts it into a standard Color object */
             int color_value = blockMC.getMaterial().getMaterialMapColor().colorValue;
             return new Color(color_value & 0xFF0000, color_value & 0x00FF00, color_value & 0x0000FF);
-        }
-
-        public String getName() {
-            return blockMC.getLocalizedName();
         }
 
         /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is
@@ -632,9 +349,11 @@ public class Block {
             return blockMC.getMaterial().isSolid();
         }
 
-        /** This method determines whether or not a block of this {@link BlockType} requires a tool to be used to be able to obtain any drops from it. For example,
-         * {@link BlockType#STONE stone} blocks will not drop anything unless a tool (in this case, a pickaxe) is used to break it; on the other hand, {@link BlockType#DIRT
-         * dirt} can drop dirt even if a player uses their bare hands to dig it out.
+        // TODO: link "pickaxe" in the Javadoc below and re-link stone, dirt, and grass blocks (x2 for grass blocks)
+        /** This method determines whether or not a block of this {@link BlockType} requires a tool to be used to be able to obtain any drops from it. For example, stone blocks
+         * will not drop anything unless a tool (in this case, a pickaxe) is used to break it; on the other hand, {@link BlockType#DIRT dirt} can drop dirt even if a player
+         * uses their bare hands to dig it out. Note that this method only determines whether or not <i>any</i> drops can be obtained without the use of a tool; for example,
+         * this will return <b>true</b> for grass blocks even though without the use of a tool, they will drop dirt blocks rather grass blocks.
          * 
          * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
         public boolean requiresTool() {
@@ -653,13 +372,6 @@ public class Block {
         public static BlockType[] values() {
             return values(BlockType.class);
         }
-
-        // custom property overrides
-        @Override
-        public byte getMaxStackSize() {
-            // ALL blocks stack to 64; it's items that can vary
-            return (byte) 64;
-        }
     }
 
     // utilities
@@ -676,27 +388,27 @@ public class Block {
     }
 
     public byte getData() {
-        return data;
+        return (byte) location.getWorld().MC().getBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     public Location getLocation() {
         return location;
     }
 
-    public BlockType getType() {
-        return type;
+    public void setData(byte data) throws BlockTypeChangeException {
+        // TODO: if this data value change would change the block's type, throw a BlockTypeChangeException
+        location.getWorld().MC().setBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ(), data, 3 /* 3 = 1 & 2 = update block and send update info to
+                                                                                                                             * client */);
     }
 
-    public void setData(byte data) {
-        this.data = data;
-        this.location.getWorld().setBlockData(this.location, data);
-        // TODO: change the BlockType if necessary
-        // TODO: send a packet to clients concerning the block change
-    }
+    public static class BlockTypeChangeException extends CorundumException {
+        private static final long serialVersionUID = 4455132109829993696L;
 
-    public void setType(BlockType type) {
-        this.type = type;
-        // TODO: change the data accordingly, but try to do in such a way that the orientation of the block doesn't change
-        // TODO: send a packet to clients concerning the block change
+        public BlockTypeChangeException(Block<?, ?, ?> block, byte attempted_data_value) {
+            super(CorundumThread.currentThread().getActor()
+                    + " attempted to change the data value of a block to one that would have required the whole block to change to a new kind of block!",
+                    "illegal attempt to change a block's type", "location = " + block.getLocation(), "type = " + block.getType(), "atetmpted data value = "
+                            + attempted_data_value);
+        }
     }
 }

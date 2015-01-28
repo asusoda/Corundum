@@ -1,6 +1,7 @@
 package org.corundummc.world;
 
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.world.Block.BlockType;
 
 public class Zone {
     /** <b><i>DEV NOTES:</b></i><br>
@@ -10,7 +11,7 @@ public class Zone {
      * This location is given the highest x, highest y, and highest z coordinates from each of the two locations given to the constructor. */
     private Location high;
 
-    public Zone(Location location1, Location location2) {
+    public Zone(Location location1, Location location2) throws ZoneCornersInDifferentWorldsException {
         // if the two corners of the zone are in different worlds, throw an exception
         if (!location1.getWorld().equals(location2.getWorld()))
             throw new ZoneCornersInDifferentWorldsException(location1, location2);
@@ -36,32 +37,28 @@ public class Zone {
     }
 
     public double getVolume() {
-        double xLength = this.high.getX() - this.low.getX();
-        double yLength = this.high.getY() - this.low.getY();
-        double zLength = this.high.getZ() - this.low.getZ();
+        double xLength = high.getX() - low.getX();
+        double yLength = high.getY() - low.getY();
+        double zLength = high.getZ() - low.getZ();
 
         return xLength * yLength * zLength;
     }
 
-    public void fillWithBlock(Block.BlockType block) {
+    public void fillWithBlock(@SuppressWarnings("rawtypes") BlockType block) {
         // This Location is reused so as not to spam the VM with Location objects.
-        Location currLocation = new Location(0, 0, 0, this.low.getWorld());
+        Location currLocation = new Location(0, 0, 0, low.getWorld());
 
-        for (int x = this.low.getBlockX(); x == this.high.getBlockX(); x++) {
-            for (int y = this.low.getBlockY(); y == this.high.getBlockY(); y++) {
-                for (int z = this.low.getBlockZ(); z == this.high.getBlockZ(); z++) {
+        for (int x = low.getBlockX(); x == high.getBlockX(); x++) {
+            for (int y = low.getBlockY(); y == high.getBlockY(); y++) {
+                for (int z = low.getBlockZ(); z == high.getBlockZ(); z++) {
                     currLocation.setX(x);
                     currLocation.setY(y);
                     currLocation.setZ(z);
-                    this.low.getWorld().setBlock(block, currLocation);
+                    low.getWorld().setBlock(block, currLocation);
                 }
             }
         }
     }
 
-    public void fillWithAir() {
-        this.fillWithBlock(Block.BlockType.AIR);
-    }
-
-    // TODO: utilities
+    /* TODO TEMP CMT public void fillWithAir() { fillWithBlock(Block.BlockType.AIR); } */
 }
