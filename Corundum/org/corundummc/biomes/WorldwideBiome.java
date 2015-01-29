@@ -60,7 +60,7 @@ public abstract class WorldwideBiome<S extends WorldwideBiome<S, MC, T>, MC exte
         return this.location.getWorld().equals(location.getWorld());
     }
 
-    /* TODO TEMP CMT @Override */
+    @Override
     public Zone getCircumscribingZone() {
         return new Zone(new Location(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, getWorld()), new Location(Integer.MAX_VALUE, Integer.MAX_VALUE,
                 Integer.MAX_VALUE, getWorld()));

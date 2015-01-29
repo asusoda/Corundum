@@ -58,6 +58,10 @@ public class World implements Matchable<World>, MCEquivalent<WorldServer> {
     }
 
     // instance utilities
+    public int getBuildHeight() {
+        return worldMC.getActualHeight();
+    }
+
     public String getName() {
         return worldMC.getWorldInfo().getWorldName();
     }
@@ -76,7 +80,7 @@ public class World implements Matchable<World>, MCEquivalent<WorldServer> {
 
     public void setBlockData(Location blockLocation, byte newData) {
         worldMC.setBlockMetadata(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ(), newData, 3 /* 3 = 1 & 2 = update block and send update
-                                                                                                                                   * info to client */);
+                                                                                                                              * info to client */);
     }
 
     public enum WorldType {

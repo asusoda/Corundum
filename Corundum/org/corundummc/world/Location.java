@@ -14,8 +14,11 @@ package org.corundummc.world;
 
 import org.corundummc.biomes.Biome;
 import org.corundummc.biomes.Biome.BiomeType;
+import org.corundummc.utils.ListUtilities;
 
-public class Location {
+import static org.corundummc.world.BlockFilter.*;
+
+public class Location implements Cloneable {
     private double x, y, z;
     private World world;
 
@@ -30,7 +33,9 @@ public class Location {
         return BiomeType.getByID(getChunk().MC().getBiomeArray()[getBlockX() * 16 + getBlockZ()]).fromLocation(this);
     }
 
-    /* public Block getBlock() { return Block.fromLocation(this); } */
+    public Block getBlock() {
+        return Block.fromLocation(this);
+    }
 
     public int getBlockX() {
         return (int) x;
@@ -48,7 +53,26 @@ public class Location {
         return new Chunk(world.MC().getChunkFromBlockCoords(getBlockX(), getBlockZ()));
     }
 
-    /* TODO: public Block getHighestBlock(BlockFilter... filters) */
+    public Block<?, ?, ?> getHighestBlock() {
+        return getHighestBlock(or(SOLID, LIQUID));
+    }
+
+    public Block getHighestBlock(BlockFilter first_filter, BlockFilter... filters) {
+        /* add the first filter to the list with the others; this is necessary to ensure that this method gets at least one filter to prevent conflict with the nullary method
+         * of the same kind */
+        ListUtilities.concatenate(new BlockFilter[] { first_filter }, filters);
+
+        Location location = clone();
+
+        for (int y = /* TODO TEMP RPLC getWorld().getBuildHeight() */256; y >= 0; y++) {
+            location.setY(y);
+
+            if (BlockFilter.matches(location.getBlock(), filters))
+                return location.getBlock();
+        }
+
+        return null;
+    }
 
     public double getX() {
         return x;
@@ -80,6 +104,11 @@ public class Location {
 
     public void setWorld(World world) {
         this.world = world;
+    }
+
+    @Override
+    protected Location clone() {
+        return new Location(x, y, z, world);
     }
 
     public String toString(boolean use_block_coordinates) {

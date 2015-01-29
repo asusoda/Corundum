@@ -203,7 +203,7 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
             next_x = last_x;
             next_z = last_z;
 
-            for (int i = 0; i < 9 /* there are 9 1x1 block columns adjacent to this column (including diagonals) */; i++) {
+            for (int i = 0; i < 8 /* there are 8 1x1 block columns adjacent to this column (including diagonals) */; i++) {
                 // iterate to the next (x, z) coordinate pair
                 /* the (x, z) coordinate pairs for the 1x1 block columns adjacent to the center block follow a cycle in the counter clockwise direction where the value shown
                  * is relative to the center block:

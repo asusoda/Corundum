@@ -12,6 +12,8 @@
 
 package org.corundummc.world;
 
+import net.minecraft.world.WorldServer;
+
 import org.corundummc.biomes.Biome.BiomeType;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.myList.myList;
@@ -58,10 +60,10 @@ public class Chunk implements MCEquivalent<net.minecraft.world.chunk.Chunk> {
     }
 
     public void load() {
-        ((net.minecraft.world.WorldServer) chunkMC.worldObj).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 
     public void unload() {
-        ((net.minecraft.world.WorldServer) chunkMC.worldObj).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 }

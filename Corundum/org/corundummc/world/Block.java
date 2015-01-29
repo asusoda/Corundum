@@ -14,19 +14,14 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
-import net.minecraft.world.WorldServer;
-
-import org.apache.commons.lang3.reflect.Typed;
+import org.corundummc.utils.types.Typed;
 import org.corundummc.biomes.Biome;
-import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.hub.CorundumThread;
-import org.corundummc.plugins.PluginThread;
 import org.corundummc.utils.interfaces.MCEquivalent;
-import org.corundummc.utils.interfaces.MCEquivalentType;
 import org.corundummc.utils.types.HoldableType;
 
-public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> implements Typed<T> {
+public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> extends Typed<T> {
     private Location location;
 
     protected Block(Location location) {
@@ -221,6 +216,9 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
             return blockMC;
         }
 
+        // abstract utilities
+        public abstract I fromLocation(Location location);
+
         // utilities
         /** This method determines whether or not a block of this {@link BlockType} can stop grass from spreading onto nearby dirt if placed on top of the dirt. For example, if
          * you place {@link BlockType#STONE stone} on top of dirt, that dirt cannot grow grass even if there is well-lit grass right next to it; on the other hand,
@@ -374,7 +372,14 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         }
     }
 
-    // utilities
+    // static utilities
+    public static Block<?, ?, ?> fromLocation(Location location) {
+        return BlockType.getByID(
+                net.minecraft.block.Block.getIdFromBlock(location.getWorld().MC().getBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ())),
+                location.getWorld().MC().getBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ())).fromLocation(location);
+    }
+
+    // instance utilities
     /** This method retrieves the {@link Biome} that this block is located in.
      * 
      * @return the {@link Biome} that this block is in. */
@@ -393,6 +398,15 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
     public Location getLocation() {
         return location;
+    }
+
+    // type utilities
+    public boolean isLiquid() {
+        return getType().isLiquid();
+    }
+
+    public boolean isSolid() {
+        return getType().isSolid();
     }
 
     public void setData(byte data) throws BlockTypeChangeException {
