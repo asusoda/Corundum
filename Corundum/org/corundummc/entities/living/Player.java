@@ -108,29 +108,6 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
     }
 
     // instance utilities
-    @Override
-    public void command(final String command) {
-        final Player _this = this;
-
-        EventResult eventResult = CorundumServer.getInstance().generateEvent(new ListenerCaller<CommandListener, EventResult>() {
-            @Override
-            public EventResult generateEvent(CommandListener listener, EventResult result) {
-                return listener.onCommand(_this, command, result);
-            }
-        });
-
-        if (!eventResult.isCancelled()
-                && this.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(command.split(" ")[0].replace("/", "")))
-                        .getRequiredPermissionLevel(), command)) {
-            CommandBase
-                    .func_147176_a(this /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO: I
-                                                                                                                                                                    * don't
-                                                                                                                                                                    * actually
-                                                                                                                                                                    * know what
-                                                                                                                                                                    * this does */);
-        }
-    }
-
     public Location getLocation() {
         return new Location(entityMC.getCommandSenderPosition().posX, entityMC.getCommandSenderPosition().posY, entityMC.getCommandSenderPosition().posZ, World
                 .fromMC((WorldServer) entityMC.worldObj));
@@ -150,44 +127,40 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
         return entityMC.getUniqueID();
     }
 
-    @Override
-    public void message(String message) {
-        this.addChatMessage(new ChatComponentText(message));
-    }
-
-    // overridden properties
-    @Override
-    public void addChatMessage(IChatComponent message) {
-        entityMC.addChatMessage(message);
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(int permission_level, String command) {
-        return entityMC.canCommandSenderUseCommand(permission_level, command);
-    }
-
     public boolean isOp() {
         return CorundumServer.getInstance().getConfigurationManager().func_152596_g(this.entityMC.getGameProfile());
     }
 
+    // overridden utilities
     @Override
-    public String getCommandSenderName() {
-        return entityMC.getCommandSenderName();
+    public void command(final String command) {
+        final Player _this = this;
+
+        EventResult eventResult = CorundumServer.getInstance().generateEvent(new ListenerCaller<CommandListener, EventResult>() {
+            @Override
+            public EventResult generateEvent(CommandListener listener, EventResult result) {
+                return listener.onCommand(_this, command, result);
+            }
+        });
+
+        if (!eventResult.isCancelled()
+                && entityMC.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(
+                        command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command)) {
+            CommandBase
+                    .func_147176_a(entityMC /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO:
+                                                                                                                                                                        * I
+                                                                                                                                                                        * don't
+                                                                                                                                                                        * actually
+                                                                                                                                                                        * know
+                                                                                                                                                                        * what
+                                                                                                                                                                        * this
+                                                                                                                                                                        * does */);
+        }
     }
 
     @Override
-    public ChunkCoordinates getCommandSenderPosition() {
-        return entityMC.getCommandSenderPosition();
-    }
-
-    @Override
-    public net.minecraft.world.World getEntityWorld() {
-        return entityMC.getEntityWorld();
-    }
-
-    @Override
-    public IChatComponent func_145748_c_() {
-        return entityMC.func_145748_c_();
+    public void message(String message) {
+        entityMC.addChatMessage(new ChatComponentText(message));
     }
 
     // data management overrides

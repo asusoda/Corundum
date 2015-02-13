@@ -14,7 +14,7 @@ public class PluginLoader extends CorundumJarLoader {
     private CorundumPlugin plugin;
 
     public PluginLoader(CorundumServer server, String jar_name) throws MalformedURLException {
-        super(new File(server.getPluginsFolder(), jar_name + ".jar"), PluginLoader.class.getClassLoader());
+        super(new File(server.getPluginsFolders()[0], jar_name + ".jar"), PluginLoader.class.getClassLoader());
     }
 
     @Override

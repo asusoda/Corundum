@@ -2,7 +2,10 @@ package org.corundummc;
 
 import static org.corundummc.utils.StringUtilities.capitalize;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -15,6 +18,7 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.WorldServer;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -33,11 +37,14 @@ import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
 import org.corundummc.plugins.PluginThread;
+import org.corundummc.utils.ListUtilities;
 import org.corundummc.utils.SettingsManager;
 import org.corundummc.utils.interfaces.Commander;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.utils.types.IDedType;
 import org.corundummc.utils.versioning.Version;
+import org.corundummc.world.Location;
+import org.corundummc.world.World;
 
 /** This class represents the entirety of a Corundum server.
  * 
@@ -46,14 +53,21 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
 
-    private final Version VERSION = new Version("pre-α"), MC_VERSION = new Version("1.7.10");
+    private final Version VERSION = new Version("0"), MC_VERSION = new Version("1.7.10");
     private final File PLUGINS_FOLDER = new File("plugins");
-
-    private String name, prefix;
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
-    public myList<CorundumPlugin> plugins = new myList<>();
+    public myList<CorundumPlugin> plugins = new myList<CorundumPlugin>() {
+        @Override
+        public int compare(CorundumPlugin plugin1, CorundumPlugin plugin2) {
+            return ListUtilities.compare(getSortPriorities(plugin1), getSortPriorities(plugin2));
+        }
+
+        private Object[] getSortPriorities(CorundumPlugin plugin) {
+            return new Object[] { plugin.isEnabled(), plugin.getName(), plugin.getVersion() };
+        }
+    };
 
     private CorundumGui corundumGui;
     private boolean corundum_GUI_enabled = false;
@@ -83,9 +97,9 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     private myList<UUID> verbose_debuggers = new myList<>();
 
     // config variable names
-    private String config_file_name = "settings.json";
+    private String config_file_name = "Corundum settings.json";
 
-    private SettingsManager settings = new SettingsManager(new File(config_file_name), name, "Corundum");
+    private SettingsManager settings = new SettingsManager(new File(config_file_name), "name", "Corundum", "prefix", "[Corundum]");
 
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
@@ -96,9 +110,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     public CorundumServer(String name) {
         // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
         super(new File("."));
-
-        this.name = name;
-        prefix = "[" + name + "] ";
     }
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
@@ -166,6 +177,56 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     }
 
     // start up and shut down
+    @Override
+    public void startServerThread() {
+        System.out.println("Starting Corundum server thread!");
+
+        final CorundumServer _this = this;
+        new Thread("Server thread") {
+            public void run() {
+                _this.run();
+            }
+        }.start();
+    }
+
+    // TODO TEMP
+    @Override
+    public void run() {
+        super.run();
+
+        try {
+            int low_x = -1000, low_z = 7500, high_x = 4500, high_z = 10500, test_x = 0, test_z = 8000;
+
+            if (test_x < low_x || test_x > high_x || test_z < low_z || test_z > high_z)
+                throw new NullPointerException("These numbers are stupid!");
+
+            File file = new File("biome map test.bin");
+            if (file.exists())
+                file.delete();
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+
+            /* file format: test_x test_z x-width z-height map */
+            out.write(test_x);
+            out.write(test_z);
+            out.write(high_x - low_x);
+            out.write(high_z - low_z);
+
+            Location location = new Location(0, 0, 0, World.fromMC(worldServers[0]));
+            for (int x = low_x; x < high_x; x++)
+                for (int z = low_z; z < high_z; z++) {
+                    location.setX(x);
+                    location.setZ(z);
+                    out.write((byte) location.getBiome().getTypeID());
+                }
+
+            out.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            quit();
+        }
+    }
+
     /** This method starts this {@link CorundumServer}.
      * 
      * @param arguments
@@ -405,12 +466,12 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
 
     @Override
     public String getName() {
-        return settings.getString(name);
+        return settings.getString("name");
     }
 
     @Override
     public String getPrefix() {
-        return prefix;
+        return settings.getString("prefix");
     }
 
     @Override
@@ -425,8 +486,9 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         return super.func_152358_ax();
     }
 
-    public File getPluginsFolder() {
-        return PLUGINS_FOLDER;
+    public File[] getPluginsFolders() {
+        // in the future, this could be configurable for more than one plugins folder
+        return new File[] { PLUGINS_FOLDER };
     }
 
     @Override
@@ -462,17 +524,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
                         exception.err();
                     }
         return result;
-    }
-
-    public static String timeStamp() {
-        return timeStamp("-", ":");
-    }
-
-    public static String timeStamp(String date_separator, String time_separator) {
-        return String.valueOf(Calendar.getInstance().get(Calendar.MONTH)) + date_separator + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + date_separator
-                + (Calendar.getInstance().get(Calendar.YEAR) - 2000) + " " + (Calendar.getInstance().get(Calendar.HOUR) == 0 ? 12 : Calendar.getInstance().get(Calendar.HOUR))
-                + time_separator + Calendar.getInstance().get(Calendar.MINUTE) + time_separator + Calendar.getInstance().get(Calendar.SECOND)
-                + (Calendar.getInstance().get(Calendar.AM_PM) == Calendar.AM ? "a" : "p") + ".m.";
     }
 
     public boolean isDebugging() {

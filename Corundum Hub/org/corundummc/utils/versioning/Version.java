@@ -32,7 +32,7 @@ public class Version implements Matchable<Version> {
     }
 
     protected void parseVersion(String version) {
-        String[] versionSeparated = version.split(".");
+        String[] versionSeparated = version.split("\\.");
 
         String majorVersion = prepVerSegForCasting(versionSeparated[0]);
         this.majorVersion = Byte.valueOf(majorVersion);

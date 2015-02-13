@@ -15,9 +15,8 @@ package org.corundummc.utils.myList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.corundummc.hub.CorundumHub;
-import org.corundummc.hub.CorundumThread;
 import org.corundummc.utils.ListUtilities;
+import org.corundummc.utils.MatchUtilities;
 import org.corundummc.utils.interfaces.Matchable;
 
 import static org.corundummc.utils.ListUtilities.*;
@@ -1272,6 +1271,11 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return results;
     }
 
+    public int resort(T object) {
+        remove(object);
+        return add(object);
+    }
+
     public void retain(T... objects) {
         if (isEmpty())
             return;
@@ -1431,13 +1435,25 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
         return union(list.toArray());
     }
 
+    // overridable
+    public int compare(T object1, T object2) {
+        if (data instanceof Comparable<?>)
+            try {
+                return ((Comparable<T>) object1).compareTo(object2);
+            } catch (ClassCastException exception) {
+                //
+            }
+
+        return object1.toString().compareTo(object2.toString());
+    }
+
     // overrides
     @Override
     public myList<T> clone() {
         return new myList<T>(this);
     }
 
-    public int compareTo(myList<T> list) {
+    public final int compareTo(myList<T> list) {
         if (isEmpty() && list.isEmpty())
             return 0;
         else if (isEmpty())
@@ -1467,7 +1483,7 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     }
 
     @Override
-    public int compareTo(T object) {
+    public final int compareTo(T object) {
         if (data == null)
             if (object == null)
                 return 0;
@@ -1475,14 +1491,8 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
                 return -1;
         else if (object == null)
             return 1;
-        else if (data instanceof Comparable<?>)
-            try {
-                return ((Comparable<T>) data).compareTo(object);
-            } catch (ClassCastException exception) {
-                return data.toString().compareTo(object.toString());
-            }
         else
-            return data.toString().compareTo(object.toString());
+            return compare(data, object);
     }
 
     @Override
@@ -1498,24 +1508,6 @@ public class myList<T> implements Comparable<T>, Cloneable, Iterable<T>, Matchab
     @Override
     public myListIterator<T> iterator() {
         return new myListIterator<T>(this);
-    }
-
-    public int matchTo(Object... match_parameters) {
-        // if the list contains an item that matches those parameters, then we have a match
-        if (findMatch(match_parameters) == null)
-            return 1;
-        else
-            return 0;
-    }
-
-    public int matchTo(Object[]... match_parameters) {
-        // try to match all the given match parameters to elements in the list
-        for (Object[] match_parameter : match_parameters)
-            if (matchTo(match_parameter) == 1)
-                return 1;
-
-        // if all the match_parameters were matched to values in the list, it's a match
-        return 0;
     }
 
     public void remove() {

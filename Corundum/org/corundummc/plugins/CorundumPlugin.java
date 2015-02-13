@@ -13,6 +13,9 @@ import org.corundummc.CorundumServer;
 import org.corundummc.entities.living.Player;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
+import org.corundummc.exceptions.CorundumSecurityException;
+import org.corundummc.hub.CorundumJarLoader;
+import org.corundummc.hub.CorundumThread;
 import org.corundummc.listeners.CorundumListener;
 import org.corundummc.listeners.ListenerCaller;
 import org.corundummc.listeners.plugins.PluginLoadListener;
@@ -21,20 +24,17 @@ import org.corundummc.utils.myList.myList;
 
 public abstract class CorundumPlugin implements CorundumListener {
     private final JarFile jar;
-    private final URLClassLoader loader;
 
     private boolean enabled = false;
     private myList<CorundumListener> listeners = new myList<CorundumListener>(this);
-    private HashMap<String, Method> commands = new HashMap<>();
 
-    public CorundumPlugin() throws CIE {
-        // get the URLClassLoader used to load this class
-        loader = (URLClassLoader) getClass().getClassLoader();
+    public CorundumPlugin() throws CIE, CorundumSecurityException {
+        CorundumServer.secure("call the CorundumPlugin constructor");
 
         // first, try to find the jar's URL from the URLClassLoader used to load it
         URL jar_URL;
         try {
-            jar_URL = loader.getURLs()[0];
+            jar_URL = ((URLClassLoader) getClass().getClassLoader()).getURLs()[0];
         } catch (ClassCastException exception) {
             throw new CorundumException("Someone loaded this plugin with something besides a URLClassLoader!", exception, "ClassLoader type="
                     + getClass().getClassLoader().getClass().getSimpleName());
@@ -51,13 +51,41 @@ public abstract class CorundumPlugin implements CorundumListener {
         }
     }
 
-    public CorundumServer getServer() {
-        return (CorundumServer) PluginThread.currentThread().getServer();
+    // private utilities
+    private static void handleDependencyChecking(List<CorundumPlugin> pluginsToCheck) {
+        Map<String, List<CorundumPlugin>> dependencies = new HashMap<>();
+        Map<String, CorundumPlugin> pluginNames = new HashMap<>();
+
+        for (CorundumPlugin plugin : pluginsToCheck) {
+            String[] pluginDependencies = plugin.getDependencies();
+            pluginNames.put(plugin.getName(), plugin);
+
+            if (pluginDependencies.length >= 1) {
+                for (String pluginDependency : pluginDependencies) {
+                    if (!dependencies.keySet().contains(pluginDependency) && !pluginDependency.equals("")) {
+                        List<CorundumPlugin> plugins = dependencies.get(pluginDependency);
+                        plugins.add(plugin);
+                        dependencies.put(pluginDependency, plugins);
+                    }
+                }
+            }
+        }
+
+        for (String dependency : dependencies.keySet()) {
+            if (!pluginNames.keySet().contains(dependency)) {
+                for (CorundumPlugin plugin : dependencies.get(dependency)) {
+                    CorundumServer.getInstance()
+                            .message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
+                    pluginsToCheck.remove(plugin);
+                }
+            }
+        }
     }
 
     // internal Corundum plugin handling
     /** This method takes a given {@link JarFile} and attempts to load it as a {@link CorundumPlugin}. If successful, it will create a new {@link CorundumPlugin} based on the
-     * given {@link JarFile}, add it to the {@link CorundumServer#plugins global plugins list}, and call the {@link CorundumPlugin}'s {@link #onLoad() onLoad() method}. Loading a
+     * given {@link JarFile}, add it to the {@link CorundumServer#plugins global plugins list}, and call the {@link CorundumPlugin}'s {@link #onLoad() onLoad() method}. Loading
+     * a
      * plugin will load the plugin and its data into the RAM and make its classes accessible, but will not start the plugin or use any of its {@link CorundumListener}s.
      * 
      * @param file_path
@@ -193,42 +221,11 @@ public abstract class CorundumPlugin implements CorundumListener {
         return loaded_plugins.toArray(new CorundumPlugin[loaded_plugins.size()]);
     }
 
-    public static void handleDependencyChecking(List<CorundumPlugin> pluginsToCheck) {
-        Map<String, List<CorundumPlugin>> dependencies = new HashMap<>();
-        Map<String, CorundumPlugin> pluginNames = new HashMap<>();
-
-        for (CorundumPlugin plugin : pluginsToCheck) {
-            String[] pluginDependencies = plugin.getDependencies();
-            pluginNames.put(plugin.getName(), plugin);
-
-            if (pluginDependencies.length >= 1) {
-                for (String pluginDependency : pluginDependencies) {
-                    if (!dependencies.keySet().contains(pluginDependency) && !pluginDependency.equals("")) {
-                        List<CorundumPlugin> plugins = dependencies.get(pluginDependency);
-                        plugins.add(plugin);
-                        dependencies.put(pluginDependency, plugins);
-                    }
-                }
-            }
-        }
-
-        for (String dependency : dependencies.keySet()) {
-            if (!pluginNames.keySet().contains(dependency)) {
-                for (CorundumPlugin plugin : dependencies.get(dependency)) {
-                    CorundumServer.getInstance()
-                            .message("Plugin " + plugin.getName() + " will NOT load, as it is missing dependency " + dependency + ", and possibly others!");
-                    pluginsToCheck.remove(plugin);
-                }
-            }
-        }
-    }
-
     /** This method enables this {@link CorundumPlugin} and calls the plugin's {@link #onEnable() onEnable() method}. Enabling a plugin causes all its {@link CorundumListener}s
      * to become active and its commands to become usable.
      * 
      * @see {@link #onEnable()}, {@link CorundumPlugin#load(String)}, {@link #disable()}, and {@link #unload()}. */
     public final void enable() {
-        enabled = true;
         try {
             onEnable();
         } catch (CorundumException exception) {
@@ -236,6 +233,11 @@ public abstract class CorundumPlugin implements CorundumListener {
         } catch (Exception exception) {
             new CorundumException(getName() + " had a problem while being enabled!", exception).err();
         }
+
+        enabled = true;
+        /* since the enable status of the plugin has been changed, its place in the plugin list will change, so it should be resorted back into the list in its new rightful
+         * position */
+        getServer().plugins.resort(this);
     }
 
     /** This method disables this {@link CorundumPlugin} and calls the plugin's {@link #onDisable() onDisable() method}. Disabling a plugin causes all its
@@ -244,8 +246,6 @@ public abstract class CorundumPlugin implements CorundumListener {
      * 
      * @see {@link #onDisable()}, {@link #load(String)}, {@link #enable()}, and {@link #unload()}. */
     public final void disable() {
-        enabled = false;
-
         try {
             onDisable();
         } catch (CorundumException exception) {
@@ -253,6 +253,11 @@ public abstract class CorundumPlugin implements CorundumListener {
         } catch (Exception exception) {
             new CorundumException(getName() + " had a problem while being disabled!", exception).err();
         }
+
+        enabled = false;
+        /* since the enable status of the plugin has been changed, its place in the plugin list will change, so it should be resorted back into the list in its new rightful
+         * position */
+        getServer().plugins.resort(this);
     }
 
     /** This method unloads this {@link CorundumPlugin} and calls the plugin's {@link #onUnload() onUnload() method}. Unloading a plugin first {@link #disable() disables} the
@@ -373,6 +378,10 @@ public abstract class CorundumPlugin implements CorundumListener {
     }
 
     // other utilities
+    public CorundumServer getServer() {
+        return (CorundumServer) CorundumThread.currentThread().getServer();
+    }
+
     public boolean isEnabled() {
         return enabled;
     }

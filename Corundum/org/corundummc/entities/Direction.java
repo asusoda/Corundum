@@ -3,10 +3,10 @@ package org.corundummc.entities;
 /**
  * Class that represents the rotation info of something, usually an entity. Deals with pitch and yaw.
  */
-public class Rotation {
+public class Direction {
     private float pitch, yaw;
 
-    public Rotation(float pitch, float yaw) {
+    public Direction(float pitch, float yaw) {
         this.pitch = pitch;
         this.yaw = yaw;
     }

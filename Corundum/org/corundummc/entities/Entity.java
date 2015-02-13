@@ -132,7 +132,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         return new Velocity(entityMC.motionX, entityMC.motionY, entityMC.motionZ);
     }
 
-    public S setRotation(Rotation rotation) {
+    public S setRotation(Direction rotation) {
         entityMC.rotationPitch = rotation.getPitch();
         entityMC.rotationYaw = rotation.getYaw();
 
@@ -162,7 +162,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         return (S) this;
     }
 
-    public Rotation getRotation() {
-        return new Rotation(entityMC.rotationPitch, entityMC.rotationYaw);
+    public Direction getRotation() {
+        return new Direction(entityMC.rotationPitch, entityMC.rotationYaw);
     }
 }

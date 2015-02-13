@@ -24,7 +24,7 @@ public abstract class LivingEntity<S extends LivingEntity<S, MC, T>, MC extends 
     }
 
     public abstract static class LivingEntityType<S extends LivingEntityType<S, MC, I>, MC extends EntityLivingBase, I extends LivingEntity<I, MC, S>> extends
-            EntityType<S, MC, I> {
+            Entity.EntityType<S, MC, I> {
         protected LivingEntityType(int id, int data) {
             super(id, data);
 
