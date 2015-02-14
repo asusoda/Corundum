@@ -1,6 +1,10 @@
-package org.corundummc.biomes;
+package org.corundummc.biomes.worldwide;
 
+import org.corundummc.biomes.Biome;
+import org.corundummc.biomes.Biome.BiomeType;
 import org.corundummc.biomes.overworld.OverworldBiome.OverworldBiomeType;
+import org.corundummc.biomes.worldwide.EndBiome.EndBiomeType;
+import org.corundummc.biomes.worldwide.NetherBiome.NetherBiomeType;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 import org.corundummc.world.Zone;
@@ -23,7 +27,8 @@ public abstract class WorldwideBiome<S extends WorldwideBiome<S, MC, T>, MC exte
     }
 
     public static interface WorldwideBiomeTypes {
-        // TODO
+        public static final NetherBiomeType NETHER = NetherBiomeType.TYPE;
+        public static final EndBiomeType END = EndBiomeType.TYPE;
     }
 
     public abstract static class WorldwideBiomeType<S extends WorldwideBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends WorldwideBiome<I, MC, S>> extends

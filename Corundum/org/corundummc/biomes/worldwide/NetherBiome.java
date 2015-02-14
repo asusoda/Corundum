@@ -1,8 +1,9 @@
-package org.corundummc.biomes;
+package org.corundummc.biomes.worldwide;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenHell;
 
+import org.corundummc.biomes.Biome;
 import org.corundummc.biomes.Biome.BiomeType;
 import org.corundummc.world.Location;
 
