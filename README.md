@@ -26,20 +26,18 @@ Building from Source
 You can either use the installer under the Corundum installer directory here, OR follow these steps.
 
  1. Download [MCP v9.08](http://www.mediafire.com/download/2czafa60rh4ajhj/mcp908.zip).
- 2. Download the source code from this repository.
- 3. Go into conf/mcp.conf. Look near the bottom and you should see CmdRecomp. Change all instances of "1.6" to "1.7". This ensures 
-    that MCP uses Java 7 rather than Java 6. Failure to do so will very likely cause compile time errors. Optionally, do the same 
-    with CmdRecompScala if your project includes Scala code.
- 4. Run MCP's decompile script (decompile.bat for Windows, decompile.sh for *nix-based systems, including Mac).
- 5. Extract the Corundum folder from the source code into MCP's "src/minecraft_server" folder.
- 6. Run MCP's recompile and reobfuscate scripts.
- 7. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum.jar".
- 8. Add a META_INF folder with a MANIFEST.MF file to the Corundum.jar and designate "org.corundummc.CorundumServer" as the main class.
- 9. Download the appropriate version of the minecraft_server.jar.
- 10. Compile the Hub inside of the Corundum Hub folder.
- 11. Package the compiled Corundum Hub code into a new jar called "Corundum Hub.jar". Make sure that inside the jar, the top-level directory is NOT "hub"; it should be "org".
- 12. Add a META_INF folder with a MANIFEST.MF file to the Corundum launcher.jar and designate "org.corundummc.hub.CorundumLauncher" as the main class.
- 13. Place the Corundum.jar, Corundum launcher.jar, and minecraft_server.jar in the same directory.
- 14. Run the Corundum launcher.jar.
+ 2. Download [the minecraft_server.jar for Minecraft 1.8.1](https://s3.amazonaws.com/Minecraft.Download/versions/1.8.1/minecraft_server.1.8.1.jar) from [Minecraft's official website](https://minecraft.net/).
+ 3. Download the source code from this repository (at least both Corundum and the Corundum Hub).
+ 4. Put the minecraft_server.jar in MCP's "jar" folder and run MCP's decompile script (decompile.bat for Windows, decompile.sh for *nix-based systems, including Mac).
+ 5. Compile Corundum and the Corundum Hub with your favorite Java 7 compiler; if you had to combine the source files for Corundum and Hub to achieve this, separate them again into two separate folders.
+ Pre-6. If this is your first time using MCP, you may have to run the recompile script before attempting the next steps.
+ 6. Copy the Corundum bytecode (.class files from the "org" folder) into MCP's "bin/minecraft_server" folder.
+ 7. Run MCP's reobfuscate script (in the MCP folder, ending in ".bat" for Windows machines or ending in ".sh" for Unix-based systems, including Mac).
+ 8. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum.jar". Make sure that inside the jar, the top-level directory is "org".
+ 9. Repeat steps `5.` and `6.` for the Corundum Hub bytecode.
+ 10. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum Hub.jar". Make sure that inside the jar, the top-level directory is "org".
+ 11. Add a META_INF folder with a MANIFEST.MF file to the Corundum Hub.jar and designate "org.corundummc.hub.CorundumHub" as the main class.
+ 12. Place the Corundum.jar, Corundum Hub.jar, and minecraft_server.jar in the same directory.
+ 13. Run the Corundum launcher.jar with a Java 7 Virtual Machine.
 
 Sorry it's so complicated.
