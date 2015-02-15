@@ -2,6 +2,8 @@ package org.corundummc.biomes.overworld.sandy;
 
 import org.corundummc.biomes.overworld.OverworldBiome;
 import org.corundummc.biomes.overworld.OverworldBiome.OverworldBiomeType;
+import org.corundummc.biomes.overworld.sandy.desert.DesertesqueBiome.DesertesqueBiomeTypes;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaesqueBiome.MesaesqueBiomeTypes;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -20,8 +22,8 @@ public abstract class SandyBiome<S extends SandyBiome<S, MC, T>, MC extends Biom
         super(location);
     }
 
-    public static interface SandyBiomeTypes {
-        // TODO
+    public static interface SandyBiomeTypes extends DesertesqueBiomeTypes, MesaesqueBiomeTypes {
+        //
     }
 
     public abstract static class SandyBiomeType<S extends SandyBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends SandyBiome<I, MC, S>> extends

@@ -1,6 +1,8 @@
 package org.corundummc.biomes.overworld;
 
 import org.corundummc.biomes.Biome;
+import org.corundummc.biomes.overworld.aquatic.AquaticBiome.AquaticBiomeTypes;
+import org.corundummc.biomes.overworld.sandy.SandyBiome.SandyBiomeTypes;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -12,7 +14,7 @@ public abstract class OverworldBiome<S extends OverworldBiome<S, MC, T>, MC exte
         super(location);
     }
 
-    public static interface OverworldBiomeTypes {
+    public static interface OverworldBiomeTypes extends AquaticBiomeTypes, SandyBiomeTypes {
         // TODO
     }
 

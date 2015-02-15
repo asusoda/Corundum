@@ -30,14 +30,14 @@ public class DesertHillsBiome extends DesertesqueBiome<DesertHillsBiome, BiomeGe
         }
 
         @Override
-        public DesertBiomeType getBaseBiomeType() {
+        public DesertBiomeType getBase() {
             return DesertBiomeType.TYPE;
         }
     }
 
     @Override
-    public DesertBiomeType getBaseBiomeType() {
-        return getType().getBaseBiomeType();
+    public DesertBiomeType getBaseType() {
+        return getType().getBase();
     }
 
     @Override

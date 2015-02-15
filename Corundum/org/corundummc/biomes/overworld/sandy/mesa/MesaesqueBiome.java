@@ -3,7 +3,13 @@ package org.corundummc.biomes.overworld.sandy.mesa;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import org.corundummc.biomes.overworld.sandy.SandyBiome;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaBiome.MesaBiomeType;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaBryceBiome.MesaBryceBiomeType;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaPlateauBiome.MesaPlateauBiomeType;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaPlateauFMBiome.MesaPlateauFMBiomeType;
 import org.corundummc.world.Location;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaPlateauFBiome.MesaPlateauFBiomeType;
+import org.corundummc.biomes.overworld.sandy.mesa.MesaPlateauMBiome.MesaPlateauMBiomeType;
 
 /** TODO
  * 
@@ -21,7 +27,12 @@ public abstract class MesaesqueBiome<S extends MesaesqueBiome<S, MC, T>, MC exte
     }
 
     public static interface MesaesqueBiomeTypes {
-        // TODO
+        public static final MesaBiomeType MESA = MesaBiomeType.TYPE;
+        public static final MesaBryceBiomeType MESA_BRYCE = MesaBryceBiomeType.TYPE;
+        public static final MesaPlateauBiomeType MESA_PLATEAU = MesaPlateauBiomeType.TYPE;
+        public static final MesaPlateauFBiomeType MESA_PLATEAU_F = MesaPlateauFBiomeType.TYPE;
+        public static final MesaPlateauMBiomeType MESA_PLATEAU_M = MesaPlateauMBiomeType.TYPE;
+        public static final MesaPlateauFMBiomeType MESA_PLATEAU_FM = MesaPlateauFMBiomeType.TYPE;
     }
 
     public abstract static class MesaesqueBiomeType<S extends MesaesqueBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends MesaesqueBiome<I, MC, S>> extends

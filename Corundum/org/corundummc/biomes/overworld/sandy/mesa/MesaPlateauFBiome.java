@@ -10,17 +10,17 @@ import net.minecraft.world.biome.BiomeGenMesa;
 
 import org.corundummc.biomes.overworld.sandy.mesa.MesaesqueBiome.MesaesqueBiomeType;
 
-public class MesaPlateauFBiome extends MesaesqueBiome<MesaPlateauFBiome, BiomeGenMesa, MesaPlateauFBiome.MesaPlateauFType> implements PlateauBiome<MesaBiomeType> {
+public class MesaPlateauFBiome extends MesaesqueBiome<MesaPlateauFBiome, BiomeGenMesa, MesaPlateauFBiome.MesaPlateauFBiomeType> implements PlateauBiome<MesaBiomeType> {
     protected MesaPlateauFBiome(Location location) {
         super(location);
     }
 
     /** This class represents one single {@link BiomeType}; classes like this are used instead of
      * simple instances of their parent types because of the self-parameterization <tt>S</tt>. */
-    static class MesaPlateauFType extends MesaesqueBiomeType<MesaPlateauFType, BiomeGenMesa, MesaPlateauFBiome> implements PlateauBiomeType<MesaBiomeType> {
-        public static final MesaPlateauFType TYPE = new MesaPlateauFType();
+    static class MesaPlateauFBiomeType extends MesaesqueBiomeType<MesaPlateauFBiomeType, BiomeGenMesa, MesaPlateauFBiome> implements PlateauBiomeType<MesaBiomeType> {
+        public static final MesaPlateauFBiomeType TYPE = new MesaPlateauFBiomeType();
 
-        private MesaPlateauFType() {
+        private MesaPlateauFBiomeType() {
             super((BiomeGenMesa) BiomeGenBase.field_150607_aa);
         }
 
@@ -30,18 +30,18 @@ public class MesaPlateauFBiome extends MesaesqueBiome<MesaPlateauFBiome, BiomeGe
         }
 
         @Override
-        public MesaBiomeType getBaseBiomeType() {
+        public MesaBiomeType getBase() {
             return MesaBiomeType.TYPE;
         }
     }
 
     @Override
-    public MesaBiomeType getBaseBiomeType() {
-        return getType().getBaseBiomeType();
+    public MesaBiomeType getBaseType() {
+        return getType().getBase();
     }
 
     @Override
-    public MesaPlateauFType getType() {
-        return MesaPlateauFType.TYPE;
+    public MesaPlateauFBiomeType getType() {
+        return MesaPlateauFBiomeType.TYPE;
     }
 }

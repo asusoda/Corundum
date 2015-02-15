@@ -1,6 +1,9 @@
 package org.corundummc.biomes.overworld.sandy.desert;
 
 import org.corundummc.biomes.overworld.sandy.SandyBiome;
+import org.corundummc.biomes.overworld.sandy.desert.DesertBiome.DesertBiomeType;
+import org.corundummc.biomes.overworld.sandy.desert.DesertHillsBiome.DesertHillsBiomeType;
+import org.corundummc.biomes.overworld.sandy.desert.DesertMBiome.DesertMBiomeType;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -22,7 +25,9 @@ public abstract class DesertesqueBiome<S extends DesertesqueBiome<S, MC, T>, MC 
     }
 
     public static interface DesertesqueBiomeTypes {
-        // TODO
+        public static final DesertBiomeType DESERT = DesertBiomeType.TYPE;
+        public static final DesertHillsBiomeType DESERT_HILLS = DesertHillsBiomeType.TYPE;
+        public static final DesertMBiomeType DESERT_M = DesertMBiomeType.TYPE;
     }
 
     public abstract static class DesertesqueBiomeType<S extends DesertesqueBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends DesertesqueBiome<I, MC, S>> extends

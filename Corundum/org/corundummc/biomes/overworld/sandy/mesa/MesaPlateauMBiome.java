@@ -30,14 +30,14 @@ public class MesaPlateauMBiome extends MesaesqueBiome<MesaPlateauMBiome, BiomeGe
         }
 
         @Override
-        public MesaBiomeType getBaseBiomeType() {
+        public MesaBiomeType getBase() {
             return MesaBiomeType.TYPE;
         }
     }
 
     @Override
-    public MesaBiomeType getBaseBiomeType() {
-        return getType().getBaseBiomeType();
+    public MesaBiomeType getBaseType() {
+        return getType().getBase();
     }
 
     @Override

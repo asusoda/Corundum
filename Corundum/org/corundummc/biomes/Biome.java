@@ -12,6 +12,8 @@
 
 package org.corundummc.biomes;
 
+import org.corundummc.biomes.overworld.OverworldBiome.OverworldBiomeTypes;
+import org.corundummc.biomes.worldwide.WorldwideBiome.WorldwideBiomeTypes;
 import org.corundummc.entities.Entity;
 import org.corundummc.utils.types.IDedType;
 import org.corundummc.utils.types.Typed;
@@ -19,8 +21,6 @@ import org.corundummc.world.Block;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 import org.corundummc.world.Zone;
-
-import com.google.common.eventbus.AllowConcurrentEvents;
 
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -44,8 +44,8 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
         this.location = location;
     }
 
-    public static interface BiomeTypes {
-        // TODO
+    public static interface BiomeTypes extends WorldwideBiomeTypes, OverworldBiomeTypes {
+        //
     }
 
     public abstract static class BiomeType<S extends BiomeType<S, MC, I>, MC extends BiomeGenBase, I extends Biome<I, MC, S>> extends IDedType<S> {
