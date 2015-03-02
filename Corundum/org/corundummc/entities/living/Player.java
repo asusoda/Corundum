@@ -84,7 +84,7 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
         /* Player.getByName() actually finds the player with a name that "matches" the given name (see getByName() Javadoc), so only return the player if their name exactly
          * matches the given name; otherwise, return null. */
-        if (player != null && player.getName().equals(name))
+        if (player == null || player.getName().equals(name))
             return player;
         else
             return null;
