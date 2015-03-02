@@ -12,6 +12,8 @@
 
 package org.corundummc.world;
 
+import net.minecraft.util.BlockPos;
+
 import org.corundummc.biomes.Biome;
 import org.corundummc.biomes.Biome.BiomeType;
 import org.corundummc.utils.ListUtilities;
@@ -50,7 +52,7 @@ public class Location implements Cloneable {
     }
 
     public Chunk getChunk() {
-        return new Chunk(world.MC().getChunkFromBlockCoords(getBlockX(), getBlockZ()));
+        return new Chunk(world.MC().getChunkFromChunkCoords(getBlockX(), getBlockZ()));
     }
 
     public Block<?, ?, ?> getHighestBlock() {
@@ -109,6 +111,10 @@ public class Location implements Cloneable {
     @Override
     protected Location clone() {
         return new Location(x, y, z, world);
+    }
+
+    public BlockPos toBlockPos() {
+        return new BlockPos(getBlockX(), getBlockY(), getBlockZ());
     }
 
     public String toString(boolean use_block_coordinates) {

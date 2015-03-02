@@ -59,14 +59,15 @@ public class Enchantment extends Typed<Enchantment.EnchantmentType> {
     }
 
     public static final class EnchantmentType extends IDedType<EnchantmentType> {
-        public static final EnchantmentType PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.protection), FIRE_PROTECTION = new EnchantmentType(
-                net.minecraft.enchantment.Enchantment.fireProtection), FEATHER_FALLING = new EnchantmentType(net.minecraft.enchantment.Enchantment.featherFalling),
+
+        public static final EnchantmentType PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180310_c), FIRE_PROTECTION = new EnchantmentType(
+                net.minecraft.enchantment.Enchantment.fireProtection), FEATHER_FALLING = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180309_e),
                 BLAST_PROTECTION = new EnchantmentType(net.minecraft.enchantment.Enchantment.blastProtection), PROJECTILE_PROTECTION = new EnchantmentType(
-                        net.minecraft.enchantment.Enchantment.projectileProtection), RESPIRATION = new EnchantmentType(net.minecraft.enchantment.Enchantment.respiration),
+                        net.minecraft.enchantment.Enchantment.field_180308_g), RESPIRATION = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180317_h),
                 AQUA_AFFINITY = new EnchantmentType(net.minecraft.enchantment.Enchantment.aquaAffinity), THORNS = new EnchantmentType(
-                        net.minecraft.enchantment.Enchantment.thorns), SHARPNESS = new EnchantmentType(net.minecraft.enchantment.Enchantment.sharpness),
-                SMITE = new EnchantmentType(net.minecraft.enchantment.Enchantment.smite), BANE_OF_ARTHROPODS = new EnchantmentType(
-                        net.minecraft.enchantment.Enchantment.baneOfArthropods), KNOCKBACK = new EnchantmentType(net.minecraft.enchantment.Enchantment.knockback),
+                        net.minecraft.enchantment.Enchantment.thorns), SHARPNESS = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180314_l),
+                SMITE = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180315_m), BANE_OF_ARTHROPODS = new EnchantmentType(
+                        net.minecraft.enchantment.Enchantment.field_180312_n), KNOCKBACK = new EnchantmentType(net.minecraft.enchantment.Enchantment.field_180313_o),
                 FIRE_ASPECT = new EnchantmentType(net.minecraft.enchantment.Enchantment.fireAspect), LOOTING = new EnchantmentType(
                         net.minecraft.enchantment.Enchantment.fireAspect), EFFICIENCY = new EnchantmentType(net.minecraft.enchantment.Enchantment.efficiency),
                 SILK_TOUCH = new EnchantmentType(net.minecraft.enchantment.Enchantment.silkTouch), UNBREAKING = new EnchantmentType(

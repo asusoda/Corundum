@@ -7,7 +7,7 @@ import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 
 public class EnderPearl extends Projectile<EnderPearl, EntityEnderPearl, EnderPearl.EnderPearlType> {
     public EnderPearl() {
-        super(new EntityEnderPearl(null));
+        super(new EntityEnderPearl(null, null));
     }
 
     protected EnderPearl(EntityEnderPearl entityMC) {

@@ -11,9 +11,9 @@ import java.util.List;
  * versioning, particularly with snapshots and prereleases.
  * 
  * @author Niadel */
-public class Version implements Matchable<Version> {
+public class Version implements Matchable<Version>, Comparable<Version> {
     private byte majorVersion;
-    private int[] minorVersions;
+    protected int[] minorVersions;
     private List<String> tags = new ArrayList<>();
     private static final List<Character> legalChars = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -63,29 +63,6 @@ public class Version implements Matchable<Version> {
         return versionSegment;
     }
 
-    public boolean isVersionGreaterThan(Version otherVersion) {
-        boolean thisVersionGreater = true;
-
-        if (this.majorVersion < otherVersion.majorVersion || (this.tags.contains("Pre-") && !otherVersion.tags.contains("Pre-"))) {
-            thisVersionGreater = false;
-        } else {
-            boolean thisHasLessMinorVersions = this.minorVersions.length < otherVersion.minorVersions.length;
-
-            for (int i = 0; thisHasLessMinorVersions ? i == this.minorVersions.length : i == otherVersion.minorVersions.length; i++) {
-                if (this.minorVersions[i] < otherVersion.minorVersions[i]) {
-                    thisVersionGreater = false;
-                    break;
-                }
-            }
-        }
-
-        return thisVersionGreater;
-    }
-
-    public boolean isVersionLesserThan(Version otherVersion) {
-        return !this.isVersionGreaterThan(otherVersion);
-    }
-
     public byte getMajorVersion() {
         return this.majorVersion;
     }
@@ -96,10 +73,6 @@ public class Version implements Matchable<Version> {
 
     public List<String> getTags() {
         return this.tags;
-    }
-
-    protected void setMinorVersions(int[] newMinorVersions) {
-        this.minorVersions = newMinorVersions;
     }
 
     public class BadVersionException extends CorundumException {
@@ -122,6 +95,30 @@ public class Version implements Matchable<Version> {
 
         public String getSymbol() {
             return this.symbol;
+        }
+    }
+
+    @Override
+    public int compareTo(Version otherVersion) {
+        if (otherVersion.equals(this))
+            return 0;
+        else {
+            boolean thisVersionGreater = true;
+
+            if (this.majorVersion < otherVersion.majorVersion || (this.tags.contains("Pre-") && !otherVersion.tags.contains("Pre-"))) {
+                thisVersionGreater = false;
+            } else {
+                boolean thisHasLessMinorVersions = this.minorVersions.length < otherVersion.minorVersions.length;
+
+                for (int i = 0; thisHasLessMinorVersions ? i == this.minorVersions.length : i == otherVersion.minorVersions.length; i++) {
+                    if (this.minorVersions[i] < otherVersion.minorVersions[i]) {
+                        thisVersionGreater = false;
+                        break;
+                    }
+                }
+            }
+
+            return thisVersionGreater ? 1 : -1;
         }
     }
 

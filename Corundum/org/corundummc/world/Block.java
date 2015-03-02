@@ -14,12 +14,17 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
+import net.minecraft.block.BlockButton;
+import net.minecraft.block.state.BlockStateBase;
+import net.minecraft.block.state.IBlockState;
+
 import org.corundummc.utils.types.Typed;
 import org.corundummc.biomes.Biome;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.types.HoldableType;
+import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> extends Typed<T> {
     private Location location;
@@ -226,7 +231,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * 
          * @return <b>true</b> if this {@link BlockType} can stop the spread of grass to dirt; <b>false</b> otherwise. */
         public boolean canBlockGrass() {
-            return blockMC.getMaterial().getCanBlockGrass();
+            return blockMC.getMaterial().blocksLight();
         }
 
         /** This method returns the {@link BoundingBox} that describes the shape of this block. Some blocks have normal bounds and are shaped like full-size cubes, like
@@ -265,13 +270,6 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * @return a number between 0 and 255 representing the opacity of this {@link BlockType}. */
         public short getOpacity() {
             return (short) blockMC.getLightOpacity();
-        }
-
-        /** This method determines whether or not this {@link BlockType} can be mined and its drops obtained without a tool in Adventure Mode.
-         * 
-         * @return <b>true</b> if its drops can be obtained without the use of a tool in Adventure Mode; <b>false</b> otherwise. */
-        public boolean isAdventureModeExempt() {
-            return blockMC.getMaterial().isAdventureModeExempt();
         }
 
         /** This method determines whether of not a block is broken when it is pushed by a piston. For example, {@link BlockType#TORCH torches} are broken when they are pushed,
@@ -367,6 +365,10 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
             return getByID(BlockType.class, id, data);
         }
 
+        public IBlockState toBlockState() {
+            return net.minecraft.block.Block.getBlockById(getID()).getStateFromMeta(getData());
+        }
+
         public static BlockType[] values() {
             return values(BlockType.class);
         }
@@ -374,9 +376,9 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
     // static utilities
     public static Block<?, ?, ?> fromLocation(Location location) {
-        return BlockType.getByID(
-                net.minecraft.block.Block.getIdFromBlock(location.getWorld().MC().getBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ())),
-                location.getWorld().MC().getBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ())).fromLocation(location);
+        return BlockType.getByID(net.minecraft.block.Block.getIdFromBlock(location.getWorld().MC().getBlockState(location.toBlockPos()).getBlock()),
+                location.getWorld().MC().getBlockState(location.toBlockPos()).getBlock().getMetaFromState(location.getWorld().MC().getBlockState(location.toBlockPos())))
+                .fromLocation(location);
     }
 
     // instance utilities
@@ -388,16 +390,32 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
     }
 
     public Chunk getChunk() {
-        net.minecraft.world.chunk.Chunk mcChunk = this.getLocation().getWorld().MC().getChunkFromBlockCoords(this.location.getBlockX(), this.location.getBlockZ());
-        return new Chunk(mcChunk);
+        return new Chunk(getLocation().getWorld().MC().getChunkFromChunkCoords(this.location.getBlockX(), this.location.getBlockZ()));
     }
 
     public byte getData() {
-        return (byte) location.getWorld().MC().getBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return (byte) location.getWorld().MC().getBlockState(location.toBlockPos()).getBlock().getMetaFromState(location.getWorld().MC().getBlockState(location.toBlockPos()));
     }
 
     public Location getLocation() {
         return location;
+    }
+
+    /** This method changes the type of this {@link Block} to the given {@link BlockType}.
+     * 
+     * @param type
+     *            is the {@link BlockType} which this {@link Block} will be changed to.
+     * 
+     * @return the new {@link Block} with the given {@link BlockType} or <b>null</b> if this {@link Block} could not be changed to the given {@link BlockType}. <br>
+     *         <i>Note that the old {@link Block} is now obsolete and should not be used any more! Replace it with the {@link Block} returned by this method.</i> */
+    @SuppressWarnings({ "unchecked", "hiding" })
+    public <S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends BlockType<T, MC, S>> Block<S, MC, T> setType(BlockType<T, MC, S> type) {
+        boolean result = location.getWorld().setBlock(this, type);
+
+        if (result)
+            return (Block<S, MC, T>) Block.fromLocation(location);
+        else
+            return null;
     }
 
     // type utilities
@@ -407,22 +425,5 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
     public boolean isSolid() {
         return getType().isSolid();
-    }
-
-    public void setData(byte data) throws BlockTypeChangeException {
-        // TODO: if this data value change would change the block's type, throw a BlockTypeChangeException
-        location.getWorld().MC().setBlockMetadata(location.getBlockX(), location.getBlockY(), location.getBlockZ(), data, 3 /* 3 = 1 & 2 = update block and send update info to
-                                                                                                                             * client */);
-    }
-
-    public static class BlockTypeChangeException extends CorundumException {
-        private static final long serialVersionUID = 4455132109829993696L;
-
-        public BlockTypeChangeException(Block<?, ?, ?> block, byte attempted_data_value) {
-            super(CorundumThread.currentThread().getActor()
-                    + " attempted to change the data value of a block to one that would have required the whole block to change to a new kind of block!",
-                    "illegal attempt to change a block's type", "location = " + block.getLocation(), "type = " + block.getType(), "atetmpted data value = "
-                            + attempted_data_value);
-        }
     }
 }

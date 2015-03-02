@@ -13,7 +13,7 @@ public interface Server {
 
     public Version getVersion();
 
-    public void start(String[] arguments);
+    void start(String[] arguments);
 
-    public void quit();
+    void quit();
 }

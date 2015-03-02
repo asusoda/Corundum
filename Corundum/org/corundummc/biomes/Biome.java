@@ -229,7 +229,7 @@ public abstract class Biome<S extends Biome<S, MC, T>, MC extends BiomeGenBase, 
         }
 
         private boolean isCorrectBiomeType(int x, int z) {
-            return location.getWorld().MC().getChunkFromBlockCoords(x, z).getBiomeArray()[x * 16 + z] == getTypeID();
+            return location.getWorld().MC().getChunkFromChunkCoords(x, z).getBiomeArray()[x * 16 + z] == getTypeID();
         }
 
         // result getters

@@ -52,18 +52,18 @@ public class Chunk implements MCEquivalent<net.minecraft.world.chunk.Chunk> {
     }
 
     public Location getLocation() {
-        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMC((net.minecraft.world.WorldServer) chunkMC.worldObj));
+        return new Location(chunkMC.xPosition, 0 /* the y is irrelevant */, chunkMC.zPosition, World.fromMC((net.minecraft.world.WorldServer) chunkMC.getWorld()));
     }
 
     public boolean isLoaded() {
-        return chunkMC.isChunkLoaded;
+        return chunkMC.isLoaded();
     }
 
     public void load() {
-        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((WorldServer) chunkMC.getWorld()).theChunkProviderServer.loadChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 
     public void unload() {
-        ((WorldServer) chunkMC.worldObj).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
+        ((WorldServer) chunkMC.getWorld()).theChunkProviderServer.dropChunk(chunkMC.xPosition, chunkMC.zPosition);
     }
 }

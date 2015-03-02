@@ -21,7 +21,7 @@ public class MesaPlateauFBiome extends MesaesqueBiome<MesaPlateauFBiome, BiomeGe
         public static final MesaPlateauFBiomeType TYPE = new MesaPlateauFBiomeType();
 
         private MesaPlateauFBiomeType() {
-            super((BiomeGenMesa) BiomeGenBase.field_150607_aa);
+            super((BiomeGenMesa) BiomeGenBase.mesaPlateau_F);
         }
 
         @Override

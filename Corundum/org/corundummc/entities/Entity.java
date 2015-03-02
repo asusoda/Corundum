@@ -156,7 +156,7 @@ public abstract class Entity<S extends Entity<S, MC, T>, MC extends net.minecraf
         entityMC.worldObj = location.getWorld().MC();
         /* TODO TEST: I noticed that Minecraft's Entity.setWorld() does not set the dimension I.D., and as it is now (as of 12/3/14), we pass null Worlds into Minecraft
          * constructors when creating new entities, so I thought it might be a good idea to put this in here to make sure the dimension I.D. is set */
-        entityMC.dimension = location.getWorld().MC().provider.dimensionId;
+        entityMC.dimension = location.getWorld().MC().provider.getDimensionId();
         entityMC.worldObj.spawnEntityInWorld(entityMC);
 
         return (S) this;

@@ -2,34 +2,22 @@ package org.corundummc;
 
 import static org.corundummc.utils.StringUtilities.capitalize;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 
-import com.mojang.authlib.GameProfile;
-
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.management.PlayerProfileCache;
-import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.world.EnumDifficulty;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.corundummc.entities.Entity.EntityType;
 import org.corundummc.entities.living.Player;
 import org.corundummc.entities.living.Player.GameMode;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.exceptions.CorundumException;
 import org.corundummc.exceptions.CorundumSecurityException;
-import org.corundummc.hub.Server;
 import org.corundummc.hub.CorundumHub;
+import org.corundummc.hub.CorundumServerBackend;
 import org.corundummc.hub.CorundumThread;
 import org.corundummc.listeners.CommandListener;
 import org.corundummc.listeners.CorundumListener;
@@ -38,23 +26,20 @@ import org.corundummc.listeners.results.EventResult;
 import org.corundummc.plugins.CorundumPlugin;
 import org.corundummc.plugins.PluginThread;
 import org.corundummc.utils.ListUtilities;
-import org.corundummc.utils.SettingsManager;
 import org.corundummc.utils.interfaces.Commander;
+import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.utils.types.IDedType;
 import org.corundummc.utils.versioning.Version;
-import org.corundummc.world.Location;
-import org.corundummc.world.World;
 
 /** This class represents the entirety of a Corundum server.
  * 
  * @author REALDrummer */
-public class CorundumServer extends DedicatedServer implements Server, Commander {
+public class CorundumServer implements Commander, MCEquivalent<CorundumServerBackend> {
     /** This {@link OperatingSystem} represents the operating system is currently running on. */
     public final OperatingSystem OS = OperatingSystem.getFromName(System.getProperty("os.name"));
 
-    private final Version VERSION = new Version("0"), MC_VERSION = new Version("1.7.10");
-    private final File PLUGINS_FOLDER = new File("plugins");
+    private final CorundumServerBackend BACKEND;
 
     /** This list contains all the currently loaded {@link CorundumPlugin}s on the server. Note that loading and unloading plugins will add or remove them from this list,
      * respectively, but enabling or disabling them will <i>not</i> affect this list. */
@@ -69,23 +54,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         }
     };
 
-    private CorundumGui corundumGui;
-    private boolean corundum_GUI_enabled = false;
-    /** This <b>boolean</b> determines whether or not the server uses the default Minecraft GUI. Usually false but can be changed via --mc-gui. */
-    private boolean usingMCGui = false;
-
-    /** The {@link ArgInfo} concerning the args passed in {@link #start}. */
-    private ArgInfo argInfo;
-
-    /** This <b>boolean</b> determines whether or not the server is running in "debug" mode, which will cause the server to log debugging messages to the console. Debug mode is
-     * off (<b>false</b>) by default. Debug mode can be enabled by passing the argument <tt>--debug</tt> (a.k.a. <tt>-d</tt>) to the console as a command line argument when
-     * starting the server. */
-    private boolean debugMode;
-    /** This <b>boolean</b> determines whether or not the server is running in "verbose" mode, which will cause the server to log a large amount of debugging messages to the
-     * console. Verbose mode is off (<b>false</b>) by default. Verbose mode can be enabled by passing the argument <tt>--verbose</tt> (a.k.a. <tt>-v</tt>) to the console as a
-     * command line argument when starting the server. Note that if verbose mode is enabled, so is {@link #debugMode debug mode}. */
-    private boolean verboseMode;
-
     /** This {@link myList} keeps track of the players who are currently in debugging mode; <b>null</b> repesents {@link Corundum#CONSOLE the console} while non-<b>null</b>
      * {@link java.util.UUID}s represent players. Note that {@link #verbose_debuggers verbose debuggers} also appear in this list in addition to appearing in
      * {@link #verbose_debuggers the verbose debuggers list}. */
@@ -96,11 +64,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
 
-    // config variable names
-    private String config_file_name = "Corundum settings.json";
-
-    private SettingsManager settings = new SettingsManager(new File(config_file_name), "name", "Corundum", "prefix", "[Corundum]");
-
     /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
      * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
      * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
@@ -108,8 +71,7 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
      * @param name
      *            is the name of this {@link CorundumServer}. */
     public CorundumServer(String name) {
-        // this DedicatedServer constructor sets up the server and sets MinecraftServer.mcServer to this
-        super(new File("."));
+        BACKEND = new CorundumServerBackend(name);
     }
 
     /** This enum represents a type of operating system. It can be {@link #WINDOWS Windows}, {@link #MAC Mac OS}, {@link #LINUX Linux}, {@link #UNIX Unix}, or {@link #OTHER
@@ -150,20 +112,16 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     }
 
     public static class Difficulty extends IDedType<Difficulty> {
-        public static final Difficulty PEACEFUL = new Difficulty("Peaceful"), EASY = new Difficulty("Easy"), NORMAL = new Difficulty("Normal"), HARD = new Difficulty("Hard");
+        public static final Difficulty PEACEFUL = new Difficulty(), EASY = new Difficulty(), NORMAL = new Difficulty(), HARD = new Difficulty();
 
-        private final String name;
-
-        protected Difficulty(String name) {
+        protected Difficulty() {
             super(values() == null ? 0 : values().length);
-
-            this.name = name;
         }
 
         // overridden utilities
         @Override
         public String getName() {
-            return name;
+            return new ChatComponentTranslation(EnumDifficulty.values()[getID()].getDifficultyResourceKey(), new Object[0]).getUnformattedText();
         }
 
         // pseudo-enum utilities
@@ -174,117 +132,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         public static Difficulty[] values() {
             return values(Difficulty.class);
         }
-    }
-
-    // start up and shut down
-    @Override
-    public void startServerThread() {
-        System.out.println("Starting Corundum server thread!");
-
-        final CorundumServer _this = this;
-        new Thread("Server thread") {
-            public void run() {
-                _this.run();
-            }
-        }.start();
-    }
-
-    // TODO TEMP
-    @Override
-    public void run() {
-        super.run();
-
-        try {
-            int low_x = -1000, low_z = 7500, high_x = 4500, high_z = 10500, test_x = 0, test_z = 8000;
-
-            if (test_x < low_x || test_x > high_x || test_z < low_z || test_z > high_z)
-                throw new NullPointerException("These numbers are stupid!");
-
-            File file = new File("biome map test.bin");
-            if (file.exists())
-                file.delete();
-            file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file);
-
-            /* file format: test_x test_z x-width z-height map */
-            out.write(test_x);
-            out.write(test_z);
-            out.write(high_x - low_x);
-            out.write(high_z - low_z);
-
-            Location location = new Location(0, 0, 0, World.fromMC(worldServers[0]));
-            for (int x = low_x; x < high_x; x++)
-                for (int z = low_z; z < high_z; z++) {
-                    location.setX(x);
-                    location.setZ(z);
-                    out.write((byte) location.getBiome().getTypeID());
-                }
-
-            out.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            quit();
-        }
-    }
-
-    /** This method starts this {@link CorundumServer}.
-     * 
-     * @param arguments
-     *            are the command-line arguments used to configure the properties of this server on startup. */
-    @Override
-    public final void start(String[] arguments) throws CorundumSecurityException {
-        secure("call CorundumServer.start()");
-
-        System.out.println("Starting Corundum server...");
-
-        // To make arg reading easier.
-        this.argInfo = new ArgInfo(arguments);
-        // --no-debug takes priority.
-        this.debugMode = this.argInfo.hasArg("--no-debug", "-D") ? false : this.argInfo.hasArg("--debug", "-d");
-        this.verboseMode = this.argInfo.hasArg("--no-verbose", "-V") ? false : this.argInfo.hasArg("--verbose", "-v");
-
-        if (this.argInfo.hasArg("--gui-enabled", "-g")) {
-            this.enableGUI();
-        }
-
-        try {
-            main(arguments);
-        } catch (Exception exception) {
-            CIE.err("There was a problem starting this Corundum server!", exception);
-        }
-
-        // Vanilla property setting is after the server is started-started as, otherwise, the properties gotten from
-        // server.properties takes priority.
-        /* TODO: I had to comment these parts below because they break the build: Minecraft puts the Minecraft server in a separate thread, which causes startServer() to not
-         * be called until later, which causes the lines below to throw a NullPointerException because the MinecraftServer PropertyManager is not initialized until
-         * startServer() is called. In addition, I can't just call startServer() before this because when the server thread starts immediately after this method and
-         * startServer() is called there, it can't bind to port because it's basically trying ot run two servers in the same place at the same time and it crashes. We also
-         * can't put it before the main() call, for obvious reasons. */
-        // if (argInfo.hasArg("--online-mode", "-o")) {
-        // super.setProperty("online-mode", true);
-        // } else if (this.argInfo.hasArg("--offline-mode", "-O")) {
-        // super.setProperty("online-mode", false);
-        // }
-        //
-        // if (this.argInfo.hasArg("--world")) {
-        // super.setProperty("level-name", this.argInfo.getArgValue("--world"));
-        // } else {
-        // super.setProperty("level-name", "world");
-        // }
-    }
-
-    /** This method shuts down Corundum completely.
-     * 
-     * @throws CorundumSecurityException
-     *             if a {@link CorundumPlugin} attempts to call this method. */
-    @Override
-    public final void quit() throws CorundumSecurityException {
-        secure("call CorundumServer.quit()");
-
-        getInstance().stopServer();
-
-        // close Corundum
-        System.exit(0);
     }
 
     // security
@@ -341,70 +188,6 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         return "the Corundum server \"" + getName() + "\" (v" + getVersion() + ")";
     }
 
-    // Minecraft utils
-    public boolean canGenerateStructures() {
-        // This method is necessary because super.canStructuresSpawn() will be obfuscated!
-        return super.canStructuresSpawn();
-    }
-
-    public void enableGUI() {
-        if (this.argInfo.hasArg("--mc-gui", "-mc-g") || !corundum_GUI_enabled) {
-            if (!corundum_GUI_enabled) {
-                System.out
-                        .println("The Corundum GUI is not enabled! This is a dev thing and hardcoded (ie. Unalterable via args). Corundum is likely in alpha as this is the only time it's likely to be disabled.");
-                System.out.println("Using vanilla server GUI as Corundum's GUI is not enabled [HARDCODED VALUE].");
-            }
-
-            super.setGuiEnabled();
-            this.usingMCGui = true;
-            this.corundum_GUI_enabled = false;
-        } else {
-            this.corundumGui = new CorundumGui(this);
-            this.corundum_GUI_enabled = true;
-        }
-    }
-
-    public boolean isUsingGUI() {
-        return getGuiEnabled() || corundum_GUI_enabled;
-    }
-
-    public GameMode getDefaultGameMode() {
-        return GameMode.getByID(getGameType().getID());
-    }
-
-    public Difficulty getDifficulty() {
-        return Difficulty.getByID(/* get server default difficulty */func_147135_j()./* get difficulty enum I.D. */func_151525_a());
-    }
-
-    public int getSpawnRadius() {
-        return getSpawnProtectionSize();
-    }
-
-    public String getHostName() {
-        return getHostname();
-    }
-
-    public boolean hasNether() {
-        return super.getAllowNether();
-    }
-
-    public boolean isInHardcoreMode() {
-        // This method is necessary because super.isHardcore() will be obfuscated!
-        return super.isHardcore();
-    }
-
-    public boolean isUsingMCGUI() {
-        return getGuiEnabled();
-    }
-
-    public boolean isSnooping() {
-        return super.isSnooperEnabled();
-    }
-
-    public boolean canUseCommandBlocks() {
-        return isCommandBlockEnabled();
-    }
-
     // Corundum utils
     public void bloviate(String message) {
         message(message);
@@ -444,11 +227,11 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         if (result.getServerMessage() != null)
             broadcast(result.getServerMessage());
 
-        addPendingCommand(command, this);
+        BACKEND.addPendingCommand(command, BACKEND);
     }
 
     public void debug(String message) {
-        logDebug(message);
+        BACKEND.logDebug(message);
 
         for (UUID playerUUID : this.debuggers) {
             Player.getByUUID(playerUUID).message(message);
@@ -459,41 +242,81 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
         }
     }
 
-    @Override
     public Version getMCVersion() {
-        return MC_VERSION;
+        return BACKEND.getMCVersion();
     }
 
     @Override
     public String getName() {
-        return settings.getString("name");
+        return BACKEND.getName();
     }
 
-    @Override
     public String getPrefix() {
-        return settings.getString("prefix");
+        return BACKEND.getPrefix();
     }
 
-    @Override
     public Version getVersion() {
-        return VERSION;
-    }
-
-    /** Helper method as the actual method is SRG named in MCP 1.7.10
-     * 
-     * @return this server's {@link PlayerProfileCache}. */
-    PlayerProfileCache getPlayerProfileCache() {
-        return super.func_152358_ax();
+        return BACKEND.getVersion();
     }
 
     public File[] getPluginsFolders() {
         // in the future, this could be configurable for more than one plugins folder
-        return new File[] { PLUGINS_FOLDER };
+        return BACKEND.getPluginFolders();
     }
 
     @Override
     public void message(String message) {
-        super.addChatMessage(new ChatComponentText(message));
+        BACKEND.addChatMessage(new ChatComponentText(message));
+    }
+
+    // Minecraft utils
+    public boolean canGenerateStructures() {
+        return BACKEND.canStructuresSpawn();
+    }
+
+    public boolean canUseCommandBlocks() {
+        return BACKEND.isCommandBlockEnabled();
+    }
+
+    public boolean isUsingGUI() {
+        return BACKEND.getGuiEnabled() || BACKEND.isUsingCorundumGUI();
+    }
+
+    public GameMode getDefaultGameMode() {
+        return GameMode.getByID(BACKEND.getGameType().getID());
+    }
+
+    public Difficulty getDifficulty() {
+        return Difficulty.getByID(BACKEND.getDifficulty().ordinal());
+    }
+
+    public String getHostname() {
+        return BACKEND.getHostname();
+    }
+
+    public int getSpawnProtectionRadius() {
+        return BACKEND.getSpawnProtectionSize();
+    }
+
+    public boolean hasNether() {
+        return BACKEND.getAllowNether();
+    }
+
+    public boolean isHardcore() {
+        return BACKEND.isHardcore();
+    }
+
+    public boolean isUsingMCGUI() {
+        return BACKEND.getGuiEnabled();
+    }
+
+    public boolean isSnooping() {
+        return BACKEND.isSnooperEnabled();
+    }
+
+    @Override
+    public CorundumServerBackend MC() {
+        return BACKEND;
     }
 
     // listener handling
@@ -527,23 +350,10 @@ public class CorundumServer extends DedicatedServer implements Server, Commander
     }
 
     public boolean isDebugging() {
-        return this.debugMode;
+        return BACKEND.isDebugging();
     }
 
     public boolean isVerboselyDebugging() {
-        return this.verboseMode;
-    }
-
-    public ArgInfo getArgInfo() {
-        return this.argInfo;
-    }
-
-    // messenger configuration getters and setters
-    public myList<UUID> getDebuggers() {
-        return this.debuggers;
-    }
-
-    public myList<UUID> getVerboseDebuggers() {
-        return this.verbose_debuggers;
+        return BACKEND.isVerboselyDebugging();
     }
 }

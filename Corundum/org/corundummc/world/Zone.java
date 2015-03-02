@@ -154,20 +154,21 @@ public class Zone {
      *            {@link BlockType} and which should not. Only {@link Block}s that match <i>all</i> of the given {@link BlockFilter}s will be replaced. If no
      *            {@link BlockFilter}s are given, every {@link Block} in the zone will be replaced with new {@link Block}s of the given {@link BlockType}.
      * @return the number of {@link Block}s replaced with new {@link Block}s of the given {@link BlockType}. */
+    @SuppressWarnings("unchecked")
     public int replaceAll(@SuppressWarnings("rawtypes") BlockType new_type, BlockFilter... filters) {
         Location location = new Location(0, 0, 0, low.getWorld());
         int blocks_replaced = 0;
 
         for (int x = low.getBlockX(); x <= high.getBlockX(); x++)
-            for (int y = low.getBlockY(); y < high.getBlockY(); y++)
-                for (int z = low.getBlockZ(); z < high.getBlockZ(); z++) {
+            for (int y = low.getBlockY(); y <= high.getBlockY(); y++)
+                for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
                     location.setX(x);
                     location.setY(y);
                     location.setZ(z);
                     /* TODO: if possible, do this in such a way that it doesn't have to send the update information to the client for every single block individually */
                     if (BlockFilter.matches(location.getBlock(), filters)) {
                         blocks_replaced++;
-                        low.getWorld().setBlock(new_type, location);
+                        location.getBlock().setType(new_type);
                     }
                 }
 

@@ -30,10 +30,6 @@ public class CorundumJarLoader extends URLClassLoader {
     }
 
     public Class<?> loadClass(String class_name) throws ClassNotFoundException {
-        // TODO TEMP
-        if (is_Minecraft_server_jar && class_name.equals("lt"))
-            class_name = "org.corundummc.CorundumServer";
-
         return loadClassHelper(class_name, false);
     }
 
@@ -67,7 +63,6 @@ public class CorundumJarLoader extends URLClassLoader {
                 throw new ClassNotFoundException();
         }
     }
-    
 
     public void loadJar() throws IOException, NoClassDefFoundError, ClassNotFoundException, URISyntaxException {
         loadJar(null);

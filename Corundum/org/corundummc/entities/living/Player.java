@@ -11,7 +11,6 @@ import org.corundummc.listeners.results.EventResult;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 
@@ -109,13 +108,12 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
 
     // instance utilities
     public Location getLocation() {
-        return new Location(entityMC.getCommandSenderPosition().posX, entityMC.getCommandSenderPosition().posY, entityMC.getCommandSenderPosition().posZ, World
-                .fromMC((WorldServer) entityMC.worldObj));
+        return new Location(entityMC.posX, entityMC.posY, entityMC.posZ, World.fromMC((WorldServer) entityMC.worldObj));
     }
 
     @Override
     public String getName() {
-        return entityMC.getCommandSenderName();
+        return entityMC.getName();
     }
 
     /** This method returns the {@link UUID} associated with this {@link Player}. Every {@link Player} in Minecraft has a {@link UUID}, a
@@ -128,7 +126,7 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
     }
 
     public boolean isOp() {
-        return CorundumServer.getInstance().getConfigurationManager().func_152596_g(this.entityMC.getGameProfile());
+        return CorundumServer.getInstance().MC().getConfigurationManager().getOppedPlayers().getEntry(this.entityMC.getGameProfile().getId().toString()) != null;
     }
 
     // overridden utilities
@@ -144,18 +142,10 @@ public class Player extends PlayerEntity implements Commander, Matchable<Player>
         });
 
         if (!eventResult.isCancelled()
-                && entityMC.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().getCommandManager().getCommands().get(
-                        command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command)) {
-            CommandBase
-                    .func_147176_a(entityMC /* command executor */, command.split(" ") /* space-delimited arguments */, 0 /* the number of parameters to skip */, true /* TODO:
-                                                                                                                                                                        * I
-                                                                                                                                                                        * don't
-                                                                                                                                                                        * actually
-                                                                                                                                                                        * know
-                                                                                                                                                                        * what
-                                                                                                                                                                        * this
-                                                                                                                                                                        * does */);
-        }
+        // TODO: replace canCommandSenderUseCommand call with our own method that accounts for Corundum's permissions
+                && entityMC.canCommandSenderUseCommand(((CommandBase) CorundumServer.getInstance().MC().getCommandManager().getCommands().get(
+                        command.split(" ")[0].replace("/", ""))).getRequiredPermissionLevel(), command))
+            CorundumServer.getInstance().MC().getCommandManager().executeCommand(entityMC, command);
     }
 
     @Override

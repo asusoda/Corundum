@@ -184,7 +184,7 @@ public class CorundumThread extends Thread {
 
         try {
             // get the CorundumServer class
-            Class<?> main_class = Class.forName("org.corundummc.CorundumServer", true, Corundum_loader);
+            Class<?> main_class = Class.forName("org.corundummc.hub.CorundumServerBackend", true, Corundum_loader);
             // make a new CorundumServer
             server = (Server) main_class.getConstructor(String.class).newInstance("Corundum");
             // start the new CorundumServer

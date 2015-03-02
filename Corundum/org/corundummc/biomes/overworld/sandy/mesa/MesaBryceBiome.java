@@ -21,7 +21,7 @@ public class MesaBryceBiome extends MesaesqueBiome<MesaBryceBiome, BiomeGenMesa,
         public static final MesaBryceBiomeType TYPE = new MesaBryceBiomeType();
 
         private MesaBryceBiomeType() {
-            super((BiomeGenMesa) BiomeGenBase.func_150568_d(163));
+            super((BiomeGenMesa) BiomeGenBase.getBiome(163));
         }
 
         @Override

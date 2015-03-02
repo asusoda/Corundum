@@ -16,9 +16,11 @@ import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
+
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
+import org.corundummc.world.Block.BlockType;
 
 public class World implements Matchable<World>, MCEquivalent<WorldServer> {
     // TODO: public static final World MAIN_WORLD;
@@ -70,21 +72,12 @@ public class World implements Matchable<World>, MCEquivalent<WorldServer> {
         return type;
     }
 
-    public void setBlock(Block.BlockType blockType, Location location) {
-        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.MC());
-    }
-
-    public void setBlockWithMetadata(Block.BlockType blockType, Location location, byte data) {
-        this.worldMC.setBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ(), blockType.MC(), data, 3);
-    }
-
-    public void setBlockData(Location blockLocation, byte newData) {
-        worldMC.setBlockMetadata(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ(), newData, 3 /* 3 = 1 & 2 = update block and send update
-                                                                                                                              * info to client */);
-    }
-
     public enum WorldType {
         OVERWORLD, NETHER, END, CUSTOM;
+    }
+
+    public boolean setBlock(Block<?, ?, ?> block, BlockType<?, ?, ?> type) {
+        return worldMC.setBlockState(block.getLocation().toBlockPos(), type.toBlockState());
     }
 
     // overridden utilities

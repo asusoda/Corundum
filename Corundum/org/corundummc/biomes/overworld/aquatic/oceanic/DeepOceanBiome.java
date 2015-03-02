@@ -17,7 +17,7 @@ public class DeepOceanBiome extends OceanicBiome<DeepOceanBiome, DeepOceanBiome.
         public static final DeepOceanBiomeType TYPE = new DeepOceanBiomeType();
 
         private DeepOceanBiomeType() {
-            super((BiomeGenOcean) BiomeGenBase.field_150575_M);
+            super((BiomeGenOcean) BiomeGenBase.deepOcean);
         }
 
         @Override

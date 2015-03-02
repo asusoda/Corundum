@@ -18,7 +18,7 @@ public class MesaBiome extends MesaesqueBiome<MesaBiome, BiomeGenMesa, MesaBiome
         public static final MesaBiomeType TYPE = new MesaBiomeType();
 
         private MesaBiomeType() {
-            super((BiomeGenMesa) BiomeGenBase.field_150589_Z);
+            super((BiomeGenMesa) BiomeGenBase.mesa);
         }
 
         @Override

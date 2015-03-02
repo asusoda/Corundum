@@ -396,7 +396,7 @@ public class Item {
                     return ItemType.IRON_INGOT;
                 case GOLD:
                     return ItemType.GOLD_INGOT;
-                case CLOTH:
+                case LEATHER:
                     return ItemType.LEATHER;
                 default:
                     throw new CIE("This piece of armor is made of a material that I don't recognize! Is Corundum running with a Minecraft server version higher than "
@@ -438,7 +438,7 @@ public class Item {
          *         {@link BlockType#ANVIL anvil} with any other type of item besides itself. */
         public HoldableType<?> getRepairMaterial() {
             if (itemTypeMC instanceof ItemTool)
-                return fromMCToolMaterial(((ItemTool) itemTypeMC).func_150913_i());
+                return fromMCToolMaterial(((ItemTool) itemTypeMC).getToolMaterial());
             else if (itemTypeMC instanceof ItemArmor)
                 return fromMCArmorMaterial(((ItemArmor) itemTypeMC).getArmorMaterial());
             else

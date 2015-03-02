@@ -20,7 +20,7 @@ public class DesertMBiome extends DesertesqueBiome<DesertMBiome, BiomeGenMutated
         public static final DesertMBiomeType TYPE = new DesertMBiomeType();
 
         private DesertMBiomeType() {
-            super((BiomeGenMutated) BiomeGenBase.func_150568_d(130));
+            super((BiomeGenMutated) BiomeGenBase.getBiome(130));
         }
 
         @Override
