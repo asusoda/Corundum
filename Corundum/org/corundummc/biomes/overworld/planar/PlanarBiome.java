@@ -1,6 +1,10 @@
 package org.corundummc.biomes.overworld.planar;
 
 import org.corundummc.biomes.overworld.OverworldBiome;
+import org.corundummc.biomes.overworld.planar.IcePlainsBiome.IcePlainsBiomeType;
+import org.corundummc.biomes.overworld.planar.IceSpikesBiome.IceSpikesBiomeType;
+import org.corundummc.biomes.overworld.planar.PlainsBiome.PlainsBiomeType;
+import org.corundummc.biomes.overworld.planar.SunflowerPlainsBiome.SunflowerPlainsBiomeType;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -20,7 +24,10 @@ public abstract class PlanarBiome<S extends PlanarBiome<S, MC, T>, MC extends Bi
     }
 
     public static interface PlanarTypes {
-        // TODO
+        public static final PlainsBiomeType PLAINS = PlainsBiomeType.TYPE;
+        public static final SunflowerPlainsBiomeType SUNFLOWER_PLAINS = SunflowerPlainsBiomeType.TYPE;
+        public static final IcePlainsBiomeType ICE_PLAINS = IcePlainsBiomeType.TYPE;
+        public static final IceSpikesBiomeType ICE_SPIKES = IceSpikesBiomeType.TYPE;
     }
 
     public abstract static class PlanarBiomeType<S extends PlanarBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends PlanarBiome<I, MC, S>> extends
