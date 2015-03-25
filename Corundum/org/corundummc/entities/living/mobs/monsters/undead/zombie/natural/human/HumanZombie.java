@@ -53,7 +53,6 @@ public abstract class HumanZombie<S extends HumanZombie<S, T>, T extends HumanZo
         public static HumanZombieType<?, ?> getByID(int id, int data) {
             return getByID(HumanZombieType.class, id, data);
         }
-
         public static HumanZombieType<?, ?>[] values() {
             return values(HumanZombieType.class);
         }

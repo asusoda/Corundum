@@ -13,7 +13,7 @@ public class DeepOceanBiome extends OceanicBiome<DeepOceanBiome, DeepOceanBiome.
 
     /** This class represents one single {@link BiomeType}; classes like this are used instead of
      * simple instances of their parent types because of the self-parameterization <tt>S</tt>. */
-    static class DeepOceanBiomeType extends OceanicBiomeType<DeepOceanBiomeType, DeepOceanBiome> {
+    public static class DeepOceanBiomeType extends OceanicBiomeType<DeepOceanBiomeType, DeepOceanBiome> {
         public static final DeepOceanBiomeType TYPE = new DeepOceanBiomeType();
 
         private DeepOceanBiomeType() {
