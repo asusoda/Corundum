@@ -99,17 +99,22 @@ public class CorundumServerBackend extends DedicatedServer implements Server {
         System.out.println("Starting Corundum server thread!");
 
         final CorundumServerBackend _this = this;
-        new Thread("Server thread") {
+        new Thread(new Runnable() {
+            @Override
             public void run() {
                 _this.run();
             }
-        }.start();
+        }, "Server thread").start();
     }
 
     // TODO TEMP
     @Override
     public void run() {
         super.run();
+
+        // TODO TEMP
+        if (new File("ops.json").exists())
+            throw new RuntimeException("Holy crap!");
 
         try {
             int low_x = -1000, low_z = 7500, high_x = 4500, high_z = 10500, test_x = 0, test_z = 8000;

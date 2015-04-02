@@ -64,9 +64,7 @@ public class CorundumServer implements Commander, MCEquivalent<CorundumServerBac
      * debugging mode and are also in the {@link #debuggers debuggers list}. */
     private myList<UUID> verbose_debuggers = new myList<>();
 
-    /** This constructor creates a new {@link CorundumServer}, which extends Minecraft's {@link DedicatedServer} class, allowing it to change some of Minecraft's behaviors.
-     * Through {@link DedicatedServer}'s constructor, it will also set {@link MinecraftServer#mcServer} to this new server. <br>
-     * <b><i><u>WARNING</b></i></u>: There should only ever be one of these! You can use its instance from {@link CorundumServer#SERVER}.
+    /** This constructor creates a new {@link CorundumServer}!
      * 
      * @param name
      *            is the name of this {@link CorundumServer}. */
@@ -201,7 +199,6 @@ public class CorundumServer implements Commander, MCEquivalent<CorundumServerBac
      * 
      * @param message
      *            is the message to be broadcasted. */
-    @SuppressWarnings("unchecked")
     public void broadcast(String message) {
         message(message);
 
