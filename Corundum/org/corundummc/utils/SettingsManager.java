@@ -64,6 +64,19 @@ public class SettingsManager {
 
     public SettingsManager(SettingsManager parent, File file, Object... default_settings) {
         this.parent = parent;
+		
+		if (!file.exists())
+		{
+			try
+			{
+				file.createNewFile();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
         this.file = file;
 
         // add the given default settings, which should alternate between String keys and Object values
