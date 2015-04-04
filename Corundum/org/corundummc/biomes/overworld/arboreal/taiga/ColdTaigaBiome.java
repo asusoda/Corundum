@@ -1,12 +1,12 @@
-package org.corundummc.biomes.overworld.taiga;
+package org.corundummc.biomes.overworld.arboreal.taiga;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenTaiga;
 
 import org.corundummc.biomes.interfaces.instances.ColdBiome;
 import org.corundummc.biomes.interfaces.types.ColdBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaBiome.TaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaBiome.TaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
 import org.corundummc.world.Location;
 
 public class ColdTaigaBiome extends TaigaesqueBiome<ColdTaigaBiome, BiomeGenTaiga, ColdTaigaBiome.ColdTaigaBiomeType> implements ColdBiome<TaigaBiomeType> {

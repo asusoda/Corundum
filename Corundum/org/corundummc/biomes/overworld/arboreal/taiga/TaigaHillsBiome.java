@@ -1,11 +1,11 @@
-package org.corundummc.biomes.overworld.taiga;
+package org.corundummc.biomes.overworld.arboreal.taiga;
 
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenTaiga;
 
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
 
 public class TaigaHillsBiome extends TaigaesqueBiome<TaigaHillsBiome, BiomeGenTaiga, TaigaHillsBiome.TaigaHillsBiomeType> {
     protected TaigaHillsBiome(Location location) {

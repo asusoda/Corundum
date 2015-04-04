@@ -1,13 +1,13 @@
-package org.corundummc.biomes.overworld.taiga;
+package org.corundummc.biomes.overworld.arboreal.taiga;
 
-import org.corundummc.biomes.overworld.OverworldBiome;
-import org.corundummc.biomes.overworld.taiga.ColdTaigaBiome.ColdTaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.ColdTaigaHillsBiome.ColdTaigaHillsBiomeType;
-import org.corundummc.biomes.overworld.taiga.ColdTaigaMBiome.ColdTaigaMBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaBiome.TaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaHillsBiome.TaigaHillsBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaMBiome.TaigaMBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeTypes;
+import org.corundummc.biomes.overworld.arboreal.ArborealBiome;
+import org.corundummc.biomes.overworld.arboreal.taiga.ColdTaigaBiome.ColdTaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.ColdTaigaHillsBiome.ColdTaigaHillsBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.ColdTaigaMBiome.ColdTaigaMBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaBiome.TaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaHillsBiome.TaigaHillsBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaMBiome.TaigaMBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeTypes;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -21,7 +21,7 @@ import net.minecraft.world.biome.BiomeGenBase;
  * @param <T>
  *            determines the type of {@link BiomeType} that represents the type of this class. */
 public abstract class TaigaesqueBiome<S extends TaigaesqueBiome<S, MC, T>, MC extends BiomeGenBase, T extends TaigaesqueBiome.TaigaesqueBiomeType<T, MC, S>> extends
-        OverworldBiome<S, MC, T> {
+        ArborealBiome<S, MC, T> {
 
     protected TaigaesqueBiome(Location location) {
         super(location);
@@ -37,7 +37,7 @@ public abstract class TaigaesqueBiome<S extends TaigaesqueBiome<S, MC, T>, MC ex
     }
 
     public abstract static class TaigaesqueBiomeType<S extends TaigaesqueBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends TaigaesqueBiome<I, MC, S>> extends
-            OverworldBiomeType<S, MC, I> {
+            ArborealBiomeType<S, MC, I> {
         protected TaigaesqueBiomeType(MC biomeMC) {
             super(biomeMC);
 

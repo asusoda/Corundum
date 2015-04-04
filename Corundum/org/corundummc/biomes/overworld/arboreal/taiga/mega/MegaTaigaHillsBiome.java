@@ -1,9 +1,9 @@
-package org.corundummc.biomes.overworld.taiga.mega;
+package org.corundummc.biomes.overworld.arboreal.taiga.mega;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenTaiga;
 
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeType;
 import org.corundummc.world.Location;
 
 public class MegaTaigaHillsBiome extends MegaTaigaesqueBiome<MegaTaigaHillsBiome, BiomeGenTaiga, MegaTaigaHillsBiome.MegaTaigaHillsBiomeType> {

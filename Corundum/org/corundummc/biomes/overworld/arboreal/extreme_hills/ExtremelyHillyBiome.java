@@ -3,7 +3,7 @@ package org.corundummc.biomes.overworld.arboreal.extreme_hills;
 import org.corundummc.biomes.overworld.arboreal.ArborealBiome;
 import org.corundummc.biomes.overworld.arboreal.extreme_hills.ExtremeHillsBiome.ExtremeHillsBiomeType;
 import org.corundummc.biomes.overworld.arboreal.extreme_hills.ExtremeHillsEdgeBiome.ExtremeHillsEdgeBiomeType;
-import org.corundummc.biomes.overworld.arboreal.extreme_hills.plus.ExtremelyHillyPlusyBiome.ExtremelyHillyPlusyBiomeTypes;
+import org.corundummc.biomes.overworld.arboreal.extreme_hills.plus.ExtremelyHillyPlusBiome.ExtremelyHillyPlusyBiomeTypes;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;

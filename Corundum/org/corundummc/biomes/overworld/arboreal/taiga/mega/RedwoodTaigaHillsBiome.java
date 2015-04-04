@@ -1,13 +1,13 @@
-package org.corundummc.biomes.overworld.taiga.mega;
+package org.corundummc.biomes.overworld.arboreal.taiga.mega;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenMutated;
 
 import org.corundummc.biomes.interfaces.instances.MutatedBiome;
 import org.corundummc.biomes.interfaces.types.MutatedBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome;
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaHillsBiome.MegaTaigaHillsBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaHillsBiome.MegaTaigaHillsBiomeType;
 import org.corundummc.world.Location;
 
 public class RedwoodTaigaHillsBiome extends TaigaesqueBiome<RedwoodTaigaHillsBiome, BiomeGenMutated, RedwoodTaigaHillsBiome.RedwoodMegaTaigaHillsBiomeType> implements

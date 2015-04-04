@@ -7,9 +7,9 @@ import org.corundummc.world.Location;
 import org.corundummc.biomes.interfaces.instances.MutatedBiome;
 import org.corundummc.biomes.interfaces.types.MutatedBiomeType;
 import org.corundummc.biomes.overworld.arboreal.extreme_hills.plus.ExtremeHillsPlusBiome.ExtremeHillsPlusBiomeType;
-import org.corundummc.biomes.overworld.arboreal.extreme_hills.plus.ExtremelyHillyPlusyBiome.ExtremelyHillyPlusyBiomeType;
+import org.corundummc.biomes.overworld.arboreal.extreme_hills.plus.ExtremelyHillyPlusBiome.ExtremelyHillyPlusyBiomeType;
 
-public class ExtremeHillsPlusMBiome extends ExtremelyHillyPlusyBiome<ExtremeHillsPlusMBiome, BiomeGenMutated, ExtremeHillsPlusMBiome.ExtremeHillsPlusMBiomeType> implements
+public class ExtremeHillsPlusMBiome extends ExtremelyHillyPlusBiome<ExtremeHillsPlusMBiome, BiomeGenMutated, ExtremeHillsPlusMBiome.ExtremeHillsPlusMBiomeType> implements
         MutatedBiome<ExtremeHillsPlusBiomeType> {
     protected ExtremeHillsPlusMBiome(Location location) {
         super(location);

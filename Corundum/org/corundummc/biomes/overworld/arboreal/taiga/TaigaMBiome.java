@@ -1,4 +1,4 @@
-package org.corundummc.biomes.overworld.taiga;
+package org.corundummc.biomes.overworld.arboreal.taiga;
 
 import org.corundummc.world.Location;
 
@@ -7,8 +7,8 @@ import net.minecraft.world.biome.BiomeGenMutated;
 
 import org.corundummc.biomes.interfaces.instances.MutatedBiome;
 import org.corundummc.biomes.interfaces.types.MutatedBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaBiome.TaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaBiome.TaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome.TaigaesqueBiomeType;
 
 public class TaigaMBiome extends TaigaesqueBiome<TaigaMBiome, BiomeGenMutated, TaigaMBiome.TaigaMBiomeType> implements MutatedBiome<TaigaBiomeType> {
     protected TaigaMBiome(Location location) {

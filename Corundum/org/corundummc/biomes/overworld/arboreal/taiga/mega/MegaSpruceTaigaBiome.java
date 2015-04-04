@@ -1,12 +1,12 @@
-package org.corundummc.biomes.overworld.taiga.mega;
+package org.corundummc.biomes.overworld.arboreal.taiga.mega;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenMutated;
 
 import org.corundummc.biomes.interfaces.instances.MutatedBiome;
 import org.corundummc.biomes.interfaces.types.MutatedBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaBiome.MegaTaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaBiome.MegaTaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaesqueBiome.MegaTaigaesqueBiomeType;
 import org.corundummc.world.Location;
 
 public class MegaSpruceTaigaBiome extends MegaTaigaesqueBiome<MegaSpruceTaigaBiome, BiomeGenMutated, MegaSpruceTaigaBiome.MegaSpruceTaigaBiomeType> implements

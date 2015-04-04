@@ -1,10 +1,10 @@
-package org.corundummc.biomes.overworld.taiga.mega;
+package org.corundummc.biomes.overworld.arboreal.taiga.mega;
 
-import org.corundummc.biomes.overworld.taiga.TaigaesqueBiome;
-import org.corundummc.biomes.overworld.taiga.mega.MegaSpruceTaigaBiome.MegaSpruceTaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaBiome.MegaTaigaBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.MegaTaigaHillsBiome.MegaTaigaHillsBiomeType;
-import org.corundummc.biomes.overworld.taiga.mega.RedwoodTaigaHillsBiome.RedwoodMegaTaigaHillsBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.TaigaesqueBiome;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaSpruceTaigaBiome.MegaSpruceTaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaBiome.MegaTaigaBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.MegaTaigaHillsBiome.MegaTaigaHillsBiomeType;
+import org.corundummc.biomes.overworld.arboreal.taiga.mega.RedwoodTaigaHillsBiome.RedwoodMegaTaigaHillsBiomeType;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;

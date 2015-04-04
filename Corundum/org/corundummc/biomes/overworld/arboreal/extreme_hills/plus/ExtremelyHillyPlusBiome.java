@@ -16,10 +16,10 @@ import net.minecraft.world.biome.BiomeGenBase;
  *            determines the type of Minecraft BiomeGenBase <tt>Object</tt> that this class's {@link BiomeType} represents.
  * @param <T>
  *            determines the type of {@link BiomeType} that represents the type of this class. */
-public abstract class ExtremelyHillyPlusyBiome<S extends ExtremelyHillyPlusyBiome<S, MC, T>, MC extends BiomeGenBase, T extends ExtremelyHillyPlusyBiome.ExtremelyHillyPlusyBiomeType<T, MC, S>>
+public abstract class ExtremelyHillyPlusBiome<S extends ExtremelyHillyPlusBiome<S, MC, T>, MC extends BiomeGenBase, T extends ExtremelyHillyPlusBiome.ExtremelyHillyPlusyBiomeType<T, MC, S>>
         extends ExtremelyHillyBiome<S, MC, T> {
 
-    protected ExtremelyHillyPlusyBiome(Location location) {
+    protected ExtremelyHillyPlusBiome(Location location) {
         super(location);
     }
 
@@ -28,7 +28,7 @@ public abstract class ExtremelyHillyPlusyBiome<S extends ExtremelyHillyPlusyBiom
         public static final ExtremeHillsPlusMBiomeType EXTREME_HILLS_PLUS_M = ExtremeHillsPlusMBiomeType.TYPE;
     }
 
-    public abstract static class ExtremelyHillyPlusyBiomeType<S extends ExtremelyHillyPlusyBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends ExtremelyHillyPlusyBiome<I, MC, S>>
+    public abstract static class ExtremelyHillyPlusyBiomeType<S extends ExtremelyHillyPlusyBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends ExtremelyHillyPlusBiome<I, MC, S>>
             extends ExtremelyHillyBiomeType<S, MC, I> {
         protected ExtremelyHillyPlusyBiomeType(MC biomeMC) {
             super(biomeMC);
