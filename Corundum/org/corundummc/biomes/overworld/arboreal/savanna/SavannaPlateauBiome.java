@@ -6,13 +6,14 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenSavanna;
 
 import org.corundummc.biomes.overworld.arboreal.savanna.SavannaesqueBiome.SavannaesqueBiomeType;
-
 import org.corundummc.biomes.overworld.arboreal.savanna.SavannaBiome.SavannaBiomeType;
+import org.corundummc.biomes.interfaces.instances.PlateauBiome;
 import org.corundummc.biomes.interfaces.instances.VariantBiome;
+import org.corundummc.biomes.interfaces.types.PlateauBiomeType;
 import org.corundummc.biomes.interfaces.types.VariantBiomeType;
 
 public class SavannaPlateauBiome extends SavannaesqueBiome<SavannaPlateauBiome, BiomeGenSavanna, SavannaPlateauBiome.SavannaPlateauBiomeType> implements
-        VariantBiome<SavannaBiomeType> {
+        PlateauBiome<SavannaBiomeType> {
     protected SavannaPlateauBiome(Location location) {
         super(location);
     }
@@ -20,7 +21,7 @@ public class SavannaPlateauBiome extends SavannaesqueBiome<SavannaPlateauBiome, 
     /** This class represents one single {@link BiomeType}; classes like this are used instead of
      * simple instances of their parent types because of the self-parameterization <tt>S</tt>. */
     static class SavannaPlateauBiomeType extends SavannaesqueBiomeType<SavannaPlateauBiomeType, BiomeGenSavanna, SavannaPlateauBiome> implements
-            VariantBiomeType<SavannaBiomeType> {
+            PlateauBiomeType<SavannaBiomeType> {
         public static final SavannaPlateauBiomeType TYPE = new SavannaPlateauBiomeType();
 
         private SavannaPlateauBiomeType() {
