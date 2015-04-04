@@ -1,6 +1,8 @@
 package org.corundummc.biomes.overworld.arboreal.swampland;
 
 import org.corundummc.biomes.overworld.arboreal.ArborealBiome;
+import org.corundummc.biomes.overworld.arboreal.swampland.SwamplandBiome.SwamplandBiomeType;
+import org.corundummc.biomes.overworld.arboreal.swampland.SwamplandMBiome.SwamplandMBiomeType;
 import org.corundummc.world.Location;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -20,7 +22,8 @@ public abstract class SwampyBiome<S extends SwampyBiome<S, MC, T>, MC extends Bi
     }
 
     public static interface SwampyBiomeTypes {
-        // TODO
+        public static final SwamplandBiomeType SWAMPLAND = SwamplandBiomeType.TYPE;
+        public static final SwamplandMBiomeType SWAMPLAND_M = SwamplandMBiomeType.TYPE;
     }
 
     public abstract static class SwampyBiomeType<S extends SwampyBiomeType<S, MC, I>, MC extends BiomeGenBase, I extends SwampyBiome<I, MC, S>> extends

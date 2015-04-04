@@ -14,17 +14,12 @@ package org.corundummc.world;
 
 import java.awt.Color;
 
-import net.minecraft.block.BlockButton;
-import net.minecraft.block.state.BlockStateBase;
 import net.minecraft.block.state.IBlockState;
 
 import org.corundummc.utils.types.Typed;
 import org.corundummc.biomes.Biome;
-import org.corundummc.exceptions.CorundumException;
-import org.corundummc.hub.CorundumThread;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.types.HoldableType;
-import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> extends Typed<T> {
     private Location location;
