@@ -32,7 +32,7 @@ public class Chunk implements MCEquivalent<net.minecraft.world.chunk.Chunk> {
      * array of {@link BiomeType}s in which the first dimension is the x-coordinate and the second dimension is the z-coordinate, both relative to the northwest corner of the
      * biome; for example, <tt>getBiomeMap()[1][3]</tt> would get you the biome of any block in the chunk at the x and z coordinates <tt>(chunk x + 1)</tt> and
      * <tt>(chunk z + 3)</tt>.
-     * 
+     *
      * @return the biome map of this chunk. */
     public BiomeType[][] getBiomeMap() {
         BiomeType[][] results = new BiomeType[16][16];  // all chunks are 16x16 (along x and z axes); the biome map reflects that
@@ -45,6 +45,10 @@ public class Chunk implements MCEquivalent<net.minecraft.world.chunk.Chunk> {
                 results[x][z] = BiomeType.getByID(chunkMC.getBiomeArray()[x * 16 + z]);
 
         return results;
+    }
+
+    public static Chunk fromMC(net.minecraft.world.chunk.Chunk chunkMC) {
+        return new Chunk(chunkMC);
     }
 
     public net.minecraft.world.chunk.Chunk MC() {

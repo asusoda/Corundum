@@ -1,11 +1,11 @@
 package org.corundummc.entities.nonliving.drops;
 
+import org.corundummc.blocks.Block;
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.living.LivingEntity;
 import org.corundummc.entities.nonliving.NonLivingEntity;
 import org.corundummc.entities.nonliving.drops.DroppedItem.DroppedItemType;
 import org.corundummc.entities.nonliving.drops.XPOrb.XPOrbType;
-import org.corundummc.world.Block;
 
 /** This class is used to represent the {@link Entity Entities} that can be dropped, e.g. by {@link Block}s when destroyed or by {@link LivingEntity LivingEntities} when
  * killed.

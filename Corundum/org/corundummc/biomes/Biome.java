@@ -14,10 +14,10 @@ package org.corundummc.biomes;
 
 import org.corundummc.biomes.overworld.OverworldBiome.OverworldBiomeTypes;
 import org.corundummc.biomes.worldwide.WorldwideBiome.WorldwideBiomeTypes;
+import org.corundummc.blocks.Block;
 import org.corundummc.entities.Entity;
 import org.corundummc.utils.types.IDedType;
 import org.corundummc.utils.types.Typed;
-import org.corundummc.world.Block;
 import org.corundummc.world.Location;
 import org.corundummc.world.World;
 import org.corundummc.world.Zone;

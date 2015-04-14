@@ -1,5 +1,6 @@
 package org.corundummc.world;
 
+import org.corundummc.blocks.Block;
 import org.corundummc.plugins.CorundumPlugin;
 
 public abstract class BlockFilter {

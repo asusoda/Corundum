@@ -16,6 +16,7 @@ import net.minecraft.util.BlockPos;
 
 import org.corundummc.biomes.Biome;
 import org.corundummc.biomes.Biome.BiomeType;
+import org.corundummc.blocks.Block;
 import org.corundummc.utils.ListUtilities;
 
 import static org.corundummc.world.BlockFilter.*;

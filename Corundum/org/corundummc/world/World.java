@@ -17,10 +17,11 @@ import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
 
+import org.corundummc.blocks.Block;
+import org.corundummc.blocks.Block.BlockType;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.interfaces.Matchable;
 import org.corundummc.utils.myList.myList;
-import org.corundummc.world.Block.BlockType;
 
 public class World implements Matchable<World>, MCEquivalent<WorldServer> {
     // TODO: public static final World MAIN_WORLD;

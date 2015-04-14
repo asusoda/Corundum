@@ -2,11 +2,11 @@ package org.corundummc.utils.types;
 
 import java.util.HashMap;
 
+import org.corundummc.blocks.Block;
+import org.corundummc.blocks.Block.BlockType;
 import org.corundummc.entities.nonliving.projectiles.Projectile.ProjectileType;
 import org.corundummc.items.Item;
 import org.corundummc.utils.interfaces.Matchable;
-import org.corundummc.world.Block;
-import org.corundummc.world.Block.BlockType;
 
 /** This class represents anything that can be categorized into types with unique integer I.D. and data values.
  * 

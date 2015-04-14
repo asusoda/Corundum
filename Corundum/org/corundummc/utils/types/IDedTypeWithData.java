@@ -3,10 +3,10 @@ package org.corundummc.utils.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.corundummc.blocks.Block;
+import org.corundummc.blocks.Block.BlockType;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.utils.ListUtilities;
-import org.corundummc.world.Block.BlockType;
-import org.corundummc.world.Block;
 
 public abstract class IDedTypeWithData<S extends IDedTypeWithData<S>> extends IDedType<S> {
     private final short data;

@@ -10,7 +10,7 @@
  *
  * @author REALDrummer */
 
-package org.corundummc.world;
+package org.corundummc.blocks;
 
 import java.awt.Color;
 
@@ -20,6 +20,9 @@ import org.corundummc.utils.types.Typed;
 import org.corundummc.biomes.Biome;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.types.HoldableType;
+import org.corundummc.world.BoundingBox;
+import org.corundummc.world.Chunk;
+import org.corundummc.world.Location;
 
 public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> extends Typed<T> {
     private Location location;
@@ -33,7 +36,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
     /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
      * I.D.s, but also many of those differentiated by different data values; for example, all different colors of wool blocks are listed individually despite the fact that
      * they all have the same I.D.
-     * 
+     *
      * @param <S>
      *            is a self-parameterization; this type should be the same type as this class.
      * @param <MC>
@@ -177,7 +180,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #BlockType(int)} and
          * {@link #BlockType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
          * >= 0 will start a new block.
-         * 
+         *
          * @param data
          *            is the data value for this {@link BlockType}. */
         private BlockType(int data) {
@@ -188,7 +191,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         }
 
         /** This constructor makes a BlockType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
-         * 
+         *
          * @param id
          *            is the block I.D. that this {@link BlockType} is associated with.
          * @param data
@@ -223,7 +226,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block of this {@link BlockType} can stop grass from spreading onto nearby dirt if placed on top of the dirt. For example, if
          * you place {@link BlockType#STONE stone} on top of dirt, that dirt cannot grow grass even if there is well-lit grass right next to it; on the other hand,
          * {@link BlockType#AIR air} cannot stop grass from spreading onto dirt.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} can stop the spread of grass to dirt; <b>false</b> otherwise. */
         public boolean canBlockGrass() {
             return blockMC.getMaterial().blocksLight();
@@ -232,7 +235,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method returns the {@link BoundingBox} that describes the shape of this block. Some blocks have normal bounds and are shaped like full-size cubes, like
          * {@link BlockType#GRASS grass} and {@link BlockType#STONE stone}; others like {@link BlockType#GLASS_PANE glass panes} and {@link BlockType#ANVIL anvils} don't take
          * on a perfectly 1x1x1 cubic shape.
-         * 
+         *
          * @return a {@link BoundingBox} describing the shape of this {@link BlockType}. */
         public BoundingBox getBoundingBox() {
             return new BoundingBox((float) blockMC.getBlockBoundsMinX(), (float) blockMC.getBlockBoundsMinY(), (float) blockMC.getBlockBoundsMinZ(), (float) blockMC
@@ -243,14 +246,14 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * {@link BlockType#STONE stone} don't emit any light, so they have a light level of 0; some other blocks like {@link BlockType#POWERED_REDSTONE_LAMP powered redstone
          * lamps} will emit lots of light (light level 1) and others like {@link BlockType#POWERED_REDSTONE_TORCH powered redstone torches} can emit some low light (light level
          * 0.5 in this case).
-         * 
+         *
          * @return a number between 0 and 1 representing the amount of light emitted by this block. */
         public float getLightEmission() {
             return blockMC.getLightValue();
         }
 
         /** This method returns the color that appears on a map to represent this {@link BlockType}.
-         * 
+         *
          * @return a standard Java {@link Color} object representing the color that this {@link BlockType} is represented by on a map. */
         public Color getMapColor() {
             /* Mojang decided that they don't need to use three values for a color, but one big int in which the bits were basically concatenated from the three bytes
@@ -261,7 +264,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
         /** This method returns the opacity of a block of this {@link BlockType} as a number between 0 and 255 (where 255 is opaque like {@link BlockType#STONE stone} and 0 is
          * completely clear like {@link BlockType#GLASS}).
-         * 
+         *
          * @return a number between 0 and 255 representing the opacity of this {@link BlockType}. */
         public short getOpacity() {
             return (short) blockMC.getLightOpacity();
@@ -269,7 +272,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
         /** This method determines whether of not a block is broken when it is pushed by a piston. For example, {@link BlockType#TORCH torches} are broken when they are pushed,
          * while {@link BlockType#STONE stone} blocks are easily pushed without breaking and {@link BlockType#BEDROCK bedrock} cannot be pushed at all.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} can be pushed, but will break when it is pushed; <b>false</b> otherwise.
          * @see {@link #isPushable()} and {@link #isImmobile()} */
         public boolean isBrokenWhenPushed() {
@@ -280,14 +283,14 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * not necessarily make them "burnable"; burnable blocks are the blocks that will burn until they break and often spread fire to other nearby blocks. For example,
          * {@link BlockType#OAK_LEAVES leaves}, {@link BlockType#OAK_WOOD_PLANKS wooden planks}, and {@link BlockType#OAK_LOG logs} are all burnable, but
          * {@link BlockType#FLOWING_WATER water}, {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} is burnable; <b>false</b> otherwise. */
         public boolean isBurnable() {
             return blockMC.getMaterial().getCanBurn();
         }
 
         /** This method determines whether or not a block of this {@link BlockType} is a "full cube", meaning that its {@link BoundingBox} takes the whole space of a cube.
-         * 
+         *
          * @return <b>true</b> if this block is a normally rendered cube. */
         public boolean isFullCube() {
             return blockMC.getBlockBoundsMinX() == 0 && blockMC.getBlockBoundsMinY() == 0 && blockMC.getBlockBoundsMinZ() == 0 && blockMC.getBlockBoundsMaxX() == 1
@@ -297,7 +300,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block of this {@link BlockType} is able to be pushed by a piston (or pulled by a sticky piston). For example,
          * {@link BlockType#BEDROCK bedrock} cannot be pushed by pistons while {@link BlockType#STONE stone} blocks can be pushed easily and {@link BlockType#TORCH torches} can
          * be pushed, but will break and not push the block after them.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} cannot be pushed or pulled by pistons; <b>false</b> otherwise. */
         public boolean isImmobile() {
             return blockMC.getMaterial().getMaterialMobility() == 2;
@@ -306,7 +309,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block of this {@link BlockType} is liquid. So far (as of 1.8), {@link BlockType#FLOWING_WATER water},
          * {@link BlockType#STILL_WATER stationary water}, {@link BlockType#FLOWING_LAVA lava}, and {@link BlockType#STILL_LAVA stationary lava} are the only liquid blocks in
          * Minecraft.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} is a liquid like water or lava; <b>false</b> otherwise. */
         public boolean isLiquid() {
             return blockMC.getMaterial().isLiquid();
@@ -315,7 +318,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block is able to be pushed by a piston (or pulled by a sticky piston) without being broken. For example,
          * {@link BlockType#STONE stone} blocks are easily pushed without breaking while {@link BlockType#TORCH torches} can be pushed, but break off when they are pushed, and
          * {@link BlockType#BEDROCK bedrock} cannot be pushed at all.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} can be pushed without breaking; <b>false</b> otherwise.
          * @see {@link #isBrokenWhenPushed()} and {@link #isImmobile()} */
         public boolean isPushable() {
@@ -325,7 +328,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block of this {@link BlockType} is "replaceable", meaning a new block can be placed where this block is without breaking
          * this block first. This would return <b>true</b> for things like {@link BlockType#TALL_GRASS tall grass} and {@link BlockType#FLOWING_WATER water}, but not for things
          * like {@link BlockType#STONE stone} and {@link BlockType#GRASS grass blocks}.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} can be replaced without being broken first; <b>false</b> otherwise. */
         public boolean isReplaceable() {
             return blockMC.getMaterial().isReplaceable();
@@ -334,7 +337,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         /** This method determines whether or not a block of this {@link BlockType} is solid. Solid blocks are blocks that you can't walk through; {@link BlockType#GRASS grass
          * blocks}, {@link BlockType#STONE stone}, and {@link BlockType#ANVIL anvils} are solid, but {@link BlockType#TALL_GRASS tall grass}, {@link BlockType#SIGN_POST signs},
          * and {@link BlockType#FLOWING_WATER water} are not.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} is solid; <b>false</b> otherwise. */
         public boolean isSolid() {
             return blockMC.getMaterial().isSolid();
@@ -345,7 +348,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * will not drop anything unless a tool (in this case, a pickaxe) is used to break it; on the other hand, {@link BlockType#DIRT dirt} can drop dirt even if a player
          * uses their bare hands to dig it out. Note that this method only determines whether or not <i>any</i> drops can be obtained without the use of a tool; for example,
          * this will return <b>true</b> for grass blocks even though without the use of a tool, they will drop dirt blocks rather grass blocks.
-         * 
+         *
          * @return <b>true</b> if this {@link BlockType} will not drop anything if broken without a tool; <b>false</b> otherwise. */
         public boolean requiresTool() {
             return !blockMC.getMaterial().isToolNotRequired();
@@ -378,14 +381,14 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
 
     // instance utilities
     /** This method retrieves the {@link Biome} that this block is located in.
-     * 
+     *
      * @return the {@link Biome} that this block is in. */
     public Biome getBiome() {
         return getLocation().getBiome();
     }
 
     public Chunk getChunk() {
-        return new Chunk(getLocation().getWorld().MC().getChunkFromChunkCoords(this.location.getBlockX(), this.location.getBlockZ()));
+        return Chunk.fromMC(getLocation().getWorld().MC().getChunkFromChunkCoords(this.location.getBlockX(), this.location.getBlockZ()));
     }
 
     public byte getData() {
@@ -397,10 +400,10 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
     }
 
     /** This method changes the type of this {@link Block} to the given {@link BlockType}.
-     * 
+     *
      * @param type
      *            is the {@link BlockType} which this {@link Block} will be changed to.
-     * 
+     *
      * @return the new {@link Block} with the given {@link BlockType} or <b>null</b> if this {@link Block} could not be changed to the given {@link BlockType}. <br>
      *         <i>Note that the old {@link Block} is now obsolete and should not be used any more! Replace it with the {@link Block} returned by this method.</i> */
     @SuppressWarnings({ "unchecked", "hiding" })

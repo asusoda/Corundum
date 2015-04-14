@@ -2,10 +2,11 @@ package org.corundummc.world;
 
 import java.math.BigDecimal;
 
+import org.corundummc.blocks.Block;
+import org.corundummc.blocks.Block.BlockType;
 import org.corundummc.entities.Entity;
 import org.corundummc.entities.Direction;
 import org.corundummc.exceptions.CorundumException;
-import org.corundummc.world.Block.BlockType;
 
 public class Zone {
     /** <b><i>DEV NOTES:</b></i><br>

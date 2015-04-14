@@ -21,12 +21,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 
 import org.corundummc.CorundumServer;
+import org.corundummc.blocks.Block.BlockType;
 import org.corundummc.entities.living.Player;
 import org.corundummc.exceptions.CIE;
 import org.corundummc.items.Enchantment.EnchantmentType;
 import org.corundummc.utils.myList.myList;
 import org.corundummc.utils.types.HoldableType;
-import org.corundummc.world.Block.BlockType;
 
 import java.util.ArrayList;
 import java.util.List;
