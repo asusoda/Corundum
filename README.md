@@ -40,18 +40,17 @@ You can either use the installer under the Corundum installer directory here, OR
      * the official minecraft_server.jar itself with the "net" folder removed from the archive.
 
 ##### Reobfuscate
-NOTE: If this is your first time using MCP, you may have to run the recompile script before attempting the next steps.
+_NOTE: If this is your first time using MCP, you may have to decompile, recompile, and reobfuscate both the client and server normally before attempting the following steps. If you don't, M.C.P. may throw weird errors, often concerning a client.log or something similar._
  6. Copy the Corundum bytecode (.class files from the "org" folder) into MCP's "bin/minecraft_server" folder.
  7. Run MCP's reobfuscate script (in the MCP folder, ending in ".bat" for Windows machines or ending in ".sh" for Unix-based systems, including Mac).
  8. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum.jar". Make sure that inside the jar, the top-level directory is "org".
- 9. Repeat steps `5.` and `6.` for the Corundum Hub bytecode.
 
 ##### Zip it!
- 10. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum Hub.jar". Make sure that inside the jar, the top-level directory is "org".
+ 10. Package the "org" folder in MCP's "reobf" folder into a new jar called "Corundum.jar". Make sure that inside the jar, the top-level directory is "org".
  11. Add a META_INF folder with a MANIFEST.MF file to the Corundum Hub.jar and designate "org.corundummc.hub.CorundumHub" as the main class.
 
 ##### Run it!
  12. Place the Corundum.jar, Corundum Hub.jar, and minecraft_server.jar in the same directory.
- 13. Run the Corundum launcher.jar with a Java 7 Virtual Machine.
+ 13. Run the Corundum Hub.jar with a Java 7 Virtual Machine. (Running with a Java 8 Virtual Machine may cause errors.)
 
 Sorry it's so complicated.
