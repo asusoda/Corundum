@@ -29,6 +29,7 @@ You can either use the installer under the Corundum installer directory here, OR
  1. Download [MCP v9.08](http://www.mediafire.com/download/2czafa60rh4ajhj/mcp908.zip).
  2. Download [the minecraft_server.jar for Minecraft 1.8.1](https://s3.amazonaws.com/Minecraft.Download/versions/1.8.1/minecraft_server.1.8.1.jar) from [Minecraft's official website](https://minecraft.net/).
  3. Download the source code from this repository (at least both Corundum and the Corundum Hub).
+
 ##### Compile the source
  4. Put the minecraft_server.jar in MCP's "jar" folder and run MCP's decompile script (decompile.bat for Windows, decompile.sh for *nix-based systems, including Mac).
  5. Compile Corundum and the Corundum Hub with your favorite Java 7 compiler. If you had to combine the source files for Corundum and Hub to achieve this, separate them again into two separate folders. 
