@@ -1,5 +1,10 @@
 package org.corundummc.transformers;
 
+import javassist.CannotCompileException;
+import javassist.NotFoundException;
+
+import java.io.IOException;
+
 /**
  * The base for all transformers.
  */
@@ -9,7 +14,17 @@ public abstract class BaseTransformer
 	
 	final byte[] getBytesOfClass(String className)
 	{
-		//TODO: Implementation of method.
-		return null;
+		byte[] bytes = null;
+		
+		try
+		{
+			bytes = TransformerRegistry.getClassPool().get(className).toBytecode();
+		}
+		catch (NotFoundException | IOException | CannotCompileException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return bytes;
 	}
 }
