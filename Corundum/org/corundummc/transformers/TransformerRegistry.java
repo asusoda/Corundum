@@ -1,7 +1,10 @@
 package org.corundummc.transformers;
 
+import javassist.CannotCompileException;
 import javassist.ClassPool;
+import javassist.NotFoundException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,20 @@ public class TransformerRegistry
 				
 			}
 		}
+	}
+	
+	static byte[] getBytesOfClass(String className)
+	{
+		try
+		{
+			return classPool.get(className).toBytecode();
+		}
+		catch (NotFoundException | IOException | CannotCompileException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	static ClassPool getClassPool()
