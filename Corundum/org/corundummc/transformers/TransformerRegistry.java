@@ -13,17 +13,32 @@ import java.util.List;
  * 
  * @author Niadel 
  */
-public class TransformerRegistry
+public final class TransformerRegistry
 {
-	private boolean transformersRun = false;
-	public List<BaseTransformer> transformers = new ArrayList<>();
+	/**
+	 * Boolean used to make sure the transformers have not been accidentally been run twice. 
+	 */
+	private static boolean transformersRun = false;
+	
+	/** 
+	 * The list of transformer that have been registered. 
+	 */
+	static List<BaseTransformer> transformers = new ArrayList<>();
+	
+	/**
+	 * Javassist ClassPool object used to get the bytes of classes. 
+	 */
 	private static final ClassPool classPool = ClassPool.getDefault();
 	
 	/**
-	 * Used to pass transformers the bytes of classes.
+	 * Used to pass transformers the bytes of classes. TODO: Is this needed?
 	 */
 	private ClassLoader corundumLoader;
 	
+	/**
+	 * The method used to register transformers. 
+	 * @param transformer The transformer being registered.
+	 */
 	void registerTransformer(BaseTransformer transformer)
 	{
 		transformers.add(transformer);
@@ -38,11 +53,18 @@ public class TransformerRegistry
 		{
 			for (BaseTransformer transformer: transformers)
 			{
-				
+				//TODO: transformer.transform()
 			}
+			
+			transformersRun = true;
 		}
 	}
 	
+	/**
+	 * Method that gets the bytes of a certain class. 
+	 * @param className The class that you want the bytes of.
+	 * @return The bytes of the class you requested.
+	 */
 	static byte[] getBytesOfClass(String className)
 	{
 		try

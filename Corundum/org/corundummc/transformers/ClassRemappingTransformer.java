@@ -16,6 +16,7 @@ public class ClassRemappingTransformer extends BaseTransformer
 	
 	public ClassRemappingTransformer()
 	{
+		//Read the mappings
 		InputStream remapsFile = ClassLoader.getSystemResourceAsStream("/corundum_resources/transformers/remappings.txt");
 		
 		Scanner remapScanner = new Scanner(remapsFile);
