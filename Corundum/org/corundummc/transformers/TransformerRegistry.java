@@ -7,6 +7,7 @@ import javassist.NotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Where we internally register transformers.
@@ -44,18 +45,23 @@ public final class TransformerRegistry
 		transformers.add(transformer);
 	}
 	
+	private void executeTransformers(String className, byte[] classBytes)
+	{
+		for (BaseTransformer transformer: transformers)
+		{
+			transformer.transform(className, classBytes);
+		}
+	}
+	
 	/**
 	 * Should only be run by Corundum itself. 
 	 */
-	public void executeTransformers()
+	public void executeRegisteredTransformers()
 	{
 		if (!transformersRun)
 		{
-			for (BaseTransformer transformer: transformers)
-			{
-				//TODO: transformer.transform()
-			}
 			
+
 			transformersRun = true;
 		}
 	}
