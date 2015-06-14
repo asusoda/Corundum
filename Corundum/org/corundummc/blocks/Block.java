@@ -18,19 +18,26 @@ import net.minecraft.block.state.IBlockState;
 
 import org.corundummc.utils.types.Typed;
 import org.corundummc.biomes.Biome;
+import org.corundummc.biomes.Biome.BiomeType;
 import org.corundummc.utils.interfaces.MCEquivalent;
 import org.corundummc.utils.types.HoldableType;
 import org.corundummc.world.BoundingBox;
 import org.corundummc.world.Chunk;
 import org.corundummc.world.Location;
 
+/** TODO
+ *
+ * @param <S>
+ *            is a self-parameterization; this type should be the same type as this class.
+ * @param <MC>
+ *            determines the type of Minecraft Block <tt>Object</tt> that this class's {@link BlockType} represents.
+ * @param <T>
+ *            determines the type of {@link BlockType} that represents the type of this class. */
 public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.block.Block, T extends Block.BlockType<T, MC, S>> extends Typed<T> {
     private Location location;
 
     protected Block(Location location) {
         this.location = location;
-
-        /* TODO: if the Block at this location isn't the same type as this block, make it so */
     }
 
     /** This enum is used to represent the different types of {@link Block}s. This list of different types not only includes those types of blocks differentiated by different
@@ -161,35 +168,6 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
         private final MC blockMC;
 
         // constructors
-        // TODO TEMP
-        /** This constructor makes a BlockType based on the previous value's I.D. and data. If the previous value has no strictly associated data value (data value = -1), it
-         * means that it has no sub-types (e.g. the different colors of wool or types of wood), so use the next I.D.; if it has a data value, give this BlockType the same I.D.
-         * and the next data value. Essentially, "I.D. blocks" (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the
-         * use of the {@link #BlockType(int)} and {@link #BlockType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a
-         * block and declaring one with a data value >= 0 will start a new block. */
-        private BlockType() {
-            super(nextID(BlockType.class), -1);
-
-            // find the Block with the given I.D.
-            blockMC = (MC) net.minecraft.block.Block.getBlockById(getID());
-        }
-
-        // TODO TEMP
-        /** This constructor makes a BlockType based on the previous value's I.D. and the given data. If the previous value's data value is <= <b><tt>data</b></tt>, then the
-         * I.D. block is ending, so it increments the I.D.; otherwise, it will use the same I.D. as the previous value to continue the I.D. block. Essentially, "I.D. blocks"
-         * (blocks of multiple enum constants that all have the same I.D., but different data values) are delimited by the use of the {@link #BlockType(int)} and
-         * {@link #BlockType(int, int)} constructors; declaring a new enum value with a data value less than the previous will end a block and declaring one with a data value
-         * >= 0 will start a new block.
-         *
-         * @param data
-         *            is the data value for this {@link BlockType}. */
-        private BlockType(int data) {
-            super(nextID(BlockType.class), data);
-
-            // find the Block with the given I.D.
-            blockMC = (MC) net.minecraft.block.Block.getBlockById(getID());
-        }
-
         /** This constructor makes a BlockType with the given I.D. and data. It's necessary for specifying I.D.s when Minecraft skips I.D.s.
          *
          * @param id
@@ -197,7 +175,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * @param data
          *            is the data value associated with this {@link BlockType}.
          * @see {@link #BlockType(int)} */
-        private BlockType(int id, int data) {
+        protected BlockType(int id, int data) {
             super(id, data);
 
             // find the Block with the given I.D.
@@ -285,7 +263,7 @@ public abstract class Block<S extends Block<S, MC, T>, MC extends net.minecraft.
          * {@link BlockType#FLOWING_WATER water}, {@link BlockType#DIRT dirt}, and {@link BlockType#STONE stone} are not.
          *
          * @return <b>true</b> if this {@link BlockType} is burnable; <b>false</b> otherwise. */
-        public boolean isBurnable() {
+        public boolean isCombustible() {
             return blockMC.getMaterial().getCanBurn();
         }
 
