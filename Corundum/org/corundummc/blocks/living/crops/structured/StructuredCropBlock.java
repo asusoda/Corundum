@@ -1,7 +1,7 @@
 package org.corundummc.blocks.living.crops.structured;
 
-import org.corundummc.blocks.living.crops.CropBlock;
-import org.corundummc.blocks.living.crops.CropBlock.CropBlockType;
+import org.corundummc.blocks.living.CropBlock;
+import org.corundummc.blocks.living.CropBlock.CropBlockType;
 import org.corundummc.world.Location;
 
 import net.minecraft.block.Block;

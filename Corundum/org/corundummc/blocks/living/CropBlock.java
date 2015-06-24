@@ -1,12 +1,11 @@
-package org.corundummc.blocks.living.crops;
+package org.corundummc.blocks.living;
 
-import org.corundummc.blocks.living.LivingBlock;
 import org.corundummc.world.Location;
 
 import net.minecraft.block.Block;
 
 // TODO LINK
-/** This {@link Block} subclass represents any {@link Block} that can be somehow farmed by players in order to produce food.
+/** This {@link Block} subclass represents any {@link Block} that can be somehow farmed by players in order to produce food or a food ingredient.
  *
  * @param <S>
  *            is a self-parameterization; this type should be the same type as this class.
@@ -14,12 +13,9 @@ import net.minecraft.block.Block;
  *            determines the type of Minecraft Block <tt>Object</tt> that this class's {@link BlockType} represents.
  * @param <T>
  *            determines the type of {@link BlockType} that represents the type of this class. */
-public abstract class CropBlock<S extends CropBlock<S, MC, T>, MC extends Block, T extends CropBlock.CropBlockType<T, MC, S>> extends LivingBlock<S, MC, T> {
-    protected CropBlock(Location location) {
-        super(location);
-    }
+public interface CropBlock<S extends CropBlock<S, MC, T>, MC extends Block, T extends CropBlock.CropBlockType<T, MC, S>> {
 
-    /** This {@link BlockType} represents the type of any {@link Block} that can be somehow farmed by players in order to produce food.
+    /** This {@link BlockType} represents the type of any {@link Block} that can be somehow farmed by players in order to produce food or a food ingredient.
      *
      * @param <S>
      *            is a self-parameterization; this type should be the same type as this class.
@@ -27,13 +23,7 @@ public abstract class CropBlock<S extends CropBlock<S, MC, T>, MC extends Block,
      *            determines the type of Minecraft Block <tt>Object</tt> that this class represents.
      * @param <I>
      *            determines the type of {@link Block} that represents the type of this class. */
-    public abstract static class CropBlockType<S extends CropBlockType<S, MC, I>, MC extends Block, I extends CropBlock<I, MC, S>> extends LivingBlockType<S, MC, I> {
-        protected CropBlockType(int id, int data) {
-            super(id, data);
-
-            addValueAs(CropBlockType.class);
-        }
-
+    public static interface CropBlockType<S extends CropBlockType<S, MC, I>, MC extends Block, I extends CropBlock<I, MC, S>> {
         // abstract utilities
 
         // overridden utilities
