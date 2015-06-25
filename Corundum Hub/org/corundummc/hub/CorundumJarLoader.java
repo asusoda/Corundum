@@ -1,5 +1,7 @@
 package org.corundummc.hub;
 
+import org.corundummc.transformers.TransformerRegistry;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -104,6 +106,8 @@ public class CorundumJarLoader extends URLClassLoader {
                 }
             }
         }
+		
+		TransformerRegistry transformerRegistry = new TransformerRegistry(this);
 
         // close the ClassLoader (which will not affect access to the loaded classes)
         close();
@@ -130,6 +134,12 @@ public class CorundumJarLoader extends URLClassLoader {
             return null;
         }
     }
+	
+	//TODO: Make a Transformer to make sure nothing other than TransformerRegistry calls this class.
+	public void defineClass(String className, byte[] bytes)
+	{
+		super.defineClass(className, bytes, 0, bytes.length);
+	}
 
     public interface ClassLoadAction {
         public void onClassLoad(Class<?> clazz);

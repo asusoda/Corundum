@@ -4,6 +4,7 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
 import org.apache.commons.io.IOUtils;
+import org.corundummc.hub.CorundumJarLoader;
 
 import java.io.*;
 import java.util.*;
@@ -36,12 +37,17 @@ public final class TransformerRegistry
 	/**
 	 * Used to pass transformers the bytes of classes. TODO: Is this needed?
 	 */
-	private ClassLoader corundumLoader;
+	private CorundumJarLoader corundumLoader;
 	
 	/**
 	 * Loaded classes from MC. There for efficiency so we don't have to call classPool.get() every time. 
 	 */
 	private static Map<String, byte[]> locatedMcClasses = new HashMap<>();
+	
+	public TransformerRegistry(CorundumJarLoader classLoader)
+	{
+		this.corundumLoader = classLoader;
+	}
 	
 	/**
 	 * The method used to register transformers. 
@@ -86,6 +92,8 @@ public final class TransformerRegistry
 					String name = entry.getName().replace(File.separator, ".");
 					
 					locatedMcClasses.put(name, bytes);
+					
+					this.corundumLoader.defineClass(name, bytes);
 				}
 				
 				transformersRun = true;
