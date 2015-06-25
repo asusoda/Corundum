@@ -3,11 +3,13 @@ package org.corundummc.transformers;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
+import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Where we internally register transformers.
@@ -37,6 +39,11 @@ public final class TransformerRegistry
 	private ClassLoader corundumLoader;
 	
 	/**
+	 * Loaded classes from MC. There for efficiency so we don't have to call classPool.get() every time. 
+	 */
+	private static Map<String, byte[]> locatedMcClasses = new HashMap<>();
+	
+	/**
 	 * The method used to register transformers. 
 	 * @param transformer The transformer being registered.
 	 */
@@ -45,7 +52,7 @@ public final class TransformerRegistry
 		transformers.add(transformer);
 	}
 	
-	private void executeTransformers(String className, byte[] classBytes)
+	private void executeTransformer(String className, byte[] classBytes)
 	{
 		for (BaseTransformer transformer: transformers)
 		{
@@ -58,11 +65,36 @@ public final class TransformerRegistry
 	 */
 	public void executeRegisteredTransformers()
 	{
-		if (!transformersRun)
+		try
 		{
-			
-
-			transformersRun = true;
+			if (!transformersRun)
+			{
+				ZipFile serverJar = new ZipFile("minecraft_server.jar");
+				//Because this is the only saneish way to read zip files recursively .-. Why couldn't someone have a 
+				//.toList() method for enumerations? It's a better method than what was originally going to be used,
+				//though. That involved ClassLoader shenanigans.
+				Enumeration entries = serverJar.entries();
+				
+				while (entries.hasMoreElements())
+				{
+					ZipEntry entry = (ZipEntry) entries.nextElement();
+					InputStream stream = serverJar.getInputStream(entry);
+					//Yay, Minecraft has Apache IO as a library in the server.jar :D!
+					byte[] bytes = IOUtils.toByteArray(stream);
+					
+					//Locate class name
+					String name = entry.getName().replace(File.separator, ".");
+					
+					locatedMcClasses.put(name, bytes);
+				}
+				
+				transformersRun = true;
+			}
+		}
+		catch (IOException e)
+		{
+			System.err.println("INTERNAL ERROR: IOE occured during the loading of transformers. Read stacktrace for details");
+			e.printStackTrace();
 		}
 	}
 	
@@ -73,13 +105,24 @@ public final class TransformerRegistry
 	 */
 	static byte[] getBytesOfClass(String className)
 	{
-		try
+		//Security things :P
+		if (!className.startsWith("org.corundummc"))
 		{
-			return classPool.get(className).toBytecode();
-		}
-		catch (NotFoundException | IOException | CannotCompileException e)
-		{
-			e.printStackTrace();
+			if (!locatedMcClasses.keySet().contains(className))
+			{
+				try
+				{
+					return classPool.get(className).toBytecode();
+				}
+				catch (NotFoundException | IOException | CannotCompileException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				return locatedMcClasses.get(className);
+			}
 		}
 		
 		return null;
