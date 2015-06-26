@@ -138,7 +138,10 @@ public class CorundumJarLoader extends URLClassLoader {
 	//TODO: Make a Transformer to make sure nothing other than TransformerRegistry calls this class.
 	public void defineClass(String className, byte[] bytes)
 	{
-		super.defineClass(className, bytes, 0, bytes.length);
+		if (!className.startsWith("org.corundummc"))
+		{
+			super.defineClass(className, bytes, 0, bytes.length);
+		}
 	}
 
     public interface ClassLoadAction {
