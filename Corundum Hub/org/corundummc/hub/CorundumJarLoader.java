@@ -1,5 +1,6 @@
 package org.corundummc.hub;
 
+import org.corundummc.transformers.OverwritingClassLoader;
 import org.corundummc.transformers.TransformerRegistry;
 
 import java.io.File;
@@ -18,12 +19,19 @@ public class CorundumJarLoader extends URLClassLoader {
 
     private CorundumJarLoader child = null;
 
+	//These variables are used solely so the ASM transformer loader can get access to these.
+	private File file;
+	private ClassLoader parent;
+
     public CorundumJarLoader(File file, ClassLoader parent) throws MalformedURLException {
         this(file, parent, false);
     }
 
     CorundumJarLoader(File file, ClassLoader parent, boolean is_Minecraft_server_jar) throws MalformedURLException {
         super(new URL[] { file.toURI().toURL() }, parent);
+		
+		this.file = file;
+		this.parent = parent;
 
         this.is_Minecraft_server_jar = is_Minecraft_server_jar;
 
@@ -107,7 +115,7 @@ public class CorundumJarLoader extends URLClassLoader {
             }
         }
 		
-		TransformerRegistry transformerRegistry = new TransformerRegistry(this);
+		TransformerRegistry transformerRegistry = new TransformerRegistry(new OverwritingClassLoader(this.file, this.parent));
 
         // close the ClassLoader (which will not affect access to the loaded classes)
         close();
@@ -134,15 +142,7 @@ public class CorundumJarLoader extends URLClassLoader {
             return null;
         }
     }
-	
-	//TODO: Make a Transformer to make sure nothing other than TransformerRegistry calls this class.
-	public void defineClass(String className, byte[] bytes)
-	{
-		if (!className.startsWith("org.corundummc"))
-		{
-			super.defineClass(className, bytes, 0, bytes.length);
-		}
-	}
+
 
     public interface ClassLoadAction {
         public void onClassLoad(Class<?> clazz);
